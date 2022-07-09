@@ -21,7 +21,7 @@ async function SendNotification(data, callback){
             return callback(null, JSON.parse(data));
         });
     });
-    req.on("error", function (err) {s
+    req.on("error", function (err) {
         return callback({
             message: err
         });
