@@ -1,0 +1,9 @@
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Entities\bin\Debug\Entities.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Entities\bin\Debug\Entities.pdb
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Entities\bin\Debug\Newtonsoft.Json.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Entities\bin\Debug\Newtonsoft.Json.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Entities\obj\Debug\Entities.csproj.AssemblyReference.cache
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Entities\obj\Debug\Entities.csproj.CoreCompileInputs.cache
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Entities\obj\Debug\Entities.csproj.CopyComplete
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Entities\obj\Debug\Entities.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Entities\obj\Debug\Entities.pdb

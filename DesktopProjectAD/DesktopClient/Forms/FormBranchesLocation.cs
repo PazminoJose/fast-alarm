@@ -11,75 +11,58 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DesktopClient.Classes;
+using DesktopClient.Controls;
+using Business;
+using Entities;
+using DesktopClient.Classess;
 
 namespace DesktopClient.Forms
 {
     public partial class FormBranchesLocation : Form
     {
         GMapOverlay markers = null;
+        CompanyEntity company = null;
+        int totalMarkers = 0;
+        bool isCompanyFormActive = false;
         public FormBranchesLocation()
         {
             InitializeComponent();
             LoadMap();
-            GenerateBranchButtons();
+            LoadMarkers();
+            AddCompanyButtonsToPanel();
+            BlockFormCompany();
+
         }
         private void LoadMap()
         {
+            GMapProviders.GoogleMap.ApiKey = Properties.Settings.Default.API_KEY_GMAP;
             gMapControl.MapProvider = GMapProviders.GoogleMap;
             gMapControl.DragButton = MouseButtons.Left;
             gMapControl.ShowCenter = false;
-            double latitude = -0.1074016582484328;
-            double longitude = -78.47017988776682;
+            double latitude = -1.3460634739251633;
+            double longitude = -78.56483353462201;
             gMapControl.Position = new PointLatLng(latitude, longitude);
             gMapControl.MaxZoom = 18;
             gMapControl.MinZoom = 7;
             gMapControl.Zoom = 7;
 
-
-
-            PointLatLng point = new PointLatLng(latitude, longitude);
-
-            GMapMarker marker = new BranchMarker(1, point, GMarkerGoogleType.green_dot);
-            marker.ToolTipText = "Sucursal 1";
-            marker.ToolTipMode = MarkerTooltipMode.Always;
-            double lat = marker.Position.Lat;
-            double lng = marker.Position.Lng;
-            // 1. Create overlay
-            markers = new GMapOverlay("markers");
-            // Add all availabe markers to that overlay
-            markers.Markers.Add(marker);
-            // 3. Cover map with overlay
-            gMapControl.Overlays.Add(markers);
-
         }
-
-        private void gMapControl_OnMapZoomChanged()
-        {
-            Console.WriteLine(gMapControl.Zoom);
-            Console.Read();
-        }
-        private void GenerateBranchButtons()
+        private void AddCompanyButtonsToPanel()
         {
             int posX, posY;
             int width, height;
-            width = (panelButtons.Width / 2);
+            width = (int)(panelButtons.Width / 1.3);
             height = (panelButtons.Height / 6);
             posX = 0;
             posY = 0;
-
-            for (int i = 1; i <= 5; i++)
+            CompanyButton btn = null;
+            foreach (var marker in markers.Markers)
             {
 
-                BranchButton btn = new BranchButton(1);
-                btn.ForeColor = Color.White;
-
-                // Set button color
-                btn.BackColor = Color.FromArgb(50, 205, 50);
+                btn = ((CompanyMarker)marker).btn;
                 // Set btton size
                 btn.Size = new Size(width, height);
                 // Set button text
-                btn.Text = "Sucursal " + i.ToString();
                 btn.Click += ClickBranchButton;
                 // Add button to panel
                 panelButtons.Controls.Add(btn);
@@ -95,30 +78,203 @@ namespace DesktopClient.Forms
                     posX = 0;
                     posY += height;
                 }
-
             }
+        }
+        private void LoadMarkers()
+        {
+            gMapControl.Overlays.Clear();
+            List<CompanyEntity> companies = CompanyBusiness.GetAll();
+            // Set total markers
+            totalMarkers = companies.Count();
+            // 1. Create overlay
+            markers = new GMapOverlay("markers");
+            foreach (var company in companies)
+            {
+                CompanyButton btn = new CompanyButton(company);
+                PointLatLng point = new PointLatLng(company.latitude, company.longitude);
+
+                GMapMarker marker = new CompanyMarker(btn, point, GMarkerGoogleType.green_dot);
+                // Add all markers to the overlay
+                markers.Markers.Add(marker);
+            }
+            // 3. Cover map with overlay
+            gMapControl.Overlays.Add(markers);
         }
         private void ClickBranchButton(object sender, EventArgs e)
         {
-            int index = 0;
-            foreach (var marker in markers.Markers.Select((value, i) => (value, i)))
-            {
-                if (((BranchMarker)marker.value).id == ((BranchButton)sender).id) index = marker.i;
-            }
+            CompanyButton btn = (CompanyButton)sender;
+            ClickButtonMarkerAction(btn);
 
-            BranchMarker bm = (BranchMarker)markers.Markers[index];
-            if (bm.id == 1)
-            {
-                gMapControl.Zoom = 13;
-                gMapControl.Position = new PointLatLng(bm.Position.Lat, bm.Position.Lng);
-            }
         }
+        private void ClickButtonMarkerAction(CompanyButton btn)
+        {
+            if (btn == null) return;
+            LoadFormCompany(btn.company);
+            UnlockFormCompanyOnCompanySelected();
+            company = btn.company;
+            gMapControl.Zoom = 13;
+            gMapControl.Position = new PointLatLng(btn.company.latitude, btn.company.longitude);
+        }
+
         private void gMapControl_OnMarkerClick(GMapMarker item, MouseEventArgs e)
         {
-            PointLatLng point = item.Position;
-            int name = ((BranchMarker)item).id;
-            Console.WriteLine("");
+            CompanyMarker marker = (CompanyMarker)item;
+            ClickButtonMarkerAction(marker.btn);
 
         }
+        private void SetAdressByPointLatLng(PointLatLng point)
+        {
+            List<Placemark> placemarks = null;
+            var statusCode = GMapProviders.GoogleMap.GetPlacemarks(point, out placemarks);
+            if (statusCode != GeoCoderStatusCode.OK && placemarks == null) return;
+            textBoxAdress.Text = placemarks.First().Address;
+        }
+
+        private void gMapControl_OnMapClick(PointLatLng pointClick, MouseEventArgs e)
+        {
+            if (!isCompanyFormActive) return;
+            AddMarkerOnMap(pointClick);
+            SetAdressByPointLatLng(pointClick);
+
+        }
+        private void AddMarkerOnMap(PointLatLng point)
+        {
+            // Removing old marker 
+            if (markers.Markers.Count() > totalMarkers) markers.Markers.RemoveAt(markers.Markers.Count() - 1);
+            // Clear Markers in the map overlay
+            gMapControl.Overlays.Clear();
+            // Add new marker
+            GMapMarker marker = new CompanyMarker(null, point, GMarkerGoogleType.blue_dot);
+            markers.Markers.Add(marker);
+            gMapControl.Overlays.Add(markers);
+
+
+        }
+        private void BlockFormCompany()
+        {
+            textBoxName.Enabled = false;
+            textBoxContact.Enabled = false;
+            textBoxAdress.Enabled = false;
+            buttonSearch.Enabled = false;
+            buttonNew.Enabled = true;
+            buttonEdit.Enabled = false;
+            buttonSave.Enabled = false;
+            buttonDelete.Enabled = false;
+            isCompanyFormActive = false;
+
+        }
+        private void UnlockFormCompanyEdit()
+        {
+            textBoxName.Enabled = true;
+            textBoxContact.Enabled = true;
+            textBoxAdress.Enabled = true;
+            buttonSearch.Enabled = true;
+            buttonNew.Enabled = true;
+            buttonEdit.Enabled = false;
+            buttonSave.Enabled = true;
+            buttonDelete.Enabled = true;
+        }
+        private void UnlockFormCompanyOnCompanySelected()
+        {
+            textBoxName.Enabled = false;
+            textBoxContact.Enabled = false;
+            textBoxAdress.Enabled = false;
+            buttonSearch.Enabled = false;
+            buttonNew.Enabled = true;
+            buttonEdit.Enabled = true;
+            buttonSave.Enabled = false;
+            buttonDelete.Enabled = true;
+        }
+        private void UnlockFormCompanyNew()
+        {
+            textBoxName.Enabled = true;
+            textBoxContact.Enabled = true;
+            textBoxAdress.Enabled = true;
+            buttonSearch.Enabled = true;
+            buttonNew.Enabled = true;
+            buttonEdit.Enabled = false;
+            buttonSave.Enabled = true;
+            buttonDelete.Enabled = false;
+            isCompanyFormActive = true;
+        }
+        private void LoadFormCompany(CompanyEntity company)
+        {
+            textBoxName.Text = company.name;
+            textBoxContact.Text = company.contact;
+            textBoxAdress.Text = company.address;
+        }
+        private void CleanFormCompany()
+        {
+            textBoxName.Text = "";
+            textBoxContact.Text = "";
+            textBoxAdress.Text = "";
+        }
+        private void buttonSearch_Click(object sender, EventArgs e)
+        {
+            string search = textBoxAdress.Text;
+            GeoCoderStatusCode status = gMapControl.SetPositionByKeywords(search);
+            if (status == GeoCoderStatusCode.OK)
+            {
+                gMapControl.Zoom = 17;
+
+                List<PointLatLng> points = null;
+                var statusCode = GMapProviders.GoogleMap.GetPoints(search, out points);
+                AddMarkerOnMap(points.First());
+            }
+        }
+
+        private void buttonNew_Click(object sender, EventArgs e)
+        {
+            UnlockFormCompanyNew();
+            CleanFormCompany();
+        }
+
+        private void buttonEdit_Click(object sender, EventArgs e)
+        {
+            UnlockFormCompanyEdit();
+            EditCompany();
+        }
+
+        private void buttonSave_Click(object sender, EventArgs e)
+        {
+            SaveCompany();
+            BlockFormCompany();
+        }
+        private void EditCompany()
+        {
+            this.company.name = textBoxName.Text;
+            this.company.contact = textBoxContact.Text;
+            this.company.address = textBoxAdress.Text;
+            if (markers.Markers.Count() > totalMarkers)
+            {
+                PointLatLng point = markers.Markers.Last().Position;
+                this.company.latitude = point.Lat;
+                this.company.longitude = point.Lng;
+
+            }
+            CompanyBusiness.Save(company);
+
+
+
+        }
+        private void SaveCompany()
+        {
+            string name = textBoxName.Text;
+            string contact = textBoxContact.Text;
+            string adress = textBoxAdress.Text;
+            CompanyMarker marker = (CompanyMarker)markers.Markers.Last();
+            this.company = new CompanyEntity(Session.actualUser.Company, null, name, adress, contact, marker.Position.Lat, marker.Position.Lng);
+            CompanyBusiness.Save(company);
+
+        }
+        private void buttonDelete_Click(object sender, EventArgs e)
+        {
+           if( MessageBox.Show("¿Esta seguro que desea eliminar la sucursal?", "Confirmar", MessageBoxButtons.OKCancel).Equals(DialogResult.OK))
+            {
+                CompanyBusiness.Delete(this.company.id);    
+            }
+            
+        }
     }
+
 }

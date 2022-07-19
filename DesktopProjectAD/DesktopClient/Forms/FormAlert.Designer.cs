@@ -29,29 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.Button buttonClose;
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.labelMessage = new System.Windows.Forms.Label();
             this.timerMessage = new System.Windows.Forms.Timer(this.components);
-            buttonClose = new System.Windows.Forms.Button();
+            this.buttonClose = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonClose)).BeginInit();
             this.SuspendLayout();
-            // 
-            // buttonClose
-            // 
-            buttonClose.AutoSize = true;
-            buttonClose.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            buttonClose.Dock = System.Windows.Forms.DockStyle.Right;
-            buttonClose.FlatAppearance.BorderSize = 0;
-            buttonClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            buttonClose.Image = global::DesktopClient.Properties.Resources.cancel;
-            buttonClose.Location = new System.Drawing.Point(634, 0);
-            buttonClose.Name = "buttonClose";
-            buttonClose.Padding = new System.Windows.Forms.Padding(0, 0, 10, 0);
-            buttonClose.Size = new System.Drawing.Size(48, 72);
-            buttonClose.TabIndex = 0;
-            buttonClose.UseVisualStyleBackColor = true;
-            buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
             // 
             // pictureBox1
             // 
@@ -79,21 +63,35 @@
             // 
             this.timerMessage.Tick += new System.EventHandler(this.timerMessage_Tick);
             // 
+            // buttonClose
+            // 
+            this.buttonClose.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.buttonClose.Dock = System.Windows.Forms.DockStyle.Right;
+            this.buttonClose.Image = global::DesktopClient.Properties.Resources.cancel;
+            this.buttonClose.Location = new System.Drawing.Point(635, 0);
+            this.buttonClose.Name = "buttonClose";
+            this.buttonClose.Size = new System.Drawing.Size(47, 72);
+            this.buttonClose.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.buttonClose.TabIndex = 3;
+            this.buttonClose.TabStop = false;
+            this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
+            // 
             // FormAlert
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Crimson;
             this.ClientSize = new System.Drawing.Size(682, 72);
+            this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.labelMessage);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(buttonClose);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FormAlert";
             this.ShowInTaskbar = false;
             this.Text = "FormAlert";
             this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonClose)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -104,5 +102,6 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label labelMessage;
         private System.Windows.Forms.Timer timerMessage;
+        private System.Windows.Forms.PictureBox buttonClose;
     }
 }

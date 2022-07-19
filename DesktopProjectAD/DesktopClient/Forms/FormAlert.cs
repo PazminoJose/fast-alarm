@@ -26,12 +26,6 @@ namespace DesktopClient.Forms
         }
         private FormAlert.enmActions action;
 
-        private void buttonClose_Click(object sender, EventArgs e)
-        {
-            timerMessage.Interval = 1;
-            this.action = enmActions.close;
-        }
-
         private void timerMessage_Tick(object sender, EventArgs e)
         {
             switch (this.action)
@@ -67,6 +61,11 @@ namespace DesktopClient.Forms
             }
         }
 
+        private void buttonClose_Click(object sender, EventArgs e)
+        {
+            timerMessage.Interval = 1;
+            this.action = enmActions.close;
+        }
         public void ShowAlert(string msg)
         {
             this.Opacity = 0.0;
