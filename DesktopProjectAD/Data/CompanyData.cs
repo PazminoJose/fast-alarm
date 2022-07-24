@@ -13,8 +13,8 @@ namespace Data
 {
     public class CompanyData
     {
-        //private const string URL = "https://server-panic-button-ad.herokuapp.com/api/company";
-        private const string URL = "http://localhost:3000/api/company";
+        private static string URL = String.Format("{0}/api/company", Properties.Settings.Default.URL_API);
+
         public static List<CompanyEntity> GetAll()
         {
             try
@@ -54,8 +54,9 @@ namespace Data
             try
             {
                 RestClient client = new RestClient(URL);
-                RestRequest request = new RestRequest(Method.PUT);
+                RestRequest request = new RestRequest("/{id}", Method.PUT);
                 request.AddJsonBody(company);
+                request.AddUrlSegment("id", company.id);
 
                 company = client.Put<CompanyEntity>(request).Data;
                 return company;
@@ -71,8 +72,8 @@ namespace Data
             try
             {
                 RestClient client = new RestClient(URL);
-                RestRequest request = new RestRequest("/{id}",Method.DELETE);
-                request.AddUrlSegment("id",id);
+                RestRequest request = new RestRequest("/{id}", Method.DELETE);
+                request.AddUrlSegment("id", id);
                 return client.Delete<bool>(request).Data;
             }
             catch (Exception e)
@@ -81,7 +82,24 @@ namespace Data
                 return false;
             }
         }
+        public static CompanyEntity GetById(string id)
+        {
+            try
+            {
+                RestClient client = new RestClient(URL);
+                RestRequest request = new RestRequest("/{id}", Method.GET);
+                request.AddUrlSegment("id", id);
+
+                return client.Get<CompanyEntity>(request).Data;
+            }
+            catch (Exception e)
+            {
+                string error = e.Message;
+                return null;
+            }
+        }
 
 
     }
+
 }

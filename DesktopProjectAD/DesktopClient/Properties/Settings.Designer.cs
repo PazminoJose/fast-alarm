@@ -34,5 +34,17 @@ namespace DesktopClient.Properties {
                 this["API_KEY_GMAP"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:3000")]
+        public string URL_API {
+            get {
+                return ((string)(this["URL_API"]));
+            }
+            set {
+                this["URL_API"] = value;
+            }
+        }
     }
 }

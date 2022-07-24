@@ -25,5 +25,10 @@ namespace Business
         {
             return CompanyData.Delete(id);
         }
+
+        public static CompanyEntity GetById(string id)
+        {
+            return CompanyData.GetById(id);
+        }
     }
 }

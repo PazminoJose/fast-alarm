@@ -16,8 +16,8 @@ namespace DesktopClient.Controls
         {
             this.company = company;
             this.ForeColor = Color.White;
-            this.BackColor = Color.FromArgb(50, 205, 50);
-            this.Text = company.name;
+            this.BackColor = (company != null && company.state.Equals("normal")) ? Color.FromArgb(50, 205, 50) : Color.Crimson ;
+            this.Text = String.Format("{0} \n ({1})", company.name,company.state);
         }
 
   

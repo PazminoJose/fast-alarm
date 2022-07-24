@@ -18,7 +18,6 @@ namespace DesktopClient
             this.btn = btn;
             this.ToolTipMode = MarkerTooltipMode.Always;
             this.ToolTipText = (this.btn!=null) ? this.btn.company.name : "";
-            
         }
     }
 }

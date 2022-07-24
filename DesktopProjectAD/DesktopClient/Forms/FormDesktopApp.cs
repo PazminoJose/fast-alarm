@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DesktopClient.Classess;
+using SocketIOClient;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DesktopClient.Controls;
+
 
 namespace DesktopClient.Forms
 {
@@ -17,16 +19,14 @@ namespace DesktopClient.Forms
         public FormDesktopApp()
         {
             InitializeComponent();
-            OpenChildForm(new FormBranchesLocation());
+            OpenChildForm(new FormCompaniesLocation());
+            Task task = this.GetNotificationAsync();
         }
 
 
         private void OpenChildForm(Form childForm)
         {
-            if (activeForm != null)
-            {
-                activeForm.Close();
-            }
+            if (activeForm != null) activeForm.Close();
             activeForm = childForm;
             childForm.TopLevel = false;
             childForm.FormBorderStyle = FormBorderStyle.None;
@@ -37,16 +37,32 @@ namespace DesktopClient.Forms
             childForm.Show();
 
         }
-        private void Alert(string msg)
+        public async Task GetNotificationAsync()
         {
-            FormAlert frm = new FormAlert();
-            frm.ShowAlert(msg);
+
+            var client = new SocketIO(Properties.Settings.Default.URL_API);
+
+            client.On("alert", (response) =>
+            {
+                string msg = response.GetValue<string>();
+                    this.Invoke(new Action(() => {
+                        Notification.Alert(msg);
+                    }));       
+            });
+
+            await client.ConnectAsync();
+
+
         }
 
         private void buttonCompanies_Click(object sender, EventArgs e)
         {
-            OpenChildForm(new FormBranchesLocation());
-            this.Alert("ayuda prro");
+            OpenChildForm(new FormCompaniesLocation());
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FormUsers());
         }
     }
 }

@@ -31,8 +31,8 @@ namespace DesktopClient.Forms
             switch (this.action)
             {
                 case enmActions.wait:
-                    timerMessage.Interval = 5000;
-                    action = enmActions.close;
+                    //timerMessage.Interval = 50000;
+                    //action = enmActions.close;
                     break;
                 case enmActions.start:
                     timerMessage.Interval = 1;

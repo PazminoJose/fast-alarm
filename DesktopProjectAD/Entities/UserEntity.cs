@@ -11,30 +11,42 @@ namespace Entities
     public class UserEntity
     {
         [JsonProperty("_id")]
-        public string Id { get; set; }
+        public string id { get; set; }
 
         [JsonProperty("company")]
-        public CompanyEntity Company { get; set; }
+        public CompanyEntity company { get; set; }
 
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string name { get; set; }
 
         [JsonProperty("surname")]
-        public string Surname { get; set; }
+        public string surname { get; set; }
 
         [JsonProperty("email")]
-        public string Email { get; set; }
+        public string email { get; set; }
 
         [JsonProperty("password")]
-        public string Password { get; set; }
+        public string password { get; set; }
 
         [JsonProperty("user_type")]
-        public string UserType { get; set; }
+        public string user_type { get; set; }
 
-        [JsonProperty("__v")]
-        public long V { get; set; }
 
-        public static List<UserEntity> FromJson(string json) => JsonConvert.DeserializeObject<List<UserEntity>>(json, Entities.Converter.Settings);
+        public UserEntity(string id, CompanyEntity company, string name, string surname, string email, string password, string userType)
+        {
+            this.id = id;
+            this.company = company;
+            this.name = name;
+            this.surname = surname;
+            this.email = email;
+            this.password = password;
+            this.user_type = userType;
+        }
+        public UserEntity()
+        {
+
+        }
+
     }
     public class UserCredentials
     {
@@ -50,10 +62,6 @@ namespace Entities
             this.password = password;
         }
 
-    }
-    public static class SerializeUserEntity
-    {
-        public static string ToJson(this UserEntity self) => JsonConvert.SerializeObject(self, Entities.Converter.Settings);
     }
 
 }
