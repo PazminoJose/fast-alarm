@@ -11,9 +11,17 @@ class UserProvider extends ChangeNotifier {
     }
 
     var service = UserServices();
-    user = await service.getUser(credentials).onError((error, stackTrace) =>
-        error.stackTrace(print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")));
+    user = await service.getUser(credentials);
     notifyListeners();
     return user;
+  }
+
+  bool resetUser() {
+    if (user != null) {
+      user = null;
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -11,16 +11,23 @@ class UserServices {
       HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
     };
     var url = Uri.http(Environments.url, Environments.getUser);
-    final response =
-        await http.post(url, headers: headers, body: jsonEncode(credentials));
-
-    var user = User();
-    if (response.statusCode == 200) {
-      final decoded = await json.decode(response.body);
-      user = User.fromJson(decoded);
-      return user;
-    } else {
-      return null;
+    try {
+      final response =
+          await http.post(url, headers: headers, body: jsonEncode(credentials));
+      var user = User();
+      if (response.statusCode == 200) {
+        final decoded = await json.decode(response.body);
+        user = User.fromJson(decoded);
+        return user;
+      } else {
+        return null;
+      }
+    } on SocketException {
+      throw Failure("Error de socketExpetion");
+    } on HttpException {
+      throw Failure("Couldn't find the post");
+    } on FormatException {
+      throw Failure("Bad response format");
     }
   }
 }

@@ -59,6 +59,7 @@ class Company {
     this.name,
     this.address,
     this.contact,
+    this.state,
     this.latitude,
     this.longitude,
   });
@@ -68,6 +69,7 @@ class Company {
   String name;
   String address;
   String contact;
+  String state;
   double latitude;
   double longitude;
 
@@ -77,6 +79,7 @@ class Company {
         name: json["name"],
         address: json["address"],
         contact: json["contact"],
+        state: json["state"],
         latitude: json["latitude"].toDouble(),
         longitude: json["longitude"].toDouble(),
       );
@@ -87,6 +90,7 @@ class Company {
         "name": name,
         "address": address,
         "contact": contact,
+        "state": state,
         "latitude": latitude,
         "longitude": longitude,
       };
@@ -119,4 +123,14 @@ class NotificationEntity {
         "message": message,
         "date": date.toIso8601String(),
       };
+}
+
+class Failure {
+  // Use something like "int code;" if you want to translate error messages
+  final String message;
+
+  Failure(this.message);
+
+  @override
+  String toString() => message;
 }

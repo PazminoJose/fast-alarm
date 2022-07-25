@@ -1,11 +1,11 @@
 import 'package:app_boton_panico/src/models/entities.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
-import 'package:app_boton_panico/src/screens/my_home_page.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:app_boton_panico/src/components/snackbars.dart';
 
 class loguin_page extends StatefulWidget {
   @override
@@ -33,12 +33,7 @@ class _loguin_pageState extends State<loguin_page> {
   void initState() {
     super.initState();
     _loadingFirst = true;
-    Future.delayed(const Duration(seconds: 4), () {
-      setState(() {
-        _loadingFirst = false;
-      });
-    });
-    preferences();
+    openUserPreferences(context);
     fToast = FToast();
     fToast.init(context);
   }
@@ -60,7 +55,7 @@ class _loguin_pageState extends State<loguin_page> {
             ]),
           ),
           child: Image.asset(
-            "assets/image/login.png",
+            "assets/image/fast_alert_logo.png",
             height: 170,
           ),
         ),
@@ -143,7 +138,7 @@ class _loguin_pageState extends State<loguin_page> {
                                 _showHomePage(
                                     context, emailValue, passwordValue);
                               }),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Row(
@@ -159,22 +154,6 @@ class _loguin_pageState extends State<loguin_page> {
                                   }),
                             ],
                           ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                TextButton(
-                                    onPressed: () {
-                                      _showForgetPassword_page(context);
-                                    },
-                                    child: const Text(
-                                      "¿Olvido su contraseña?",
-                                      style:
-                                          TextStyle(color: Colors.blueAccent),
-                                    ))
-                              ])
                         ]),
                       ),
                     ],
@@ -215,22 +194,32 @@ class _loguin_pageState extends State<loguin_page> {
         setState(() {
           _loading = true;
         });
+        try {
+          user = await userProvider.getUser(credentials);
 
-        var user = await userProvider.getUser(credentials);
+          if (user != null) {
+            formKey.currentState.save();
+            if (isSwitched) {
+              SharedPreferences preferences =
+                  await SharedPreferences.getInstance();
+              preferences.setString("email", usuario);
+              preferences.setString("password", password);
+            }
 
-        if (user != null) {
-          formKey.currentState.save();
-          if (isSwitched) {
-            SharedPreferences preferences =
-                await SharedPreferences.getInstance();
-            preferences.setString("email1", usuario);
-            preferences.setString("password1", password);
+            Navigator.of(context).pushReplacementNamed("/homePage");
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
+                'Usuario o Contraseña Incorrecta.\nPor favor intente de nuevo!',
+                'Incorrecto!'));
+            //_showToast("Usuario o Contraseña Incorrecta", "red", "error");
+            setState(() {
+              _loading = false;
+            });
           }
-
-          Navigator.of(context).pushReplacementNamed("/homePage",
-              arguments: HomePageArguments(user: user));
-        } else {
-          _showToast("Usuario o Contraseña Incorrecta", "red", "error");
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
+              'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
+              'Error!'));
           setState(() {
             _loading = false;
           });
@@ -239,9 +228,6 @@ class _loguin_pageState extends State<loguin_page> {
     }
   }
 
-  void _showForgetPassword_page(BuildContext context) {
-    Navigator.of(context).pushNamed("/lostPassword_page");
-  }
 
   _showToast(String messege, String color, String icon) {
     Widget toast = Container(
@@ -270,20 +256,37 @@ class _loguin_pageState extends State<loguin_page> {
     );
   }
 
-  Future<void> preferences() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    var email = preferences.getString("email");
-    var password = preferences.getString("password");
-    Map<String, dynamic> credentials = {"email": email, "password": password};
-    if (email != null && password != null) {
-      var user = await userProvider.getUser(credentials);
-      _showToast("Ya ha iniciado sesión", "green", "ok");
-
-      Navigator.of(context).pushReplacementNamed("/homePage",
-          arguments: HomePageArguments(user: user));
-    } else {
-      return;
+  Future<void> openUserPreferences(context) async {
+    try {
+      WidgetsFlutterBinding.ensureInitialized();
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      var email = preferences.getString("email");
+      var password = preferences.getString("password");
+      Map<String, dynamic> credentials = {"email": email, "password": password};
+      if (email != null && password != null) {
+        user = await userProvider.getUser(credentials);
+        _showToast("Ya ha iniciado sesión", "green", "ok");
+        print(user);
+        Future.delayed(const Duration(seconds: 4), () {
+          if (mounted) {
+            setState(() {
+              _loadingFirst = false;
+            });
+          }
+        });
+        Navigator.of(context).pushReplacementNamed("/homePage");
+      } else {
+        setState(() {
+          _loadingFirst = false;
+        });
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
+          'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
+          'Error!'));
+      setState(() {
+        _loadingFirst = true;
+      });
     }
   }
 }
