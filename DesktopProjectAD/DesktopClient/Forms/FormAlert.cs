@@ -24,7 +24,6 @@ namespace DesktopClient.Forms
             this.msg = msg;
             this.isTimeNotification = isTimeNotification;
         }
-
         private void SetTypeNotification(enmType type)
         {
             switch (type)
