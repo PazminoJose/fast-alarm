@@ -11,6 +11,7 @@ namespace DesktopClient.Utils
         //Errors:
         public const string CONECCTION_ERROR = "Error de conexión, revise su red";
         public const string CREDENTIAL_ERROR = "Correo o Contraseña Incorrectos";
+        public const string USER_TYPE_ERROR = "El usuario debe ser administrador";
 
         // Map
         public const double INITIAL_LATITUDE = -1.3460634739251633;
@@ -23,5 +24,8 @@ namespace DesktopClient.Utils
         public const string COMPANIES = "LOCALIZACIÓN SUCURSALES";
         public const string NOTIFICATIONS = "HISTORIAL DE NOTIFICACIONES";
         public const string USERS = "USUARIOS";
+
+        //ALERT
+        public const string DELETE_BRANCH = "¿Esta seguro que desea eliminar la sucursal? Si existen usuarios asignados a esta sucursal tendrá que reasignarlos manualmente después";
     }
 }

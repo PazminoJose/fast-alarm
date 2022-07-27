@@ -27,9 +27,9 @@ D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Business\bi
 D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Business\bin\Debug\System.Threading.Tasks.Extensions.xml
 D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Business\bin\Debug\System.ValueTuple.xml
 D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Business\bin\Debug\RestSharp.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Business\bin\Debug\Newtonsoft.Json.xml
 D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Business\obj\Debug\Business.csproj.AssemblyReference.cache
 D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Business\obj\Debug\Business.csproj.CoreCompileInputs.cache
 D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Business\obj\Debug\Business.csproj.CopyComplete
 D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Business\obj\Debug\Business.dll
 D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Business\obj\Debug\Business.pdb
-D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\Business\bin\Debug\Newtonsoft.Json.xml

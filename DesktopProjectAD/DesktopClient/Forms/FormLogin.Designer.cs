@@ -73,7 +73,7 @@ namespace DesktopClient.Forms
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 471);
             this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(100, 0, 100, 0);
+            this.panel2.Padding = new System.Windows.Forms.Padding(80, 0, 80, 0);
             this.panel2.Size = new System.Drawing.Size(521, 283);
             this.panel2.TabIndex = 3;
             // 
@@ -86,9 +86,9 @@ namespace DesktopClient.Forms
             this.panel3.Controls.Add(this.textBoxEmail);
             this.panel3.Controls.Add(this.label1);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(100, 0);
+            this.panel3.Location = new System.Drawing.Point(80, 0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(321, 283);
+            this.panel3.Size = new System.Drawing.Size(361, 283);
             this.panel3.TabIndex = 0;
             // 
             // labelError
@@ -109,7 +109,7 @@ namespace DesktopClient.Forms
             this.buttonLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(39)))), ((int)(((byte)(58)))));
             this.buttonLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonLogin.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.buttonLogin.Location = new System.Drawing.Point(89, 204);
+            this.buttonLogin.Location = new System.Drawing.Point(109, 204);
             this.buttonLogin.Name = "buttonLogin";
             this.buttonLogin.Size = new System.Drawing.Size(139, 57);
             this.buttonLogin.TabIndex = 8;

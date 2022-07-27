@@ -140,6 +140,8 @@ namespace DesktopClient.Forms
         
             CompanyButton btn = (CompanyButton)sender;
             LoadCompany(btn);
+            if (btn.company.state.Equals("normal")) this.buttonDisableAlarm.Visible = false;
+            else this.buttonDisableAlarm.Visible = true;
 
         }
         private void LoadCompany(CompanyButton btn)
@@ -148,7 +150,6 @@ namespace DesktopClient.Forms
             SetFormData(btn.company);
             UnlockFormCompanyOnCompanySelected();
             company = btn.company;
-            if (!company.state.Equals("normal")) this.buttonDisableAlarm.Visible = true;
             gMapControl.Zoom = Constants.MAP_ZOOM;
             gMapControl.Position = new PointLatLng(btn.company.latitude, btn.company.longitude);
         }
@@ -265,7 +266,7 @@ namespace DesktopClient.Forms
         }
         private void DeleteCompany()
         {
-            if (MessageBox.Show("¿Esta seguro que desea eliminar la sucursal? Si existen usuarios asignados a esta sucursal tendrá que reasignarlos manualmente después", "Confirmar", MessageBoxButtons.OKCancel).Equals(DialogResult.OK))
+            if (MessageBox.Show(Constants.DELETE_BRANCH, "Confirmar", MessageBoxButtons.OKCancel).Equals(DialogResult.OK))
             {
                 CompanyBusiness.Delete(this.company.id);
             }

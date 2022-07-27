@@ -29,6 +29,11 @@ namespace DesktopClient.Forms
                 this.showError(Constants.CREDENTIAL_ERROR);
                 return false;
             }
+            if (!user.user_type.Equals("admin"))
+            {
+                this.showError(Constants.USER_TYPE_ERROR);
+                return false;
+            }
             Session.actualUser = user;
             return true;
 
