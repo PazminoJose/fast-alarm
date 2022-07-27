@@ -38,6 +38,7 @@ namespace DesktopClient.Forms
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
+            this.labelError = new System.Windows.Forms.Label();
             this.buttonSearch = new System.Windows.Forms.PictureBox();
             this.buttonDisableAlarm = new System.Windows.Forms.Button();
             this.buttonDelete = new System.Windows.Forms.Button();
@@ -52,7 +53,6 @@ namespace DesktopClient.Forms
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
-            this.labelError = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
@@ -190,6 +190,18 @@ namespace DesktopClient.Forms
             this.panel7.Size = new System.Drawing.Size(404, 648);
             this.panel7.TabIndex = 0;
             // 
+            // labelError
+            // 
+            this.labelError.AutoSize = true;
+            this.labelError.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelError.ForeColor = System.Drawing.Color.Crimson;
+            this.labelError.Location = new System.Drawing.Point(3, 295);
+            this.labelError.Name = "labelError";
+            this.labelError.Size = new System.Drawing.Size(52, 17);
+            this.labelError.TabIndex = 26;
+            this.labelError.Text = "label6";
+            this.labelError.Visible = false;
+            // 
             // buttonSearch
             // 
             this.buttonSearch.BackColor = System.Drawing.Color.WhiteSmoke;
@@ -220,7 +232,7 @@ namespace DesktopClient.Forms
             // buttonDelete
             // 
             this.buttonDelete.BackColor = System.Drawing.Color.Crimson;
-            this.buttonDelete.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonDelete.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonDelete.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.buttonDelete.Location = new System.Drawing.Point(58, 503);
@@ -235,7 +247,7 @@ namespace DesktopClient.Forms
             // buttonSave
             // 
             this.buttonSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(61)))), ((int)(((byte)(132)))), ((int)(((byte)(194)))));
-            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSave.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.buttonSave.Location = new System.Drawing.Point(58, 426);
@@ -249,7 +261,7 @@ namespace DesktopClient.Forms
             // buttonEdit
             // 
             this.buttonEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(77)))), ((int)(((byte)(186)))), ((int)(((byte)(217)))));
-            this.buttonEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonEdit.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonEdit.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonEdit.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.buttonEdit.Location = new System.Drawing.Point(235, 349);
@@ -301,7 +313,7 @@ namespace DesktopClient.Forms
             // buttonNew
             // 
             this.buttonNew.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(83)))), ((int)(((byte)(172)))), ((int)(((byte)(82)))));
-            this.buttonNew.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonNew.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonNew.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonNew.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.buttonNew.Location = new System.Drawing.Point(58, 349);
@@ -352,18 +364,6 @@ namespace DesktopClient.Forms
             this.label2.TabIndex = 0;
             this.label2.Text = "INFORMACIÓN";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // labelError
-            // 
-            this.labelError.AutoSize = true;
-            this.labelError.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelError.ForeColor = System.Drawing.Color.Crimson;
-            this.labelError.Location = new System.Drawing.Point(3, 295);
-            this.labelError.Name = "labelError";
-            this.labelError.Size = new System.Drawing.Size(52, 17);
-            this.labelError.TabIndex = 26;
-            this.labelError.Text = "label6";
-            this.labelError.Visible = false;
             // 
             // FormCompaniesLocation
             // 
