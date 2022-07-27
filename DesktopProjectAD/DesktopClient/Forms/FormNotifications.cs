@@ -40,13 +40,14 @@ namespace DesktopClient.Forms
 
         private void LoadNotification()
         {
-            this.notifications = Helpers.ToDataTable(NotificationBusiness.GetAll());
+            List<NotificationEntity> notifications = NotificationBusiness.GetAll();
+            if(notifications!=null) this.notifications = Helpers.ToDataTable(notifications);
             this.dataGridViewNotifications.DataSource = this.notifications;
         }
 
         private void dateTimePickerFilter_ValueChanged(object sender, EventArgs e)
         {
-      
+            if (this.notifications == null) return;
             notifications.DefaultView.RowFilter = String.Format("Date LIKE '%{0}/{1}/{2}%' ", ((DateTimePicker)sender).Value.Day, ((DateTimePicker)sender).Value.Month, ((DateTimePicker)sender).Value.Year);
 
         }

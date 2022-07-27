@@ -61,7 +61,8 @@ namespace DesktopClient.Forms
         {
             this.dataGridViewUsers.ReadOnly = true;
             this.dataGridViewUsers.AllowUserToAddRows = false;
-            this.usersTable = Helpers.ToDataTable(UserBusiness.GetAll());
+            List<UserEntity> users = UserBusiness.GetAll();
+            if(users!=null) this.usersTable = Helpers.ToDataTable(users);
             this.dataGridViewUsers.DataSource = usersTable;
 
         }
@@ -103,7 +104,8 @@ namespace DesktopClient.Forms
         }
         private void textBoxSearchUser_TextChanged(object sender, EventArgs e)
         {
-            this.usersTable.DefaultView.RowFilter = $"Name LIKE '%{textBoxSearchUser.Text}%' OR Surname LIKE '%{textBoxSearchUser.Text}%'";
+            if (this.usersTable == null) return;
+            this.usersTable.DefaultView.RowFilter = $"Name LIKE '%{textBoxSearchUser.Text}%' OR Surname LIKE '%{textBoxSearchUser.Text}%' OR Email LIKE '%{textBoxSearchUser.Text}%' OR USER_TYPE LIKE '%{textBoxSearchUser.Text}%'";
         }
         private void buttonNew_Click(object sender, EventArgs e)
         {
@@ -135,6 +137,7 @@ namespace DesktopClient.Forms
             this.user.name = textBoxName.Text;
             this.user.surname = textBoxSurname.Text;
             this.user.email = textBoxEmail.Text;
+            if (comboBoxCompany.SelectedValue == null) return;
             this.user.company = CompanyBusiness.GetById(comboBoxCompany.SelectedValue.ToString());
             this.user.password = (this.isEditing && !textBoxPassword.Text.Equals("")) ? textBoxPassword.Text : null;
             this.user.user_type = (radioButtonUser.Checked) ? "user" : "admin";

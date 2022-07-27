@@ -56,6 +56,7 @@ namespace DesktopClient.Forms
         {
             gMapControl.Overlays.Clear();
             List<CompanyEntity> companies = CompanyBusiness.GetAll();
+            if (companies == null) return;
             // Set total markers
             totalMarkers = companies.Count();
             // 1. Create overlay
@@ -88,6 +89,7 @@ namespace DesktopClient.Forms
         private void AddMarkerOnMap(PointLatLng point)
         {
             // Removing old marker 
+            if (markers == null) return;
             if (markers.Markers.Count() > totalMarkers) markers.Markers.RemoveAt(markers.Markers.Count() - 1);
             // Clear Markers in the map overlay
             gMapControl.Overlays.Clear();
@@ -111,10 +113,12 @@ namespace DesktopClient.Forms
             posX = 0;
             posY = 0;
             CompanyButton btn = null;
+            if (markers == null) return;
             foreach (var marker in markers.Markers)
             {
 
                 btn = ((CompanyMarker)marker).btn;
+                if (btn == null) return;
                 // Set btton size
                 btn.Size = new Size(width, height);
                 // Set button text
@@ -268,7 +272,7 @@ namespace DesktopClient.Forms
         {
             if (MessageBox.Show(Constants.DELETE_BRANCH, "Confirmar", MessageBoxButtons.OKCancel).Equals(DialogResult.OK))
             {
-                CompanyBusiness.Delete(this.company.id);
+                if (CompanyBusiness.Delete(this.company.id)) Helpers.Alert("Compania eliminada exitosamente", FormAlert.enmType.success, true);
             }
         }
         private void EditCompany()
@@ -294,6 +298,7 @@ namespace DesktopClient.Forms
             this.company.name = textBoxName.Text;
             this.company.contact = textBoxContact.Text;
             this.company.address = textBoxAdress.Text;
+            if (markers == null) return;
             CompanyMarker marker = (CompanyMarker)markers.Markers.Last();
             if( markers.Markers.Count() > totalMarkers)
             {
@@ -302,7 +307,7 @@ namespace DesktopClient.Forms
             }
             this.company.state = "normal";
             this.company.headOffice = (this.company.id == Session.actualUser.company.id) ? null : Session.actualUser.company;
-            CompanyBusiness.Save(company);
+            if (CompanyBusiness.Save(company) == null) return;
             if (this.company.id == null) Helpers.Alert("Compania guardada exitosamente", FormAlert.enmType.success, true);
             else Helpers.Alert("Compania editada exitosamente", FormAlert.enmType.success, true);
         }
