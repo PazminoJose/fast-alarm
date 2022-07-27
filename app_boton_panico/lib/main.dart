@@ -33,14 +33,14 @@ class MyApp extends StatelessWidget {
           return MaterialPageRoute(builder: (BuildContext context) {
             switch (settings.name) {
               case "/":
-                return loguin_page();
+                return LoginPage();
                 break;
               case "/homePage":
                 // ignore: prefer_const_constructors
                 return MyHomePage();
                 break;
               default:
-                loguin_page();
+                LoginPage();
             }
           });
         },

@@ -7,12 +7,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_boton_panico/src/components/snackbars.dart';
 
-class loguin_page extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  State<loguin_page> createState() => _loguin_pageState();
+  State<LoginPage> createState() => LoginPageState();
 }
 
-class _loguin_pageState extends State<loguin_page> {
+class LoginPageState extends State<LoginPage> {
   FToast fToast;
   var user = User();
   bool _loading = false;
@@ -25,8 +25,6 @@ class _loguin_pageState extends State<loguin_page> {
   String emailValue = "";
   String passwordValue = "";
   final formKey = GlobalKey<FormState>();
-  TextEditingController em = TextEditingController();
-  TextEditingController pass = TextEditingController();
   var userProvider;
 
   @override
@@ -88,7 +86,7 @@ class _loguin_pageState extends State<loguin_page> {
                             onSaved: (value) => {emailValue = value},
                             validator: (value) {
                               if (value.isEmpty || value == null) {
-                                return "Ingrese su Correo electronico";
+                                return "Ingrese su correo electronico";
                               }
                               return null;
                             },
@@ -117,7 +115,7 @@ class _loguin_pageState extends State<loguin_page> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text("Iniciar sesión"),
+                                  Text("Iniciar Sesión"),
                                   if (_loading)
                                     Container(
                                       width: 20,

@@ -11,7 +11,6 @@ import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
-//import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 
 import '../models/entities.dart';
 
@@ -59,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   //crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Envio de alerta de Incidente",
+                    const Text("Envío de alerta de Incidente",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -89,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               UserAccountsDrawerHeader(
                 accountEmail: Text(user.email),
-                accountName: Text(user.name),
+                accountName: Text("${user.name} ${user.surname}"),
                 currentAccountPicture: GestureDetector(
                   child: Image.asset("assets/image/account.png"),
                 ),
@@ -190,7 +189,7 @@ Future<List<String>> getDevices(playerId) async {
       listPlayers.add(userEntry["id"].toString());
     }
   }
-  listPlayers.remove(playerId);
+  //listPlayers.remove(playerId);
   return listPlayers;
 }
 
@@ -216,6 +215,7 @@ Future<void> initPlatform(context) async {
     }
   });
 
+  //SUBSCRIPCION A ONE SIGNAL PARA RECIBIR Y ENVIAR NOTIFICACIONES
   var init =
       await OneSignal.shared.setAppId('9fd9a40d-8646-450c-bd3b-d661b0e8ee42');
 
@@ -224,13 +224,4 @@ Future<void> initPlatform(context) async {
       .then((value) => {print(value?.userId)});
 }
 
-Future<bool> getLocation() async {
-  Location location = Location();
-  location.requestPermission().then((value) => print(value));
 
-  if (await location.hasPermission() == PermissionStatus.granted) {
-    return true;
-  } else {
-    return false;
-  }
-}
