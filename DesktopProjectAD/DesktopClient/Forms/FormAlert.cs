@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DesktopClient.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,11 +13,38 @@ namespace DesktopClient.Forms
 {
     public partial class FormAlert : Form
     {
+        public static FormAlert.enmType type;
         private int x, y;
-        public FormAlert()
+        public string msg { get; set; }
+        public bool isTimeNotification { get; set; }
+        public FormAlert(string msg, enmType type, bool isTimeNotification)
         {
             InitializeComponent();
-           
+            SetTypeNotification(type);
+            this.msg = msg;
+            this.isTimeNotification = isTimeNotification;
+        }
+
+        private void SetTypeNotification(enmType type)
+        {
+            switch (type)
+            {
+                case enmType.success:
+                    this.BackColor = ThemeColor.success;
+                    this.pictureBox1.Image = Properties.Resources.success;
+                    break;
+                case enmType.error:
+                    this.BackColor = ThemeColor.error;
+                    this.pictureBox1.Image = Properties.Resources.warning;
+                    break;
+                default:
+                    break;
+            }
+        }
+        public enum enmType
+        {
+            success,
+            error
         }
         public enum enmActions
         {
@@ -31,8 +59,9 @@ namespace DesktopClient.Forms
             switch (this.action)
             {
                 case enmActions.wait:
-                    //timerMessage.Interval = 50000;
-                    //action = enmActions.close;
+                    if (!isTimeNotification) break;
+                    timerMessage.Interval = 5000;
+                    action = enmActions.close;
                     break;
                 case enmActions.start:
                     timerMessage.Interval = 1;
@@ -66,7 +95,7 @@ namespace DesktopClient.Forms
             timerMessage.Interval = 1;
             this.action = enmActions.close;
         }
-        public void ShowAlert(string msg)
+        public void ShowAlert()
         {
             this.Opacity = 0.0;
             this.StartPosition = FormStartPosition.Manual;
@@ -85,7 +114,7 @@ namespace DesktopClient.Forms
                 }
             }
             this.x = Screen.PrimaryScreen.WorkingArea.Width - base.Width - 5;
-            labelMessage.Text = msg;
+            labelMessage.Text = this.msg;
             this.Show();
             this.action = enmActions.start;
             timerMessage.Interval = 1;

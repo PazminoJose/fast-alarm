@@ -46,6 +46,10 @@ namespace Entities
         {
 
         }
+        public override string ToString()
+        {
+            return String.Format("{0} {1}",this.name,this.surname);
+        }
 
     }
     public class UserCredentials

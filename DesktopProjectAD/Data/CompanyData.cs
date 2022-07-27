@@ -13,7 +13,7 @@ namespace Data
 {
     public class CompanyData
     {
-        private static string URL = String.Format("{0}/api/company", Properties.Settings.Default.URL_API);
+        private static string URL = $"{Properties.Settings.Default.URL_API}/api/company";
 
         public static List<CompanyEntity> GetAll()
         {
@@ -87,7 +87,7 @@ namespace Data
             try
             {
                 RestClient client = new RestClient(URL);
-                RestRequest request = new RestRequest("/{id}", Method.GET);
+                RestRequest request = new RestRequest("/{id}");
                 request.AddUrlSegment("id", id);
 
                 return client.Get<CompanyEntity>(request).Data;

@@ -29,8 +29,10 @@ namespace DesktopClient.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonEdit = new System.Windows.Forms.Button();
             this.radioButtonAdmin = new System.Windows.Forms.RadioButton();
             this.radioButtonUser = new System.Windows.Forms.RadioButton();
             this.labelError = new System.Windows.Forms.Label();
@@ -73,6 +75,7 @@ namespace DesktopClient.Forms
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.buttonEdit);
             this.groupBox1.Controls.Add(this.radioButtonAdmin);
             this.groupBox1.Controls.Add(this.radioButtonUser);
             this.groupBox1.Controls.Add(this.labelError);
@@ -98,7 +101,19 @@ namespace DesktopClient.Forms
             this.groupBox1.Size = new System.Drawing.Size(340, 819);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "DATOS";
+            this.groupBox1.Text = "INFORMACIÓN";
+            // 
+            // buttonEdit
+            // 
+            this.buttonEdit.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonEdit.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonEdit.Location = new System.Drawing.Point(200, 600);
+            this.buttonEdit.Name = "buttonEdit";
+            this.buttonEdit.Size = new System.Drawing.Size(131, 53);
+            this.buttonEdit.TabIndex = 37;
+            this.buttonEdit.Text = "Editar";
+            this.buttonEdit.UseVisualStyleBackColor = true;
+            this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
             // 
             // radioButtonAdmin
             // 
@@ -139,9 +154,9 @@ namespace DesktopClient.Forms
             // 
             this.buttonDelete.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonDelete.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonDelete.Location = new System.Drawing.Point(202, 600);
+            this.buttonDelete.Location = new System.Drawing.Point(11, 760);
             this.buttonDelete.Name = "buttonDelete";
-            this.buttonDelete.Size = new System.Drawing.Size(131, 53);
+            this.buttonDelete.Size = new System.Drawing.Size(320, 53);
             this.buttonDelete.TabIndex = 33;
             this.buttonDelete.Text = "Eliminar";
             this.buttonDelete.UseVisualStyleBackColor = true;
@@ -171,7 +186,7 @@ namespace DesktopClient.Forms
             // 
             this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.buttonSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSave.Location = new System.Drawing.Point(11, 675);
+            this.buttonSave.Location = new System.Drawing.Point(11, 680);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(322, 53);
             this.buttonSave.TabIndex = 29;
@@ -220,6 +235,7 @@ namespace DesktopClient.Forms
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.Size = new System.Drawing.Size(322, 22);
             this.textBoxPassword.TabIndex = 23;
+            this.textBoxPassword.TextChanged += new System.EventHandler(this.textBoxPassword_TextChanged);
             // 
             // label5
             // 
@@ -321,6 +337,8 @@ namespace DesktopClient.Forms
             // 
             // dataGridViewUsers
             // 
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.Black;
+            this.dataGridViewUsers.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridViewUsers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewUsers.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -377,5 +395,6 @@ namespace DesktopClient.Forms
         private System.Windows.Forms.RadioButton radioButtonUser;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.DataGridView dataGridViewUsers;
+        private System.Windows.Forms.Button buttonEdit;
     }
 }

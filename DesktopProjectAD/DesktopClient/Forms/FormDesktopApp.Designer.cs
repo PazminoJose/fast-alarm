@@ -29,26 +29,37 @@ namespace DesktopClient.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormDesktopApp));
             this.panel4 = new System.Windows.Forms.Panel();
+            this.buttonNotifications = new System.Windows.Forms.Button();
+            this.buttonUsers = new System.Windows.Forms.Button();
+            this.buttonCompanies = new System.Windows.Forms.Button();
             this.panel6 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.panelContent = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.buttonCompanies = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.labelTitle = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.buttonLogout = new System.Windows.Forms.Button();
+            this.panelContent = new System.Windows.Forms.Panel();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.labelUserName = new System.Windows.Forms.Label();
             this.panel4.SuspendLayout();
             this.panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.panel3.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel4
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(82)))));
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel4.Controls.Add(this.button2);
-            this.panel4.Controls.Add(this.button1);
+            this.panel4.Controls.Add(this.buttonNotifications);
+            this.panel4.Controls.Add(this.buttonUsers);
             this.panel4.Controls.Add(this.buttonCompanies);
             this.panel4.Controls.Add(this.panel6);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Left;
@@ -56,6 +67,63 @@ namespace DesktopClient.Forms
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(249, 892);
             this.panel4.TabIndex = 12;
+            // 
+            // buttonNotifications
+            // 
+            this.buttonNotifications.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonNotifications.FlatAppearance.BorderSize = 0;
+            this.buttonNotifications.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonNotifications.Font = new System.Drawing.Font("Microsoft Tai Le", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonNotifications.ForeColor = System.Drawing.Color.Gainsboro;
+            this.buttonNotifications.Image = global::DesktopClient.Properties.Resources.notification;
+            this.buttonNotifications.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonNotifications.Location = new System.Drawing.Point(0, 252);
+            this.buttonNotifications.Name = "buttonNotifications";
+            this.buttonNotifications.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.buttonNotifications.Size = new System.Drawing.Size(245, 86);
+            this.buttonNotifications.TabIndex = 3;
+            this.buttonNotifications.Text = "NOTIFICACIONES";
+            this.buttonNotifications.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.buttonNotifications.UseVisualStyleBackColor = true;
+            this.buttonNotifications.Click += new System.EventHandler(this.buttonNotifications_Click);
+            // 
+            // buttonUsers
+            // 
+            this.buttonUsers.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonUsers.FlatAppearance.BorderSize = 0;
+            this.buttonUsers.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonUsers.Font = new System.Drawing.Font("Microsoft Tai Le", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonUsers.ForeColor = System.Drawing.Color.Gainsboro;
+            this.buttonUsers.Image = global::DesktopClient.Properties.Resources.clients;
+            this.buttonUsers.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonUsers.Location = new System.Drawing.Point(0, 166);
+            this.buttonUsers.Name = "buttonUsers";
+            this.buttonUsers.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.buttonUsers.Size = new System.Drawing.Size(245, 86);
+            this.buttonUsers.TabIndex = 2;
+            this.buttonUsers.Text = "   USUARIOS";
+            this.buttonUsers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.buttonUsers.UseVisualStyleBackColor = true;
+            this.buttonUsers.Click += new System.EventHandler(this.buttonUsers_Click);
+            // 
+            // buttonCompanies
+            // 
+            this.buttonCompanies.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonCompanies.FlatAppearance.BorderSize = 0;
+            this.buttonCompanies.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonCompanies.Font = new System.Drawing.Font("Microsoft Tai Le", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonCompanies.ForeColor = System.Drawing.Color.Gainsboro;
+            this.buttonCompanies.Image = global::DesktopClient.Properties.Resources.branchLocation;
+            this.buttonCompanies.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.buttonCompanies.Location = new System.Drawing.Point(0, 80);
+            this.buttonCompanies.Name = "buttonCompanies";
+            this.buttonCompanies.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
+            this.buttonCompanies.Size = new System.Drawing.Size(245, 86);
+            this.buttonCompanies.TabIndex = 1;
+            this.buttonCompanies.Text = "   SUCURSALES";
+            this.buttonCompanies.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.buttonCompanies.UseVisualStyleBackColor = true;
+            this.buttonCompanies.Click += new System.EventHandler(this.buttonCompanies_Click);
             // 
             // panel6
             // 
@@ -79,82 +147,6 @@ namespace DesktopClient.Forms
             this.label1.TabIndex = 1;
             this.label1.Text = "FAST \r\nALARM";
             // 
-            // panel3
-            // 
-            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(150)))), ((int)(((byte)(136)))));
-            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel3.Location = new System.Drawing.Point(249, 0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1509, 80);
-            this.panel3.TabIndex = 13;
-            // 
-            // panelContent
-            // 
-            this.panelContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(76)))));
-            this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelContent.Location = new System.Drawing.Point(249, 80);
-            this.panelContent.Name = "panelContent";
-            this.panelContent.Padding = new System.Windows.Forms.Padding(0, 0, 0, 30);
-            this.panelContent.Size = new System.Drawing.Size(1509, 812);
-            this.panelContent.TabIndex = 14;
-            // 
-            // button2
-            // 
-            this.button2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Microsoft Tai Le", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.ForeColor = System.Drawing.Color.Gainsboro;
-            this.button2.Image = global::DesktopClient.Properties.Resources.notification;
-            this.button2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button2.Location = new System.Drawing.Point(0, 252);
-            this.button2.Name = "button2";
-            this.button2.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
-            this.button2.Size = new System.Drawing.Size(245, 86);
-            this.button2.TabIndex = 3;
-            this.button2.Text = "NOTIFICACIONES";
-            this.button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Microsoft Tai Le", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.ForeColor = System.Drawing.Color.Gainsboro;
-            this.button1.Image = global::DesktopClient.Properties.Resources.clients;
-            this.button1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.button1.Location = new System.Drawing.Point(0, 166);
-            this.button1.Name = "button1";
-            this.button1.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
-            this.button1.Size = new System.Drawing.Size(245, 86);
-            this.button1.TabIndex = 2;
-            this.button1.Text = "   USUARIOS";
-            this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // buttonCompanies
-            // 
-            this.buttonCompanies.Dock = System.Windows.Forms.DockStyle.Top;
-            this.buttonCompanies.FlatAppearance.BorderSize = 0;
-            this.buttonCompanies.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonCompanies.Font = new System.Drawing.Font("Microsoft Tai Le", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonCompanies.ForeColor = System.Drawing.Color.Gainsboro;
-            this.buttonCompanies.Image = global::DesktopClient.Properties.Resources.branchLocation;
-            this.buttonCompanies.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonCompanies.Location = new System.Drawing.Point(0, 80);
-            this.buttonCompanies.Name = "buttonCompanies";
-            this.buttonCompanies.Padding = new System.Windows.Forms.Padding(30, 0, 0, 0);
-            this.buttonCompanies.Size = new System.Drawing.Size(245, 86);
-            this.buttonCompanies.TabIndex = 1;
-            this.buttonCompanies.Text = "   SUCURSALES";
-            this.buttonCompanies.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.buttonCompanies.UseVisualStyleBackColor = true;
-            this.buttonCompanies.Click += new System.EventHandler(this.buttonCompanies_Click);
-            // 
             // pictureBox1
             // 
             this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Left;
@@ -166,6 +158,95 @@ namespace DesktopClient.Forms
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(150)))), ((int)(((byte)(136)))));
+            this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel3.Controls.Add(this.panel2);
+            this.panel3.Controls.Add(this.panel1);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel3.Location = new System.Drawing.Point(249, 0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(1509, 80);
+            this.panel3.TabIndex = 13;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.labelTitle);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1126, 76);
+            this.panel2.TabIndex = 2;
+            // 
+            // labelTitle
+            // 
+            this.labelTitle.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 13F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTitle.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.labelTitle.Location = new System.Drawing.Point(0, 0);
+            this.labelTitle.Name = "labelTitle";
+            this.labelTitle.Size = new System.Drawing.Size(1126, 76);
+            this.labelTitle.TabIndex = 0;
+            this.labelTitle.Text = "label2";
+            this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.panel5);
+            this.panel1.Controls.Add(this.buttonLogout);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel1.Location = new System.Drawing.Point(1126, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(379, 76);
+            this.panel1.TabIndex = 1;
+            // 
+            // buttonLogout
+            // 
+            this.buttonLogout.Dock = System.Windows.Forms.DockStyle.Right;
+            this.buttonLogout.FlatAppearance.BorderSize = 0;
+            this.buttonLogout.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonLogout.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonLogout.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.buttonLogout.Location = new System.Drawing.Point(210, 0);
+            this.buttonLogout.Name = "buttonLogout";
+            this.buttonLogout.Size = new System.Drawing.Size(169, 76);
+            this.buttonLogout.TabIndex = 1;
+            this.buttonLogout.Text = "CERRAR SESIÓN";
+            this.buttonLogout.UseVisualStyleBackColor = true;
+            this.buttonLogout.Click += new System.EventHandler(this.buttonLogout_Click);
+            // 
+            // panelContent
+            // 
+            this.panelContent.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(56)))), ((int)(((byte)(56)))), ((int)(((byte)(76)))));
+            this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelContent.Location = new System.Drawing.Point(249, 80);
+            this.panelContent.Name = "panelContent";
+            this.panelContent.Padding = new System.Windows.Forms.Padding(0, 0, 0, 30);
+            this.panelContent.Size = new System.Drawing.Size(1509, 812);
+            this.panelContent.TabIndex = 14;
+            // 
+            // panel5
+            // 
+            this.panel5.Controls.Add(this.labelUserName);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(210, 76);
+            this.panel5.TabIndex = 2;
+            // 
+            // labelUserName
+            // 
+            this.labelUserName.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelUserName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelUserName.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.labelUserName.Location = new System.Drawing.Point(0, 0);
+            this.labelUserName.Name = "labelUserName";
+            this.labelUserName.Size = new System.Drawing.Size(210, 76);
+            this.labelUserName.TabIndex = 0;
+            this.labelUserName.Text = "label2";
+            this.labelUserName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // FormDesktopApp
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -174,13 +255,18 @@ namespace DesktopClient.Forms
             this.Controls.Add(this.panelContent);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel4);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormDesktopApp";
-            this.Text = "FormDesktopApp";
+            this.Text = "Fast Alarm";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.panel4.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.panel3.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -193,7 +279,13 @@ namespace DesktopClient.Forms
         private System.Windows.Forms.Panel panelContent;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button buttonUsers;
+        private System.Windows.Forms.Button buttonNotifications;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label labelTitle;
+        private System.Windows.Forms.Button buttonLogout;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Label labelUserName;
     }
 }

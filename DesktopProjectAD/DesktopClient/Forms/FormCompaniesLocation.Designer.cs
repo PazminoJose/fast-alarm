@@ -38,13 +38,13 @@ namespace DesktopClient.Forms
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel6 = new System.Windows.Forms.Panel();
             this.panel7 = new System.Windows.Forms.Panel();
+            this.buttonSearch = new System.Windows.Forms.PictureBox();
             this.buttonDisableAlarm = new System.Windows.Forms.Button();
             this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonSave = new System.Windows.Forms.Button();
             this.buttonEdit = new System.Windows.Forms.Button();
             this.label5 = new System.Windows.Forms.Label();
             this.textBoxContact = new System.Windows.Forms.TextBox();
-            this.buttonSearch = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxAdress = new System.Windows.Forms.TextBox();
             this.buttonNew = new System.Windows.Forms.Button();
@@ -52,12 +52,14 @@ namespace DesktopClient.Forms
             this.textBoxName = new System.Windows.Forms.TextBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label2 = new System.Windows.Forms.Label();
+            this.labelError = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel6.SuspendLayout();
             this.panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonSearch)).BeginInit();
             this.panel5.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -169,13 +171,14 @@ namespace DesktopClient.Forms
             // 
             // panel7
             // 
+            this.panel7.Controls.Add(this.labelError);
+            this.panel7.Controls.Add(this.buttonSearch);
             this.panel7.Controls.Add(this.buttonDisableAlarm);
             this.panel7.Controls.Add(this.buttonDelete);
             this.panel7.Controls.Add(this.buttonSave);
             this.panel7.Controls.Add(this.buttonEdit);
             this.panel7.Controls.Add(this.label5);
             this.panel7.Controls.Add(this.textBoxContact);
-            this.panel7.Controls.Add(this.buttonSearch);
             this.panel7.Controls.Add(this.label3);
             this.panel7.Controls.Add(this.textBoxAdress);
             this.panel7.Controls.Add(this.buttonNew);
@@ -187,14 +190,31 @@ namespace DesktopClient.Forms
             this.panel7.Size = new System.Drawing.Size(404, 648);
             this.panel7.TabIndex = 0;
             // 
+            // buttonSearch
+            // 
+            this.buttonSearch.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.buttonSearch.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.buttonSearch.Image = global::DesktopClient.Properties.Resources.search;
+            this.buttonSearch.Location = new System.Drawing.Point(326, 237);
+            this.buttonSearch.Name = "buttonSearch";
+            this.buttonSearch.Size = new System.Drawing.Size(45, 34);
+            this.buttonSearch.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.buttonSearch.TabIndex = 25;
+            this.buttonSearch.TabStop = false;
+            this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
+            // 
             // buttonDisableAlarm
             // 
+            this.buttonDisableAlarm.BackColor = System.Drawing.Color.Firebrick;
+            this.buttonDisableAlarm.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.buttonDisableAlarm.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonDisableAlarm.ForeColor = System.Drawing.Color.WhiteSmoke;
             this.buttonDisableAlarm.Location = new System.Drawing.Point(58, 593);
             this.buttonDisableAlarm.Name = "buttonDisableAlarm";
             this.buttonDisableAlarm.Size = new System.Drawing.Size(277, 52);
             this.buttonDisableAlarm.TabIndex = 24;
             this.buttonDisableAlarm.Text = "DESACTIVAR ALARMA";
-            this.buttonDisableAlarm.UseVisualStyleBackColor = true;
+            this.buttonDisableAlarm.UseVisualStyleBackColor = false;
             this.buttonDisableAlarm.Click += new System.EventHandler(this.buttonDisableAlarm_Click);
             // 
             // buttonDelete
@@ -259,18 +279,6 @@ namespace DesktopClient.Forms
             this.textBoxContact.Name = "textBoxContact";
             this.textBoxContact.Size = new System.Drawing.Size(395, 22);
             this.textBoxContact.TabIndex = 17;
-            // 
-            // buttonSearch
-            // 
-            this.buttonSearch.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.buttonSearch.Image = global::DesktopClient.Properties.Resources.search;
-            this.buttonSearch.Location = new System.Drawing.Point(325, 239);
-            this.buttonSearch.Name = "buttonSearch";
-            this.buttonSearch.Padding = new System.Windows.Forms.Padding(30);
-            this.buttonSearch.Size = new System.Drawing.Size(43, 34);
-            this.buttonSearch.TabIndex = 16;
-            this.buttonSearch.UseVisualStyleBackColor = true;
-            this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
             // 
             // label3
             // 
@@ -345,6 +353,18 @@ namespace DesktopClient.Forms
             this.label2.Text = "INFORMACIÓN";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // labelError
+            // 
+            this.labelError.AutoSize = true;
+            this.labelError.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelError.ForeColor = System.Drawing.Color.Crimson;
+            this.labelError.Location = new System.Drawing.Point(3, 295);
+            this.labelError.Name = "labelError";
+            this.labelError.Size = new System.Drawing.Size(52, 17);
+            this.labelError.TabIndex = 26;
+            this.labelError.Text = "label6";
+            this.labelError.Visible = false;
+            // 
             // FormCompaniesLocation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -363,6 +383,7 @@ namespace DesktopClient.Forms
             this.panel6.ResumeLayout(false);
             this.panel7.ResumeLayout(false);
             this.panel7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.buttonSearch)).EndInit();
             this.panel5.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -383,7 +404,6 @@ namespace DesktopClient.Forms
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.Button buttonNew;
         private System.Windows.Forms.TextBox textBoxName;
-        private System.Windows.Forms.Button buttonSearch;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxAdress;
         private System.Windows.Forms.Label label4;
@@ -393,5 +413,7 @@ namespace DesktopClient.Forms
         private System.Windows.Forms.Button buttonDelete;
         private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.Button buttonDisableAlarm;
+        private System.Windows.Forms.PictureBox buttonSearch;
+        private System.Windows.Forms.Label labelError;
     }
 }

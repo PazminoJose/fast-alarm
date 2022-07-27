@@ -33,8 +33,8 @@ namespace DesktopClient.Forms
             this.panel1 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.labelError = new System.Windows.Forms.Label();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.labelError = new System.Windows.Forms.Label();
             this.buttonLogin = new System.Windows.Forms.Button();
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -77,18 +77,6 @@ namespace DesktopClient.Forms
             this.panel2.Size = new System.Drawing.Size(521, 283);
             this.panel2.TabIndex = 3;
             // 
-            // labelError
-            // 
-            this.labelError.AutoSize = true;
-            this.labelError.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelError.ForeColor = System.Drawing.Color.Crimson;
-            this.labelError.Location = new System.Drawing.Point(3, 167);
-            this.labelError.Name = "labelError";
-            this.labelError.Size = new System.Drawing.Size(59, 20);
-            this.labelError.TabIndex = 1;
-            this.labelError.Text = "label3";
-            this.labelError.Visible = false;
-            // 
             // panel3
             // 
             this.panel3.Controls.Add(this.labelError);
@@ -102,6 +90,18 @@ namespace DesktopClient.Forms
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(321, 283);
             this.panel3.TabIndex = 0;
+            // 
+            // labelError
+            // 
+            this.labelError.AutoSize = true;
+            this.labelError.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelError.ForeColor = System.Drawing.Color.Crimson;
+            this.labelError.Location = new System.Drawing.Point(3, 167);
+            this.labelError.Name = "labelError";
+            this.labelError.Size = new System.Drawing.Size(59, 20);
+            this.labelError.TabIndex = 1;
+            this.labelError.Text = "label3";
+            this.labelError.Visible = false;
             // 
             // buttonLogin
             // 
@@ -171,7 +171,7 @@ namespace DesktopClient.Forms
             this.MinimizeBox = false;
             this.Name = "FormLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Login";
+            this.Text = "Fats Alarm - Login";
             this.panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel2.ResumeLayout(false);

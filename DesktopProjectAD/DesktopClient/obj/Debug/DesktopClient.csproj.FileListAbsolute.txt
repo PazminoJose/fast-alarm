@@ -69,3 +69,8 @@ D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClie
 D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.exe
 D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.pdb
 D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormUsers.resources
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormNotifications.resources
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\DesktopClient.exe.manifest
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\DesktopClient.application
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.exe.manifest
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.application

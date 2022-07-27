@@ -1,4 +1,5 @@
 ﻿using DesktopClient.Classess;
+using DesktopClient.Utils;
 using SocketIOClient;
 using System;
 using System.Collections.Generic;
@@ -20,7 +21,9 @@ namespace DesktopClient.Forms
         {
             InitializeComponent();
             OpenChildForm(new FormCompaniesLocation());
+            this.labelTitle.Text = Constants.COMPANIES;
             Task task = this.GetNotificationAsync();
+            this.labelUserName.Text = $"{Session.actualUser.name} {Session.actualUser.surname}";
         }
 
 
@@ -46,7 +49,7 @@ namespace DesktopClient.Forms
             {
                 string msg = response.GetValue<string>();
                     this.Invoke(new Action(() => {
-                        Notification.Alert(msg);
+                        Helpers.Alert(msg,FormAlert.enmType.error,false);
                     }));       
             });
 
@@ -57,12 +60,28 @@ namespace DesktopClient.Forms
 
         private void buttonCompanies_Click(object sender, EventArgs e)
         {
+            this.labelTitle.Text = Constants.COMPANIES;
             OpenChildForm(new FormCompaniesLocation());
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonUsers_Click(object sender, EventArgs e)
         {
+            this.labelTitle.Text = Constants.USERS;
             OpenChildForm(new FormUsers());
+        }
+
+        private void buttonNotifications_Click(object sender, EventArgs e)
+        {
+            this.labelTitle.Text = Constants.NOTIFICATIONS;
+            OpenChildForm(new FormNotifications());
+        }
+
+        private void buttonLogout_Click(object sender, EventArgs e)
+        {
+            Session.actualUser = null;
+            FormLogin fm = new FormLogin();
+            fm.Show();
+            this.Dispose();
         }
     }
 }

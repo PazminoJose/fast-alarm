@@ -18,5 +18,10 @@ namespace DesktopClient.Utils
         public const int MAX_ZOOM = 18;
         public const int MIN_ZOOM = 7;
         public const int MAP_ZOOM = 13;
+
+        //TITLE
+        public const string COMPANIES = "LOCALIZACIÓN SUCURSALES";
+        public const string NOTIFICATIONS = "HISTORIAL DE NOTIFICACIONES";
+        public const string USERS = "USUARIOS";
     }
 }

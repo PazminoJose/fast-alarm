@@ -12,6 +12,7 @@ namespace DesktopClient.Forms
         public FormLogin()
         {
             InitializeComponent();
+            SetPasswordTextBox();
         }
         private bool Login()
         {
@@ -48,6 +49,11 @@ namespace DesktopClient.Forms
         {
             this.labelError.Visible = true;
             this.labelError.Text = msg;
+        }
+        private void SetPasswordTextBox()
+        {
+            textBoxPassword.PasswordChar = '*';
+            textBoxPassword.MaxLength = 8;
         }
 
     }

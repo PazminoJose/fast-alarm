@@ -16,6 +16,8 @@ namespace DesktopClient.Utils
         public static Color buttonSave = Color.FromArgb(61, 132, 194);
         public static Color buttonDelete = Color.Crimson; 
         public static Color error = Color.Crimson;
+        public static Color black = Color.Black;
+        public static Color success = Color.FromArgb(50, 205, 50);
 
     }
 }

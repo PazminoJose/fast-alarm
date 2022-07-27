@@ -28,11 +28,7 @@ namespace Entities
 
         [JsonProperty("longitude")]
         public double longitude { get; set; }
-
-        [JsonProperty("__v")]
-        public long v { get; set; }
-
-        
+     
         public CompanyEntity()
         {
 

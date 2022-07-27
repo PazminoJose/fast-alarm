@@ -12,7 +12,7 @@ namespace Data
 {
     public class UserData
     {
-        private static string URL = String.Format("{0}/api/user", Properties.Settings.Default.URL_API);
+        private static string URL = $"{Properties.Settings.Default.URL_API}/api/user";
         public static UserEntity Login(UserCredentials credentials)
         {
             try

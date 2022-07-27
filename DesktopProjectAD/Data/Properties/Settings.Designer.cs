@@ -25,7 +25,7 @@ namespace Data.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:3000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://server-panic-button-ad.herokuapp.com")]
         public string URL_API {
             get {
                 return ((string)(this["URL_API"]));

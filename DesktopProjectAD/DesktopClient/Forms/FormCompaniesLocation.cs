@@ -190,6 +190,7 @@ namespace DesktopClient.Forms
             buttonEdit.Enabled = false;
             buttonSave.Enabled = true;
             buttonDelete.Enabled = true;
+            isCompanyFormActive = true;
         }
         private void UnlockFormCompanyOnCompanySelected()
         {
@@ -201,6 +202,7 @@ namespace DesktopClient.Forms
             buttonEdit.Enabled = true;
             buttonSave.Enabled = false;
             buttonDelete.Enabled = true;
+            isCompanyFormActive = false;
         }
         private void UnlockFormCompanyNew()
         {
@@ -219,6 +221,7 @@ namespace DesktopClient.Forms
             textBoxName.Text = "";
             textBoxContact.Text = "";
             textBoxAdress.Text = "";
+            this.labelError.Visible = false;
         }
 
         // Buttons
@@ -239,6 +242,7 @@ namespace DesktopClient.Forms
         {
             UnlockFormCompanyNew();
             ClearFormCompany();
+            this.company = null;
         }
         private void buttonEdit_Click(object sender, EventArgs e)
         {
@@ -247,18 +251,24 @@ namespace DesktopClient.Forms
         }
         private void buttonSave_Click(object sender, EventArgs e)
         {
+            if (!Validate()) return;
             SaveCompany();
             LoadMarkers();
             LoadCompanyButtons();
-            BlockFormCompany();
+            UnlockFormCompanyOnCompanySelected();
         }
         private void buttonDelete_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("¿Esta seguro que desea eliminar la sucursal?", "Confirmar", MessageBoxButtons.OKCancel).Equals(DialogResult.OK))
+            this.DeleteCompany();
+            this.LoadMarkers();
+            this.LoadCompanyButtons();
+        }
+        private void DeleteCompany()
+        {
+            if (MessageBox.Show("¿Esta seguro que desea eliminar la sucursal? Si existen usuarios asignados a esta sucursal tendrá que reasignarlos manualmente después", "Confirmar", MessageBoxButtons.OKCancel).Equals(DialogResult.OK))
             {
                 CompanyBusiness.Delete(this.company.id);
             }
-
         }
         private void EditCompany()
         {
@@ -279,20 +289,42 @@ namespace DesktopClient.Forms
         }
         private void SaveCompany()
         {
-            string name = textBoxName.Text;
-            string contact = textBoxContact.Text;
-            string adress = textBoxAdress.Text;
+            if (this.company == null) this.company = new CompanyEntity();
+            this.company.name = textBoxName.Text;
+            this.company.contact = textBoxContact.Text;
+            this.company.address = textBoxAdress.Text;
             CompanyMarker marker = (CompanyMarker)markers.Markers.Last();
-            this.company = new CompanyEntity(null, Session.actualUser.company, name, adress, contact,"normal", (float)marker.Position.Lat, (float)marker.Position.Lng);
+            if( markers.Markers.Count() > totalMarkers)
+            {
+                this.company.latitude = (float)marker.Position.Lat;
+                this.company.longitude = (float)marker.Position.Lng;
+            }
+            this.company.state = "normal";
+            this.company.headOffice = (this.company.id == Session.actualUser.company.id) ? null : Session.actualUser.company;
             CompanyBusiness.Save(company);
+            if (this.company.id == null) Helpers.Alert("Compania guardada exitosamente", FormAlert.enmType.success, true);
+            else Helpers.Alert("Compania editada exitosamente", FormAlert.enmType.success, true);
+        }
+        private bool Validate()
+        {
+            string msg = "";
+            if (textBoxAdress.Text.Equals("")) msg = "La dirección es obligatoria";
+            if (textBoxContact.Text.Equals("")) msg = "El contacto es obligatorio";
+            if (textBoxName.Text.Equals("")) msg = "El nombre es obligatorio";
+            if (!msg.Equals(""))
+            {
+                this.labelError.Visible = true;
+                this.labelError.Text = msg;
+                return false;
+            }
+            return true;
 
         }
- 
         // Notification
         public  async Task GetNotificationAsync()
         {
      
-            var client = new SocketIO("http://localhost:3000");
+            var client = new SocketIO(Properties.Settings.Default.URL_API);
 
             client.On("alert", (response) =>
             {
@@ -338,6 +370,8 @@ namespace DesktopClient.Forms
 
             this.DisableAlarm();
         }
+
+    
     }
 
 }
