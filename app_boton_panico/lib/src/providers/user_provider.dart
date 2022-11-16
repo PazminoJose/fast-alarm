@@ -3,7 +3,7 @@ import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:flutter/material.dart';
 
 class UserProvider extends ChangeNotifier {
-  var user;
+  var user=User();
 
   Future<User> getUser(credentials) async {
     if (user != null) {

@@ -30,4 +30,29 @@ class UserServices {
       throw Failure("Bad response format");
     }
   }
+
+  Future<User> saveUser(User user) async {
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
+    };
+    var url = Uri.http(Environments.url, Environments.getUser);
+    try {
+      final response =
+          await http.post(url, headers: headers, body: userToJson(user));      
+      if (response.statusCode == 200) {
+        final decoded = await json.decode(response.body);
+        user = userFromJson(decoded);
+        return user;
+      } else {
+        return null;
+      }
+    } on SocketException {
+      throw Failure("Error SocketExpetion");
+    } on HttpException {
+      throw Failure("Couldn't find the post");
+    } on FormatException {
+      throw Failure("Bad response format");
+    }
+  }
+
 }

@@ -14,8 +14,7 @@ class NotificationServices {
     var url = Uri.http(Environments.url, Environments.postNotification);
 
     try {
-      final response =
-          await http.post(url, headers: headers, body: jsonEncode(data));
+      await http.post(url, headers: headers, body: jsonEncode(data));
     } on SocketException {
       throw Failure("Error de socketExpetion");
     } on HttpException {

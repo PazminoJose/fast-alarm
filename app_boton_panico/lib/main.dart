@@ -1,6 +1,7 @@
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/login_page.dart';
 import 'package:app_boton_panico/src/screens/my_home_page.dart';
+import 'package:app_boton_panico/src/screens/register_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -38,6 +39,9 @@ class MyApp extends StatelessWidget {
               case "/homePage":
                 // ignore: prefer_const_constructors
                 return MyHomePage();
+                break;
+              case "/register":
+                return RegisterPage();
                 break;
               default:
                 LoginPage();

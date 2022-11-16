@@ -5,9 +5,10 @@ import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/services/notification_services.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
-import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
@@ -25,11 +26,14 @@ var serviceNotification = NotificationServices();
 
 class _MyHomePageState extends State<MyHomePage> {
   User user;
+  String _currentAddress;
+  Position _currentPosition;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
-  Future<void> initState() {
+  Future<void> initState() async {
     super.initState();
     initPlatform(context);
+    _handleLocationPermission(context);
   }
 
   @override
@@ -67,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         splashColor: Colors.white,
                         onLongPress: () {
                           Timer(
-                              Duration(seconds: 3), (_handleSendNotification));
+                              const Duration(seconds: 3), (_handleSendNotification));
                         },
                         child: const Image(
                           image: AssetImage("assets/image/sos.png"),
@@ -101,10 +105,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   title: const Text("Cerrar Sesión"),
                   trailing: const Icon(Icons.exit_to_app_rounded),
                   onTap: () => _cerrarSesion(context)),
-              Divider(),
+              const Divider(),
               ListTile(
-                title: Text("Cancel"),
-                trailing: Icon(Icons.cancel),
+                title: const Text("Cancel"),
+                trailing: const Icon(Icons.cancel),
                 onTap: () => Navigator.pop(context),
               ),
             ],
@@ -112,18 +116,71 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
+  Future<bool> _handleLocationPermission(context) async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Los servicos de localización estan deshabilitados, Por favor habilite lo servicios')));
+      return false;
+    }
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Permisos de loxalización han sido denegados.')));
+        return false;
+      }
+    }
+    if (permission == LocationPermission.deniedForever) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Los permisos de localización están permanentemente denegados, no podemos solicitar permisos.')));
+      return false;
+    }
+    return true;
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await _handleLocationPermission(context);
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      _currentPosition = position;
+      _getAddressFromLatLng(_currentPosition);
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
+  Future<void> _getAddressFromLatLng(Position position) async {
+    await placemarkFromCoordinates(position.latitude, position.longitude)
+        .then((List<Placemark> placemarks) {
+      Placemark place = placemarks[0];
+      _currentAddress =
+          '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}';
+    }).catchError((e) {
+      debugPrint(e);
+    });
+  }
+
   void _handleSendNotification() async {
     try {
       //CORDENADAS DE DONDE OCURRE EL INCIDENTE PARA ENVIO DE NOTIFICACION PUSH
+      await _getCurrentPosition();
       Map<String, dynamic> cordinates = {
-        "longitude": user.company.longitude,
-        "latitude": user.company.latitude
+        "longitude": _currentPosition.longitude,
+        "latitude": _currentPosition.latitude
       };
 
       //CREACION Y ENVIO DE NOTIFICACION PUSH A LOS USUASRIOS ACTIVOS
       var imgUrlString =
           "https://www.cloudways.com/blog/wp-content/uploads/MapPress-Easy-Google-Map-Plugin.jpg";
-      var content = "Ha ocurrido un incidente en ${user.company.name}";
+      var content = "Ha ocurrido un incidente en $_currentAddress";
       var listPlayers = await getDevices(await getIdDevice());
       var notification = OSCreateNotification(
         additionalData: cordinates,
@@ -150,11 +207,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> postNotificationBD() async {
     //CUERPO DE PETICION POST PARA GUARDAR LA NOTIFICACION EN LA BASE DE DATOS
-    var sucursal = user.company.name;
     var contentNotificationPostServer = NotificationEntity(
-        date: DateTime.now(),
-        message: "Ha ocurrido un incidente en $sucursal",
-        user: user.id);
+        user: user.id,
+        message: "Ha ocurrido un incidente en $_currentAddress",
+        latitude: _currentPosition.latitude,
+        longitude: _currentPosition.longitude);
 
     await serviceNotification
         .postNotfication(contentNotificationPostServer.toJson());
@@ -216,12 +273,9 @@ Future<void> initPlatform(context) async {
   });
 
   //SUBSCRIPCION A ONE SIGNAL PARA RECIBIR Y ENVIAR NOTIFICACIONES
-  var init =
-      await OneSignal.shared.setAppId('9fd9a40d-8646-450c-bd3b-d661b0e8ee42');
+  await OneSignal.shared.setAppId('9fd9a40d-8646-450c-bd3b-d661b0e8ee42');
 
   await OneSignal.shared
       .getDeviceState()
       .then((value) => {print(value?.userId)});
 }
-
-

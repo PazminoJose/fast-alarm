@@ -1,5 +1,3 @@
-//     final user = userFromJson(jsonString);
-
 import 'dart:convert';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
@@ -15,115 +13,71 @@ String notificationToJson(NotificationEntity data) =>
 class User {
   User({
     this.id,
-    this.company,
     this.name,
     this.surname,
+    this.idCard,
     this.email,
     this.password,
     this.userType,
   });
 
   String id;
-  Company company;
   String name;
   String surname;
+  String idCard;
   String email;
   String password;
   String userType;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["_id"],
-        company: Company.fromJson(json["company"]),
         name: json["name"],
         surname: json["surname"],
+        idCard: json["idCard"],
         email: json["email"],
         password: json["password"],
-        userType: json["user_type"],
+        userType: json["userType"],
       );
 
   Map<String, dynamic> toJson() => {
-        "_id": id,
-        "company": company.toJson(),
         "name": name,
         "surname": surname,
+        "idCard": idCard,
         "email": email,
         "password": password,
-        "user_type": userType,
+        "userType": userType,
       };
 }
 
-class Company {
-  Company({
-    this.id,
-    this.headOffice,
-    this.name,
-    this.address,
-    this.contact,
-    this.state,
-    this.latitude,
-    this.longitude,
-  });
-
-  String id;
-  dynamic headOffice;
-  String name;
-  String address;
-  String contact;
-  String state;
-  double latitude;
-  double longitude;
-
-  factory Company.fromJson(Map<String, dynamic> json) => Company(
-        id: json["_id"],
-        headOffice: json["headOffice"],
-        name: json["name"],
-        address: json["address"],
-        contact: json["contact"],
-        state: json["state"],
-        latitude: json["latitude"].toDouble(),
-        longitude: json["longitude"].toDouble(),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "_id": id,
-        "headOffice": headOffice,
-        "name": name,
-        "address": address,
-        "contact": contact,
-        "state": state,
-        "latitude": latitude,
-        "longitude": longitude,
-      };
-}
 
 class NotificationEntity {
-  NotificationEntity({
-    this.id,
-    this.user,
-    this.message,
-    this.date,
-  });
+    NotificationEntity({
+        this.user,
+        this.message,
+        this.latitude,
+        this.longitude,
+    });
 
-  String id;
-  String user;
-  String message;
-  DateTime date;
+    String user;
+    String message;
+    double latitude;
+    double longitude;
 
-  factory NotificationEntity.fromJson(Map<String, dynamic> json) =>
-      NotificationEntity(
-        id: json["_id"],
+    factory NotificationEntity.fromJson(Map<String, dynamic> json) => NotificationEntity(
         user: json["user"],
         message: json["message"],
-        date: DateTime.parse(json["date"]),
-      );
+        latitude: json["latitude"].toDouble(),
+        longitude: json["longitude"].toDouble(),
+    );
 
-  Map<String, dynamic> toJson() => {
-        "_id": id,
+    Map<String, dynamic> toJson() => {
         "user": user,
         "message": message,
-        "date": date.toIso8601String(),
-      };
+        "latitude": latitude,
+        "longitude": longitude,
+    };
 }
+
 
 class Failure {
   // Use something like "int code;" if you want to translate error messages

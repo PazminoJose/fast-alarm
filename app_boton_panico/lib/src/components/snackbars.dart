@@ -46,6 +46,18 @@ class MySnackBars {
       xlarge: false,
     ),
   );
+  static successSaveSnackBar(String message, String title) => SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: title,
+          message: message,
+          contentType: ContentType.success,
+          isDesktop: false,
+          xlarge: false,
+        ),
+      );
 
   /// warning
   static var warningSnackBar = SnackBar(

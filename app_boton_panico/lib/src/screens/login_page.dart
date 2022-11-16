@@ -1,3 +1,4 @@
+import 'package:app_boton_panico/src/components/toasts.dart';
 import 'package:app_boton_panico/src/models/entities.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +33,7 @@ class LoginPageState extends State<LoginPage> {
     super.initState();
     _loadingFirst = true;
     openUserPreferences(context);
-    fToast = FToast();
+
     fToast.init(context);
   }
 
@@ -45,7 +46,7 @@ class LoginPageState extends State<LoginPage> {
       body: Stack(children: [
         Container(
           width: double.infinity,
-          padding: EdgeInsets.symmetric(vertical: 60),
+          padding: const EdgeInsets.symmetric(vertical: 60),
           decoration: const BoxDecoration(
             gradient: LinearGradient(colors: [
               Color.fromRGBO(0, 150, 136, 1),
@@ -58,7 +59,7 @@ class LoginPageState extends State<LoginPage> {
           ),
         ),
         Transform.translate(
-          offset: Offset(0, -50),
+          offset: const Offset(0, -50),
           child: Center(
             child: SingleChildScrollView(
               child: Card(
@@ -106,7 +107,7 @@ class LoginPageState extends State<LoginPage> {
                               return null;
                             },
                           ),
-                          SizedBox(height: 30),
+                          const SizedBox(height: 30),
                           ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 padding:
@@ -115,7 +116,7 @@ class LoginPageState extends State<LoginPage> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text("Iniciar Sesión"),
+                                  const Text("Iniciar Sesión"),
                                   if (_loading)
                                     Container(
                                       width: 20,
@@ -142,7 +143,8 @@ class LoginPageState extends State<LoginPage> {
                           Row(
                             children: [
                               const Text("Guardar Sesión"),
-                              Padding(padding: EdgeInsets.only(right: 15)),
+                              const Padding(
+                                  padding: EdgeInsets.only(right: 15)),
                               Switch(
                                   value: isSwitched,
                                   onChanged: (value) {
@@ -152,6 +154,18 @@ class LoginPageState extends State<LoginPage> {
                                   }),
                             ],
                           ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text("¿No estas registrado?"),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushNamed("/register");
+                                  },
+                                  child: const Text("Registrarse"))
+                            ],
+                          )
                         ]),
                       ),
                     ],
@@ -180,7 +194,7 @@ class LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _showHomePage(BuildContext context, usuario, password) async {
+  void _showHomePage(context, usuario, password) async {
     if (formKey.currentState.validate()) {
       Map<String, dynamic> credentials = {
         "email": usuario,
@@ -226,34 +240,6 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-
-  _showToast(String messege, String color, String icon) {
-    Widget toast = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25.0),
-        color: (color == "red") ? Colors.red : Colors.green,
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon((icon == "error") ? Icons.error : Icons.key_outlined),
-          const SizedBox(
-            width: 12.0,
-          ),
-          Text(messege),
-        ],
-      ),
-    );
-
-    fToast.showToast(
-      child: toast,
-      gravity: ToastGravity.BOTTOM,
-      toastDuration: const Duration(seconds: 3),
-      fadeDuration: 1000,
-    );
-  }
-
   Future<void> openUserPreferences(context) async {
     try {
       WidgetsFlutterBinding.ensureInitialized();
@@ -263,7 +249,7 @@ class LoginPageState extends State<LoginPage> {
       Map<String, dynamic> credentials = {"email": email, "password": password};
       if (email != null && password != null) {
         user = await userProvider.getUser(credentials);
-        _showToast("Ya ha iniciado sesión", "green", "ok");
+        MyToast.showToast("Ya ha iniciado sesión", "green", "ok", context);
         print(user);
         Future.delayed(const Duration(seconds: 4), () {
           if (mounted) {
