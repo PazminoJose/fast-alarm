@@ -159,6 +159,10 @@ class LoginPageState extends State<LoginPage> {
                             children: [
                               const Text("¿No estas registrado?"),
                               TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: TextStyle(
+                                        color: Theme.of(context).primaryColor),
+                                  ),
                                   onPressed: () {
                                     Navigator.of(context)
                                         .pushNamed("/register");
