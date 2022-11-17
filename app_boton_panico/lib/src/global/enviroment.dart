@@ -1,5 +1,5 @@
 class Environments {
-  static String url = "server-panic-button-ad.herokuapp.com";
+  static String url = "137.184.70.22";
   static String postSendNotificationPushAllDevices =
       "/api/SendNotificationAllDevices";
   static String postNotification = "/api/notification";

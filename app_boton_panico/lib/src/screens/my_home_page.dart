@@ -30,7 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Position _currentPosition;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
-  Future<void> initState() async {
+  void initState()  {
     super.initState();
     initPlatform(context);
     _handleLocationPermission(context);
@@ -91,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListView(
             children: <Widget>[
               UserAccountsDrawerHeader(
-                accountEmail: Text(user.email),
+                accountEmail: Text("${user.email}\n${user.idCard}"),
                 accountName: Text("${user.name} ${user.surname}"),
                 currentAccountPicture: GestureDetector(
                   child: Image.asset("assets/image/account.png"),
