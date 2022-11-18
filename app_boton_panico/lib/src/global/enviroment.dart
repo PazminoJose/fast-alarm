@@ -4,5 +4,6 @@ class Environments {
       "/api/SendNotificationAllDevices";
   static String postNotification = "/api/notification";
   static String getUser = "/api/user/login";
+  static String postUser = "/api/user/";
   static String getDevices = "/api/GetDevices";
 }

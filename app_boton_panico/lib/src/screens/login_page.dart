@@ -25,6 +25,7 @@ class LoginPageState extends State<LoginPage> {
 
   String emailValue = "";
   String passwordValue = "";
+  String textButtonSesion = "Iniciar Sesión";
   final formKey = GlobalKey<FormState>();
   var userProvider;
 
@@ -32,6 +33,7 @@ class LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     _loadingFirst = true;
+    openUserPreferences(context);
   }
 
   @override
@@ -39,173 +41,162 @@ class LoginPageState extends State<LoginPage> {
     userProvider = Provider.of<UserProvider>(context, listen: false);
 
     // ignore: prefer_const_constructors
-    return FutureBuilder(
-      future: openUserPreferences(context),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
-          // Future hasn't finished yet, return a placeholder
-
-        }
-        return Scaffold(
-          body: Stack(children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 60),
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(colors: [
-                  Color.fromRGBO(0, 150, 136, 1),
-                  Color.fromRGBO(56, 56, 76, 1),
-                ]),
-              ),
-              child: Image.asset(
-                "assets/image/fast_alert_logo.png",
-                height: 170,
-              ),
-            ),
-            Transform.translate(
-              offset: const Offset(0, -50),
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Card(
-                    elevation: 5.0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    margin: const EdgeInsets.only(
-                        left: 20, right: 20, top: 260, bottom: 20),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 35, vertical: 20),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Form(
-                            key: formKey,
-                            child: Column(children: [
-                              TextFormField(
-                                keyboardType: TextInputType.emailAddress,
-                                controller: email,
-                                decoration: const InputDecoration(
-                                  prefixIcon: Icon(Icons.email),
-                                  label: Text("Email"),
-                                ),
-                                onSaved: (value) => {emailValue = value},
-                                validator: (value) {
-                                  if (value.isEmpty || value == null) {
-                                    return "Ingrese su correo electronico";
-                                  }
-                                  return null;
-                                },
+    return Scaffold(
+      body: Stack(children: [
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 60),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Color.fromRGBO(0, 150, 136, 1),
+              Color.fromRGBO(56, 56, 76, 1),
+            ]),
+          ),
+          child: Image.asset(
+            "assets/image/fast_alert_logo.png",
+            height: 170,
+          ),
+        ),
+        Transform.translate(
+          offset: const Offset(0, -50),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Card(
+                elevation: 5.0,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)),
+                margin: const EdgeInsets.only(
+                    left: 20, right: 20, top: 260, bottom: 20),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Form(
+                        key: formKey,
+                        child: Column(children: [
+                          TextFormField(
+                            keyboardType: TextInputType.emailAddress,
+                            controller: email,
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.email),
+                              label: Text("Email"),
+                            ),
+                            onSaved: (value) => {emailValue = value},
+                            validator: (value) {
+                              if (value.isEmpty || value == null) {
+                                return "Ingrese su correo electronico";
+                              }
+                              return null;
+                            },
+                          ),
+                          TextFormField(
+                            obscureText: true,
+                            controller: password,
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(Icons.lock_person),
+                              label: Text("Contraseña"),
+                            ),
+                            onSaved: (value) => {passwordValue = value},
+                            validator: (value) {
+                              if (value.isEmpty || value == null) {
+                                return "Ingrese su contraseña";
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 30),
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
                               ),
-                              TextFormField(
-                                obscureText: true,
-                                controller: password,
-                                decoration: const InputDecoration(
-                                  prefixIcon: Icon(Icons.lock_person),
-                                  label: Text("Contraseña"),
-                                ),
-                                onSaved: (value) => {passwordValue = value},
-                                validator: (value) {
-                                  if (value.isEmpty || value == null) {
-                                    return "Ingrese su contraseña";
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 30),
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 15),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text("Iniciar Sesión"),
-                                      if (_loading)
-                                        Container(
-                                          width: 20,
-                                          height: 20,
-                                          margin: const EdgeInsets.only(
-                                            left: 20,
-                                          ),
-                                          child:
-                                              const CircularProgressIndicator(
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                    ],
-                                  ),
-                                  onPressed: () {
-                                    emailValue = email.text;
-                                    passwordValue = password.text;
-
-                                    _showHomePage(
-                                        context, emailValue, passwordValue);
-                                  }),
-                              const SizedBox(
-                                height: 15,
-                              ),
-                              Row(
-                                children: [
-                                  const Text("Guardar Sesión"),
-                                  const Padding(
-                                      padding: EdgeInsets.only(right: 15)),
-                                  Switch(
-                                      value: isSwitched,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          isSwitched = value;
-                                        });
-                                      }),
-                                ],
-                              ),
-                              Row(
+                              child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Text("¿No estas registrado?"),
-                                  TextButton(
-                                      style: TextButton.styleFrom(
-                                        textStyle: TextStyle(
-                                            color:
-                                                Theme.of(context).primaryColor),
+                                  Text(textButtonSesion),
+                                  if (_loading)
+                                    Container(
+                                      width: 20,
+                                      height: 20,
+                                      margin: const EdgeInsets.only(
+                                        left: 20,
                                       ),
-                                      onPressed: () {
-                                        Navigator.of(context)
-                                            .pushNamed("/register");
-                                      },
-                                      child: const Text(
-                                        "Registrate",
-                                        style: TextStyle(color: Colors.blue),
-                                      ))
+                                      child: const CircularProgressIndicator(
+                                        color: Colors.white,
+                                      ),
+                                    )
                                 ],
-                              )
-                            ]),
+                              ),
+                              onPressed: () {
+                                emailValue = email.text;
+                                passwordValue = password.text;
+
+                                _showHomePage(
+                                    context, emailValue, passwordValue);
+                              }),
+                          const SizedBox(
+                            height: 15,
                           ),
-                        ],
+                          Row(
+                            children: [
+                              const Text("Guardar Sesión"),
+                              const Padding(
+                                  padding: EdgeInsets.only(right: 15)),
+                              Switch(
+                                  value: isSwitched,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      isSwitched = value;
+                                    });
+                                  }),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text("¿No estas registrado?"),
+                              TextButton(
+                                  style: TextButton.styleFrom(
+                                    textStyle: TextStyle(
+                                        color: Theme.of(context).primaryColor),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .pushNamed("/register");
+                                  },
+                                  child: const Text(
+                                    "Registrate",
+                                    style: TextStyle(color: Colors.blue),
+                                  ))
+                            ],
+                          )
+                        ]),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ),
             ),
-            if (_loadingFirst)
-              Container(
-                width: double.infinity,
-                height: double.infinity,
-                decoration:
-                    const BoxDecoration(color: Color.fromRGBO(56, 56, 76, 1)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    CircularProgressIndicator(
-                      color: Colors.black,
-                    ),
-                  ],
+          ),
+        ),
+        if (_loadingFirst)
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration:
+                const BoxDecoration(color: Color.fromRGBO(56, 56, 76, 1)),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const [
+                CircularProgressIndicator(
+                  color: Colors.black,
                 ),
-              ),
-          ]),
-        );
-      },
+              ],
+            ),
+          ),
+      ]),
     );
   }
 
@@ -216,11 +207,13 @@ class LoginPageState extends State<LoginPage> {
         "email": usuario,
         "password": password
       };
+
       print(credentials);
 
       if (!_loading) {
         setState(() {
           _loading = true;
+          textButtonSesion = "Iniciando";
         });
         try {
           user = await userProvider.getUser(credentials);
@@ -241,6 +234,7 @@ class LoginPageState extends State<LoginPage> {
             //_showToast("Usuario o Contraseña Incorrecta", "red", "error");
             setState(() {
               _loading = false;
+              textButtonSesion = "Iniciar Sesión";
             });
           }
         } catch (e) {
@@ -249,6 +243,7 @@ class LoginPageState extends State<LoginPage> {
               'Error!'));
           setState(() {
             _loading = false;
+            textButtonSesion = "Iniciar Sesión";
           });
         }
       }
@@ -264,7 +259,25 @@ class LoginPageState extends State<LoginPage> {
       Map<String, dynamic> credentials = {"email": email, "password": password};
       if (email != null && password != null) {
         user = await userProvider.getUser(credentials);
-        MyToast.showToast("Ya ha iniciado sesión", "green", "ok", context);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          elevation: 15,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
+          backgroundColor: Colors.green,
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: const [
+              Icon(
+                Icons.key_outlined,
+                color: Colors.white,
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Text(' Ya ha iniciado sesión'),
+            ],
+          ),
+        ));
         print(user);
         Future.delayed(const Duration(seconds: 4), () {
           if (mounted) {
@@ -280,9 +293,9 @@ class LoginPageState extends State<LoginPage> {
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
-          'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
-          'Error!'));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+              'Los permisos de localización están permanentemente denegados, no podemos solicitar permisos.')));
       setState(() {
         _loadingFirst = true;
       });

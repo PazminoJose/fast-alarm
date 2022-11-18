@@ -40,7 +40,7 @@ class _RegisterPageState extends State<RegisterPage> {
           Center(
             child: SizedBox(
               child: Card(
-                semanticContainer: true,
+                semanticContainer: false,
                 elevation: 5.0,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
@@ -144,11 +144,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                   height: 10,
                                 ),
                                 TextFormField(
-                                  keyboardType: TextInputType.visiblePassword,
-                                  //obscureText: true,
-                                  //controller: password,
+                                  obscureText: true,
                                   decoration: const InputDecoration(
-                                    prefixIcon: Icon(Icons.lock_person_outlined),
+                                    prefixIcon:
+                                        Icon(Icons.lock_person_outlined),
                                     label: Text("Contraseña"),
                                   ),
                                   onSaved: (value) => {password = value},
@@ -161,35 +160,32 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ]),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 0),
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                elevation: 10,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Text("Registrarse"),
-                                  if (_loading)
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      margin: const EdgeInsets.only(
-                                        left: 20,
-                                      ),
-                                      child: const CircularProgressIndicator(
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                ],
-                              ),
-                              onPressed: () {
-                                _showHomePage(context);
-                              }),
-                        ),
+                        const SizedBox(height: 30),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 10,
+                              padding: const EdgeInsets.symmetric(vertical: 15),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text("Registrarse"),
+                                if (_loading)
+                                  Container(
+                                    width: 20,
+                                    height: 20,
+                                    margin: const EdgeInsets.only(
+                                      left: 20,
+                                    ),
+                                    child: const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  )
+                              ],
+                            ),
+                            onPressed: () {
+                              _showHomePage(context);
+                            }),
                       ],
                     ),
                   ),
@@ -210,8 +206,7 @@ class _RegisterPageState extends State<RegisterPage> {
           _loading = false;
         });
         print(Validators.isValidateIdCard(idCard));
-        User user = User(
-            id: "",
+        User user = User(        
             name: name,
             surname: suranme,
             idCard: idCard,
@@ -220,8 +215,24 @@ class _RegisterPageState extends State<RegisterPage> {
             userType: "user");
         user = await serviceUser.saveUser(user);
         if (user == null) {
-          MyToast.showToast(
-              "Error al ingresar el Usuario", "red", "error", context);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            elevation: 15,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
+            backgroundColor: Colors.red[400],
+            content: Row(
+              children: const [
+                Icon(
+                  Icons.clear_outlined,
+                  color: Colors.white,
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(' Error al ingresar el Usuario'),
+              ],
+            ),
+          ));
           return;
         }
         Navigator.of(context).pushReplacementNamed("/");

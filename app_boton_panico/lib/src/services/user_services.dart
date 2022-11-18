@@ -35,12 +35,12 @@ class UserServices {
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
     };
-    var url = Uri.http(Environments.url, Environments.getUser);
+    var url = Uri.http(Environments.url, Environments.postUser);
     try {
       final response =
           await http.post(url, headers: headers, body: userToJson(user));      
       if (response.statusCode == 200) {
-        final decoded = await json.decode(response.body);
+        var decoded = await json.decode(json.encode(response.body));
         user = userFromJson(decoded);
         return user;
       } else {
