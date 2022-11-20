@@ -14,7 +14,7 @@ class UserServices {
     try {
       final response =
           await http.post(url, headers: headers, body: jsonEncode(credentials));
-     
+
       if (response.statusCode == 200) {
         final decoded = await json.decode(response.body);
         User user = User.fromJson(decoded);
@@ -38,7 +38,7 @@ class UserServices {
     var url = Uri.http(Environments.url, Environments.postUser);
     try {
       final response =
-          await http.post(url, headers: headers, body: userToJson(user));      
+          await http.post(url, headers: headers, body: userToJson(user));
       if (response.statusCode == 200) {
         var decoded = await json.decode(json.encode(response.body));
         user = userFromJson(decoded);
@@ -54,5 +54,4 @@ class UserServices {
       throw Failure("Bad response format");
     }
   }
-
 }

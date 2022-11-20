@@ -17,7 +17,7 @@ class LoginPageState extends State<LoginPage> {
   FToast fToast;
   var user;
   bool _loading = false;
-  bool _loadingFirst;
+  bool _isNotConncet;
   bool isSwitched = false;
 
   final email = TextEditingController();
@@ -32,7 +32,7 @@ class LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _loadingFirst = true;
+    _isNotConncet = true;
     openUserPreferences(context);
   }
 
@@ -45,7 +45,8 @@ class LoginPageState extends State<LoginPage> {
       body: Stack(children: [
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 60),
+          //padding: const EdgeInsets.symmetric(vertical: 60),
+          padding: const EdgeInsets.only(top: 60),
           decoration: const BoxDecoration(
             gradient: LinearGradient(colors: [
               Color.fromRGBO(0, 150, 136, 1),
@@ -181,7 +182,7 @@ class LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-        if (_loadingFirst)
+        if (_isNotConncet)
           Container(
             width: double.infinity,
             height: double.infinity,
@@ -282,22 +283,25 @@ class LoginPageState extends State<LoginPage> {
         Future.delayed(const Duration(seconds: 4), () {
           if (mounted) {
             setState(() {
-              _loadingFirst = false;
+              _isNotConncet = false;
             });
           }
         });
         Navigator.of(context).pushReplacementNamed("/homePage");
       } else {
         setState(() {
-          _loadingFirst = false;
+          _isNotConncet = false;
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
           content: Text(
-              'Los permisos de localización están permanentemente denegados, no podemos solicitar permisos.')));
+              'Los permisos de localización están permanentemente denegados, no podemos solicitar permisos.'),
+        ),
+      );
       setState(() {
-        _loadingFirst = true;
+        _isNotConncet = true;
       });
     }
   }

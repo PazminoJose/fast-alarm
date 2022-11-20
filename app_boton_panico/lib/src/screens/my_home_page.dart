@@ -3,15 +3,19 @@ import 'dart:convert';
 
 import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
+import 'package:app_boton_panico/src/screens/alerts.dart';
 import 'package:app_boton_panico/src/services/notification_services.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:map_launcher/map_launcher.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
+import 'package:flutter_hardware_button_nullsafety/hardware_button_nullsafety.dart'
+    as hardwarebtn;
 
 import '../models/entities.dart';
 
@@ -25,15 +29,30 @@ class MyHomePage extends StatefulWidget {
 var serviceNotification = NotificationServices();
 
 class _MyHomePageState extends State<MyHomePage> {
+  String _latestHardwareButtonEvent;
+  int countPressKeyVolume = 0;
+
+  StreamSubscription<hardwarebtn.VolumeButtonEvent> _volumeButtonSubscription;
+  StreamSubscription<hardwarebtn.HomeButtonEvent> _homeButtonSubscription;
+  StreamSubscription<hardwarebtn.LockButtonEvent> _lockButtonSubscription;
+
   User user;
   String _currentAddress;
   Position _currentPosition;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
-  void initState()  {
+  void initState() {
     super.initState();
     initPlatform(context);
     _handleLocationPermission(context);
+    //TODO:Pobar botonews de volumen, cancel de subscripcion
+    _volumeButtonSubscription = hardwarebtn.volumeButtonEvents.listen((event) {
+      countPressKeyVolume++;
+      setState(() {
+        _latestHardwareButtonEvent = event.toString();
+        print("${_latestHardwareButtonEvent} ${countPressKeyVolume}");
+      });
+    });
   }
 
   @override
@@ -49,13 +68,33 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Row(mainAxisAlignment: MainAxisAlignment.end, children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 23),
-                  child: IconButton(
-                      onPressed: () {
-                        _scaffoldKey.currentState.openEndDrawer();
-                      },
-                      icon: const Icon(Icons.menu, color: Colors.white)),
-                ),
+                    padding: const EdgeInsets.only(top: 23),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            showBarModalBottomSheet(
+                                context: context,
+                                expand: true,
+                                backgroundColor: Colors.transparent,
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(30))),
+                                builder: (context) => Alerts(
+                                      user: user.id,
+                                    ));
+                          },
+                          icon: const Icon(Icons.notification_important,
+                              color: Colors.white),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            _scaffoldKey.currentState.openEndDrawer();
+                          },
+                          icon: const Icon(Icons.menu, color: Colors.white),
+                        ),
+                      ],
+                    )),
               ]),
               Center(
                 child: Column(
@@ -70,8 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     InkWell(
                         splashColor: Colors.white,
                         onLongPress: () {
-                          Timer(
-                              const Duration(seconds: 3), (_handleSendNotification));
+                          Timer(const Duration(seconds: 3),
+                              (_handleSendNotification));
                         },
                         child: const Image(
                           image: AssetImage("assets/image/sos.png"),
@@ -194,27 +233,26 @@ class _MyHomePageState extends State<MyHomePage> {
       //PETICIONES A PUSH NOTIFICATIONS Y NOTIFICACION A LA BASE DE DATOS
       await OneSignal.shared.postNotification(notification);
       await postNotificationBD();
-      Vibration.vibrate(duration: 2000);
+      Vibration.vibrate(duration: 2500);
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(MySnackBars.successSnackBar);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
           'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
           'Error!'));
-      print(e.message);
     }
   }
 
   Future<void> postNotificationBD() async {
     //CUERPO DE PETICION POST PARA GUARDAR LA NOTIFICACION EN LA BASE DE DATOS
-    var contentNotificationPostServer = NotificationEntity(
+    var contentAlertPostServer = Alert(
         user: user.id,
         message: "Ha ocurrido un incidente en $_currentAddress",
+        state: "active",
         latitude: _currentPosition.latitude,
         longitude: _currentPosition.longitude);
 
-    await serviceNotification
-        .postNotfication(contentNotificationPostServer.toJson());
+    await serviceNotification.postNotfication(contentAlertPostServer);
   }
 
   _cerrarSesion(context) async {

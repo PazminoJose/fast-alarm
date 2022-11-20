@@ -10,11 +10,39 @@ class NotificationServices {
     HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
   };
 
-  Future<void> postNotfication(data) async {
+  Future<bool> postNotfication(alert) async {
     var url = Uri.http(Environments.url, Environments.postNotification);
 
     try {
-      await http.post(url, headers: headers, body: jsonEncode(data));
+      var response =
+          await http.post(url, headers: headers, body: alertToJson(alert));
+      return (response.statusCode == 200) ? true : false;
+    } on SocketException {
+      throw Failure("Error de socketExpetion");
+    } on HttpException {
+      throw Failure("Couldn't find the post");
+    } on FormatException {
+      throw Failure("Bad response format");
+    }
+  }
+
+  Future<List<Alert>> getAlertsByUser(userId) async {
+    var url = Uri.http(
+      Environments.url,
+      Environments.getAlertsByUser + userId,
+    );
+    try {
+      final response = await http.get(
+        url,
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final List result = json.decode(response.body);
+        return result.map((e) => Alert.fromJson(e)).toList();
+      } else {
+        return null;
+      }
     } on SocketException {
       throw Failure("Error de socketExpetion");
     } on HttpException {

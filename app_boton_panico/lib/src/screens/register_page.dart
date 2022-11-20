@@ -1,11 +1,12 @@
 import 'package:app_boton_panico/src/components/snackbars.dart';
-import 'package:app_boton_panico/src/components/toasts.dart';
 import 'package:app_boton_panico/src/methods/validators.dart';
 import 'package:app_boton_panico/src/models/entities.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key key}) : super(key: key);
+
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
@@ -18,6 +19,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String name = "";
   String suranme = "";
   String idCard = "";
+  String phone = "";
   String password = "";
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -69,6 +71,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 TextFormField(
+                                  autofocus: true,
                                   keyboardType: TextInputType.name,
                                   //controller: name,
                                   decoration: const InputDecoration(
@@ -85,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   },
                                 ),
                                 const SizedBox(
-                                  height: 10,
+                                  height: 7,
                                 ),
                                 TextFormField(
                                   keyboardType: TextInputType.name,
@@ -104,7 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   },
                                 ),
                                 const SizedBox(
-                                  height: 10,
+                                  height: 7,
                                 ),
                                 TextFormField(
                                   keyboardType: TextInputType.number,
@@ -123,7 +126,26 @@ class _RegisterPageState extends State<RegisterPage> {
                                   },
                                 ),
                                 const SizedBox(
-                                  height: 10,
+                                  height: 7,
+                                ),
+                                TextFormField(
+                                  keyboardType: TextInputType.number,
+                                  //controller: name,
+                                  decoration: const InputDecoration(
+                                    prefixIcon:
+                                        Icon(Icons.phone_outlined),
+                                    label: Text("Teléfono"),
+                                  ),
+                                  onSaved: (value) => {phone = value},
+                                  validator: (value) {
+                                    if (value.isEmpty || value == null) {
+                                      return "Ingrese su telefono";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(
+                                  height: 7,
                                 ),
                                 TextFormField(
                                   keyboardType: TextInputType.emailAddress,
@@ -141,7 +163,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   },
                                 ),
                                 const SizedBox(
-                                  height: 10,
+                                  height: 7,
                                 ),
                                 TextFormField(
                                   obscureText: true,
@@ -197,7 +219,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
-
+//TODO: Comprobar cedula con 0
   void _showHomePage(context) async {
     try {
       if (_formKey.currentState.validate()) {
@@ -206,10 +228,11 @@ class _RegisterPageState extends State<RegisterPage> {
           _loading = false;
         });
         print(Validators.isValidateIdCard(idCard));
-        User user = User(        
+        User user = User(
             name: name,
             surname: suranme,
             idCard: idCard,
+            phone: phone,
             email: email,
             password: password,
             userType: "user");
