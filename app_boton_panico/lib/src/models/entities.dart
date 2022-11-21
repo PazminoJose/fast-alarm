@@ -80,13 +80,11 @@ class Alert {
       );
 
   Map<String, dynamic> toJson() => {
-        "_id": id,
         "user": user,
         "message": message,
         "state": state,
         "latitude": latitude,
         "longitude": longitude,
-        "createdAt": createdAt.toIso8601String(),
       };
 }
 

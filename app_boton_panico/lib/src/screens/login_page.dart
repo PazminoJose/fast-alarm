@@ -53,13 +53,21 @@ class LoginPageState extends State<LoginPage> {
               Color.fromRGBO(56, 56, 76, 1),
             ]),
           ),
-          child: Image.asset(
-            "assets/image/fast_alert_logo.png",
-            height: 170,
-          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 50),
+              child: Image.asset(
+                "assets/image/fast_alert_logo.png",
+                height: 170,
+              ),
+            ),
+          ],
         ),
         Transform.translate(
-          offset: const Offset(0, -50),
+          offset: const Offset(0, -30),
           child: Center(
             child: SingleChildScrollView(
               child: Card(
@@ -74,10 +82,21 @@ class LoginPageState extends State<LoginPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      const Padding(
+                        padding: EdgeInsets.only(top: 15, bottom: 15),
+                        child: Text(
+                          "Bienvenido",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 30),
+                        ),
+                      ),
                       Form(
                         key: formKey,
                         child: Column(children: [
                           TextFormField(
+                            textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.emailAddress,
                             controller: email,
                             decoration: const InputDecoration(
@@ -93,6 +112,7 @@ class LoginPageState extends State<LoginPage> {
                             },
                           ),
                           TextFormField(
+                            textInputAction: TextInputAction.done,
                             obscureText: true,
                             controller: password,
                             decoration: const InputDecoration(

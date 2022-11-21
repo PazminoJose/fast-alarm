@@ -33,8 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int countPressKeyVolume = 0;
 
   StreamSubscription<hardwarebtn.VolumeButtonEvent> _volumeButtonSubscription;
-  StreamSubscription<hardwarebtn.HomeButtonEvent> _homeButtonSubscription;
-  StreamSubscription<hardwarebtn.LockButtonEvent> _lockButtonSubscription;
+
 
   User user;
   String _currentAddress;
@@ -50,7 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
       countPressKeyVolume++;
       setState(() {
         _latestHardwareButtonEvent = event.toString();
-        print("${_latestHardwareButtonEvent} ${countPressKeyVolume}");
+        print(
+            " aaaaaaaaaaaaaa $_latestHardwareButtonEvent $countPressKeyVolume");
       });
     });
   }
@@ -66,34 +66,33 @@ class _MyHomePageState extends State<MyHomePage> {
           decoration: const BoxDecoration(color: Color.fromRGBO(56, 56, 76, 1)),
           child: Stack(
             children: [
-              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 23),
+                  child: IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                          context: context,
+                          //isScrollControlled: true,
+                          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20))),
+                          builder: (context) => Alerts(
+                                user: user.id,
+                              ));
+                    },
+                    icon: const Icon(Icons.notification_important,
+                        color: Colors.white),
+                  ),
+                ),
                 Padding(
                     padding: const EdgeInsets.only(top: 23),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            showBarModalBottomSheet(
-                                context: context,
-                                expand: true,
-                                backgroundColor: Colors.transparent,
-                                shape: const RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(30))),
-                                builder: (context) => Alerts(
-                                      user: user.id,
-                                    ));
-                          },
-                          icon: const Icon(Icons.notification_important,
-                              color: Colors.white),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            _scaffoldKey.currentState.openEndDrawer();
-                          },
-                          icon: const Icon(Icons.menu, color: Colors.white),
-                        ),
-                      ],
+                    child: IconButton(
+                      onPressed: () {
+                        _scaffoldKey.currentState.openEndDrawer();
+                      },
+                      icon: const Icon(Icons.menu, color: Colors.white),
                     )),
               ]),
               Center(
@@ -127,11 +126,47 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         endDrawer: Drawer(
+          width: 270,
           child: ListView(
             children: <Widget>[
               UserAccountsDrawerHeader(
-                accountEmail: Text("${user.email}\n${user.idCard}"),
                 accountName: Text("${user.name} ${user.surname}"),
+                accountEmail: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 7),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.email_outlined,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(user.email),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 7),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            Icons.phone_outlined,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          Text(user.phone),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 currentAccountPicture: GestureDetector(
                   child: Image.asset("assets/image/account.png"),
                 ),
@@ -190,9 +225,8 @@ class _MyHomePageState extends State<MyHomePage> {
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
       _currentPosition = position;
-      _getAddressFromLatLng(_currentPosition);
     }).catchError((e) {
-      debugPrint(e);
+      print(e);
     });
   }
 
@@ -201,9 +235,9 @@ class _MyHomePageState extends State<MyHomePage> {
         .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
       _currentAddress =
-          '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}';
+          '${place.subLocality}, ${place.subAdministrativeArea}, ${place.street}';
     }).catchError((e) {
-      debugPrint(e);
+      print(e);
     });
   }
 
@@ -211,6 +245,9 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       //CORDENADAS DE DONDE OCURRE EL INCIDENTE PARA ENVIO DE NOTIFICACION PUSH
       await _getCurrentPosition();
+      //Obtener direccion excata del usuario
+      await _getAddressFromLatLng(_currentPosition);
+      print(_currentAddress);
       Map<String, dynamic> cordinates = {
         "longitude": _currentPosition.longitude,
         "latitude": _currentPosition.latitude
@@ -219,7 +256,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //CREACION Y ENVIO DE NOTIFICACION PUSH A LOS USUASRIOS ACTIVOS
       var imgUrlString =
           "https://www.cloudways.com/blog/wp-content/uploads/MapPress-Easy-Google-Map-Plugin.jpg";
-      var content = "Ha ocurrido un incidente en $_currentAddress";
+      var content = "Incidente en $_currentAddress";
       var listPlayers = await getDevices(await getIdDevice());
       var notification = OSCreateNotification(
         additionalData: cordinates,
@@ -247,7 +284,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //CUERPO DE PETICION POST PARA GUARDAR LA NOTIFICACION EN LA BASE DE DATOS
     var contentAlertPostServer = Alert(
         user: user.id,
-        message: "Ha ocurrido un incidente en $_currentAddress",
+        message: "Incidente en $_currentAddress",
         state: "active",
         latitude: _currentPosition.latitude,
         longitude: _currentPosition.longitude);

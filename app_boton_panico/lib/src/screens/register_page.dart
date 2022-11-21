@@ -71,9 +71,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 TextFormField(
+                                  textInputAction: TextInputAction.next,
                                   autofocus: true,
                                   keyboardType: TextInputType.name,
-                                  //controller: name,
                                   decoration: const InputDecoration(
                                     prefixIcon:
                                         Icon(Icons.person_outline_rounded),
@@ -92,7 +92,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 TextFormField(
                                   keyboardType: TextInputType.name,
-                                  //controller: name,
+                                  textInputAction: TextInputAction.next,
                                   decoration: const InputDecoration(
                                     prefixIcon:
                                         Icon(Icons.person_outline_rounded),
@@ -111,7 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 TextFormField(
                                   keyboardType: TextInputType.number,
-                                  //controller: name,
+                                  textInputAction: TextInputAction.next,
                                   decoration: const InputDecoration(
                                     prefixIcon:
                                         Icon(Icons.calendar_view_week_outlined),
@@ -130,10 +130,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 TextFormField(
                                   keyboardType: TextInputType.number,
-                                  //controller: name,
+                                  textInputAction: TextInputAction.next,
                                   decoration: const InputDecoration(
-                                    prefixIcon:
-                                        Icon(Icons.phone_outlined),
+                                    prefixIcon: Icon(Icons.phone_outlined),
                                     label: Text("Teléfono"),
                                   ),
                                   onSaved: (value) => {phone = value},
@@ -149,7 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 TextFormField(
                                   keyboardType: TextInputType.emailAddress,
-                                  //controller: name,
+                                  textInputAction: TextInputAction.next,
                                   decoration: const InputDecoration(
                                     prefixIcon: Icon(Icons.email_outlined),
                                     label: Text("Email"),
@@ -166,6 +165,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   height: 7,
                                 ),
                                 TextFormField(
+                                  textInputAction: TextInputAction.done,
                                   obscureText: true,
                                   decoration: const InputDecoration(
                                     prefixIcon:
@@ -219,6 +219,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
     );
   }
+
 //TODO: Comprobar cedula con 0
   void _showHomePage(context) async {
     try {
