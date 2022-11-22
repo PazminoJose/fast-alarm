@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
                 return MyHomePage();
                 break;
               case "/register":
+                // ignore: prefer_const_constructors
                 return RegisterPage();
                 break;
               default:

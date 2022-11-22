@@ -1,5 +1,3 @@
-import 'package:app_boton_panico/src/components/toasts.dart';
-import 'package:app_boton_panico/src/models/entities.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -7,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_boton_panico/src/components/snackbars.dart';
+import 'package:flutter/services.Dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -96,6 +95,9 @@ class LoginPageState extends State<LoginPage> {
                         key: formKey,
                         child: Column(children: [
                           TextFormField(
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(30),
+                            ],
                             textInputAction: TextInputAction.next,
                             keyboardType: TextInputType.emailAddress,
                             controller: email,
@@ -111,7 +113,9 @@ class LoginPageState extends State<LoginPage> {
                               return null;
                             },
                           ),
-                          TextFormField(
+                          TextFormField(inputFormatters: [
+                              LengthLimitingTextInputFormatter(15),
+                            ],
                             textInputAction: TextInputAction.done,
                             obscureText: true,
                             controller: password,

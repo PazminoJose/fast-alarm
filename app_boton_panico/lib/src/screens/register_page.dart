@@ -3,6 +3,7 @@ import 'package:app_boton_panico/src/methods/validators.dart';
 import 'package:app_boton_panico/src/models/entities.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.Dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key key}) : super(key: key);
@@ -71,6 +72,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 TextFormField(
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(10),
+                                  ],
                                   textInputAction: TextInputAction.next,
                                   autofocus: true,
                                   keyboardType: TextInputType.name,
@@ -91,6 +95,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   height: 7,
                                 ),
                                 TextFormField(
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(15),
+                                  ],
                                   keyboardType: TextInputType.name,
                                   textInputAction: TextInputAction.next,
                                   decoration: const InputDecoration(
@@ -110,6 +117,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   height: 7,
                                 ),
                                 TextFormField(
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(10),
+                                  ],
                                   keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
                                   decoration: const InputDecoration(
@@ -121,6 +131,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
                                       return "Ingrese su cedula";
+                                    } else if (!Validators.isValidateIdCard(
+                                        value)) {
+                                      return "Ingrese una cedula correcta";
                                     }
                                     return null;
                                   },
@@ -129,9 +142,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                   height: 7,
                                 ),
                                 TextFormField(
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(10),
+                                  ],
                                   keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
                                   decoration: const InputDecoration(
+                                    hintText: "09673803004",
                                     prefixIcon: Icon(Icons.phone_outlined),
                                     label: Text("Teléfono"),
                                   ),
@@ -139,6 +156,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
                                       return "Ingrese su telefono";
+                                    } else if (value.length != 10 || value.substring(0,2) != "09") {
+                                      return "Ingrese un telefono correcto";
                                     }
                                     return null;
                                   },
@@ -147,6 +166,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   height: 7,
                                 ),
                                 TextFormField(
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(30),
+                                  ],
                                   keyboardType: TextInputType.emailAddress,
                                   textInputAction: TextInputAction.next,
                                   decoration: const InputDecoration(
@@ -165,6 +187,9 @@ class _RegisterPageState extends State<RegisterPage> {
                                   height: 7,
                                 ),
                                 TextFormField(
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(15),
+                                  ],
                                   textInputAction: TextInputAction.done,
                                   obscureText: true,
                                   decoration: const InputDecoration(

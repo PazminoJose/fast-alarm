@@ -6,16 +6,14 @@ import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/alerts.dart';
 import 'package:app_boton_panico/src/services/notification_services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:map_launcher/map_launcher.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
-import 'package:flutter_hardware_button_nullsafety/hardware_button_nullsafety.dart'
-    as hardwarebtn;
 
 import '../models/entities.dart';
 
@@ -29,29 +27,31 @@ class MyHomePage extends StatefulWidget {
 var serviceNotification = NotificationServices();
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _latestHardwareButtonEvent;
-  int countPressKeyVolume = 0;
-
-  StreamSubscription<hardwarebtn.VolumeButtonEvent> _volumeButtonSubscription;
-
+  int pressVolumeId;
 
   User user;
   String _currentAddress;
   Position _currentPosition;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  StreamSubscription<HardwareButton> subscription;
+
   @override
   void initState() {
     super.initState();
     initPlatform(context);
     _handleLocationPermission(context);
     //TODO:Pobar botonews de volumen, cancel de subscripcion
-    _volumeButtonSubscription = hardwarebtn.volumeButtonEvents.listen((event) {
-      countPressKeyVolume++;
-      setState(() {
-        _latestHardwareButtonEvent = event.toString();
-        print(
-            " aaaaaaaaaaaaaa $_latestHardwareButtonEvent $countPressKeyVolume");
-      });
+    startListening();
+    
+  }
+
+  void startListening() {
+    subscription = FlutterAndroidVolumeKeydown.stream.listen((event) {
+      if (event == HardwareButton.volume_down) {
+        print("Volume down received");
+      } else if (event == HardwareButton.volume_up) {
+        print("Volume up received");
+      }
     });
   }
 
