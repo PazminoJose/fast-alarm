@@ -42,7 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
     _handleLocationPermission(context);
     //TODO:Pobar botonews de volumen, cancel de subscripcion
     startListening();
-    
   }
 
   void startListening() {
@@ -321,7 +320,7 @@ Future<List<String>> getDevices(playerId) async {
       listPlayers.add(userEntry["id"].toString());
     }
   }
-  //listPlayers.remove(playerId);
+  listPlayers.remove(playerId);
   return listPlayers;
 }
 
