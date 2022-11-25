@@ -10,6 +10,7 @@ import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.da
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:map_launcher/map_launcher.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -71,15 +72,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: IconButton(
                     onPressed: () {
                       showModalBottomSheet(
-                          context: context,
-                          //isScrollControlled: true,
-                          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20))),
-                          builder: (context) => Alerts(
-                                user: user.id,
-                              ));
+                        context: context,
+                        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(20))),
+                        builder: (context) => Alerts(
+                          user: user.id,
+                        ),
+                      );
                     },
                     icon: const Icon(Icons.notification_important,
                         color: Colors.white),
@@ -269,7 +270,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //PETICIONES A PUSH NOTIFICATIONS Y NOTIFICACION A LA BASE DE DATOS
       await OneSignal.shared.postNotification(notification);
       await postNotificationBD();
-      Vibration.vibrate(duration: 2500);
+      Vibration.vibrate(duration: 1000);
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(MySnackBars.successSnackBar);
     } catch (e) {

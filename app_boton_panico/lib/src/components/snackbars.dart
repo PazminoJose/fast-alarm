@@ -40,7 +40,7 @@ class MySnackBars {
     content: AwesomeSnackbarContent(
       title: 'Enviado!',
       message:
-          'Se envio alerta a todas las sucursales.\nPor favor espere por ayuda!',
+          'Se envio alerta a todos los dispositivos.\nPor favor espere por ayuda!',
       contentType: ContentType.success,
       isDesktop: false,
       xlarge: false,

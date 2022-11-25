@@ -16,24 +16,26 @@ class Alerts extends StatelessWidget {
       decoration: const BoxDecoration(
           color: Color.fromRGBO(56, 56, 76, 1),
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      child: Column(
-        children: [
-          AppBar(
-            backgroundColor: Colors.red,
-            automaticallyImplyLeading: false,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-            title: const Center(
-              child: Text("Alertas Enviadas"),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            AppBar(
+              backgroundColor: Colors.red,
+              automaticallyImplyLeading: false,
+              shape: const RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(20))),
+              title: const Center(
+                child: Text("Alertas Enviadas"),
+              ),
             ),
-          ),
-          Center(
-            child: FutureBuilder<List<Alert>>(
+            FutureBuilder<List<Alert>>(
               future: serviceNotification.getAlertsByUser(user),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return snapshot.data.isNotEmpty
                       ? ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
@@ -77,8 +79,8 @@ class Alerts extends StatelessWidget {
                 }
               },
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
