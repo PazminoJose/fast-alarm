@@ -1,0 +1,86 @@
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Fast Alarm.exe.config
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Fast Alarm.exe.manifest
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Fast Alarm.application
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Fast Alarm.exe
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Fast Alarm.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Business.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Entities.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\EntityFramework.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\EntityFramework.SqlServer.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\GMap.NET.Core.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\GMap.NET.WindowsForms.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\GMap.NET.WindowsPresentation.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\JsonSubTypes.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\LiveCharts.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\LiveCharts.WinForms.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\LiveCharts.Wpf.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Newtonsoft.Json.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Polly.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\SocketIOClient.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Buffers.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.ComponentModel.Annotations.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Data.SqlClient.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Data.SQLite.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Data.SQLite.EF6.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Data.SQLite.Linq.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Memory.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Numerics.Vectors.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Reactive.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Security.Principal.Windows.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Text.Encodings.Web.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Text.Json.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Threading.Channels.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Threading.Tasks.Extensions.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.ValueTuple.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Data.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\RestSharp.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Business.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Business.dll.config
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Entities.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\EntityFramework.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\EntityFramework.SqlServer.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\LiveCharts.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\LiveCharts.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\LiveCharts.WinForms.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\LiveCharts.WinForms.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\LiveCharts.Wpf.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\LiveCharts.Wpf.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Microsoft.Bcl.AsyncInterfaces.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Newtonsoft.Json.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Polly.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Polly.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\SocketIOClient.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Buffers.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Data.SqlClient.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Data.SQLite.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Memory.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Numerics.Vectors.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Reactive.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Security.Principal.Windows.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Text.Encodings.Web.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Text.Json.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Threading.Channels.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.Threading.Tasks.Extensions.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\System.ValueTuple.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Data.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\Data.dll.config
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Release\RestSharp.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\DesktopClient.csproj.AssemblyReference.cache
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\DesktopClient.Forms.FormCompaniesLocation.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\DesktopClient.Forms.FormReports.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\DesktopClient.Forms.FormMainApp.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\DesktopClient.Forms.FormAlert.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\DesktopClient.Forms.FormLogin.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\DesktopClient.Forms.FormNotifications.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\DesktopClient.Forms.FormUsers.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\DesktopClient.Properties.Resources.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\DesktopClient.csproj.GenerateResource.cache
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\DesktopClient.csproj.CoreCompileInputs.cache
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\Fast Alarm.exe.manifest
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\Fast Alarm.application
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\DesktopClient.csproj.CopyComplete
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\Fast Alarm.exe
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Release\Fast Alarm.pdb
