@@ -19,3 +19,5 @@
 # format (NuGet v4 and .NET Core).
 project.lock.json
 project.assets.json
+
+Fast-alert-desktop-app\DesktopClient\bin
