@@ -1,0 +1,350 @@
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Fast Alarm.exe.config
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Fast Alarm.exe.manifest
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Fast Alarm.application
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Fast Alarm.exe
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Fast Alarm.pdb
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Business.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Entities.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\EntityFramework.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\EntityFramework.SqlServer.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\GMap.NET.Core.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\GMap.NET.WindowsForms.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\GMap.NET.WindowsPresentation.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\JsonSubTypes.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Newtonsoft.Json.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Polly.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\SocketIOClient.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Buffers.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.ComponentModel.Annotations.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Data.SqlClient.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Data.SQLite.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Data.SQLite.EF6.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Data.SQLite.Linq.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Memory.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Numerics.Vectors.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Reactive.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Security.Principal.Windows.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Text.Encodings.Web.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Text.Json.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Threading.Channels.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Threading.Tasks.Extensions.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.ValueTuple.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Data.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\RestSharp.dll
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Business.pdb
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Business.dll.config
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Entities.pdb
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\EntityFramework.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\EntityFramework.SqlServer.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Newtonsoft.Json.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Polly.pdb
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Polly.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\SocketIOClient.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Buffers.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Data.SqlClient.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Data.SQLite.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Memory.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Numerics.Vectors.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Reactive.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Security.Principal.Windows.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Text.Encodings.Web.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Text.Json.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Threading.Channels.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.Threading.Tasks.Extensions.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\System.ValueTuple.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Data.pdb
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\Data.dll.config
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\bin\Debug\RestSharp.xml
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.csproj.AssemblyReference.cache
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormCompaniesLocation.resources
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormDesktopApp.resources
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormAlert.resources
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormLogin.resources
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormNotifications.resources
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormUsers.resources
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Properties.Resources.resources
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.csproj.GenerateResource.cache
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.csproj.CoreCompileInputs.cache
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\Fast Alarm.exe.manifest
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\Fast Alarm.application
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.csproj.CopyComplete
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\Fast Alarm.exe
+D:\Visual Studio Projects\ProyectoFinalAD\ProjectAD\DesktopProjectAD\DesktopClient\obj\Debug\Fast Alarm.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Reactive.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.Core.Runtime.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.Core.Runtime.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.Core.Runtime.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\chrome_100_percent.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\chrome_200_percent.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\chrome_elf.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\d3dcompiler_47.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\icudtl.dat
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\libcef.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\libEGL.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\libGLESv2.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\LICENSE.txt
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\af.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\am.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\ar.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\bg.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\bn.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\ca.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\cs.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\da.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\de.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\el.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\en-GB.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\en-US.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\es-419.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\es.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\et.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\fa.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\fi.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\fil.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\fr.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\gu.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\he.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\hi.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\hr.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\hu.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\id.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\it.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\ja.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\kn.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\ko.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\lt.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\lv.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\ml.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\mr.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\ms.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\nb.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\nl.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\pl.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\pt-BR.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\pt-PT.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\ro.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\ru.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\sk.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\sl.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\sr.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\sv.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\sw.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\ta.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\te.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\th.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\tr.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\uk.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\ur.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\vi.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\zh-CN.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\locales\zh-TW.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\README.txt
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\resources.pak
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\snapshot_blob.bin
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\v8_context_snapshot.bin
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\vk_swiftshader.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\vk_swiftshader_icd.json
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\vulkan-1.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.BrowserSubprocess.Core.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.BrowserSubprocess.Core.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.BrowserSubprocess.exe
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.BrowserSubprocess.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Fast Alarm.exe.config
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Fast Alarm.exe.manifest
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Fast Alarm.application
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Fast Alarm.exe
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Fast Alarm.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Business.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.Core.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.WinForms.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Entities.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\EntityFramework.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\EntityFramework.SqlServer.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\GMap.NET.Core.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\GMap.NET.WindowsForms.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\GMap.NET.WindowsPresentation.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\JsonSubTypes.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\LiveCharts.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\LiveCharts.WinForms.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\LiveCharts.Wpf.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Newtonsoft.Json.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Polly.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\SocketIOClient.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Buffers.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.ComponentModel.Annotations.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Data.SqlClient.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Data.SQLite.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Data.SQLite.EF6.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Data.SQLite.Linq.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Memory.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Numerics.Vectors.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Reactive.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Security.Principal.Windows.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Text.Encodings.Web.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Text.Json.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Threading.Channels.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Threading.Tasks.Extensions.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.ValueTuple.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Data.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\RestSharp.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Business.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Business.dll.config
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Entities.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.Core.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.Core.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.WinForms.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\CefSharp.WinForms.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\EntityFramework.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\EntityFramework.SqlServer.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\LiveCharts.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\LiveCharts.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\LiveCharts.WinForms.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\LiveCharts.WinForms.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\LiveCharts.Wpf.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\LiveCharts.Wpf.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Newtonsoft.Json.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Polly.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Polly.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Buffers.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Data.SqlClient.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Data.SQLite.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Memory.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Numerics.Vectors.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Security.Principal.Windows.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Text.Encodings.Web.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Text.Json.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Threading.Channels.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.Threading.Tasks.Extensions.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\System.ValueTuple.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Data.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Data.dll.config
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\RestSharp.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.csproj.AssemblyReference.cache
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormMainApp.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormAlert.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormLogin.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormNotifications.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormUsers.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Properties.Resources.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.csproj.GenerateResource.cache
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.csproj.CoreCompileInputs.cache
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\Fast Alarm.exe.manifest
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\Fast Alarm.application
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.csproj.CopyComplete
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\Fast Alarm.exe
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\Fast Alarm.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\websocket-sharp.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\websocket-sharp.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\SocketIOClient.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormAlarmsLocations.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\obj\Debug\DesktopClient.Forms.FormDashboard.resources
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\DesktopClient\bin\Debug\Entities.dll.config
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Fast Alarm.exe.config
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Fast Alarm.exe.manifest
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Fast Alarm.application
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Fast Alarm.exe
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Fast Alarm.pdb
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Business.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\CefSharp.Core.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\CefSharp.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\CefSharp.WinForms.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Entities.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\EntityFramework.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\EntityFramework.SqlServer.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\GMap.NET.Core.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\GMap.NET.WindowsForms.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\GMap.NET.WindowsPresentation.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\JsonSubTypes.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\LiveCharts.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\LiveCharts.WinForms.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\LiveCharts.Wpf.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Newtonsoft.Json.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Polly.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\SocketIOClient.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Buffers.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.ComponentModel.Annotations.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Data.SqlClient.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Data.SQLite.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Data.SQLite.EF6.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Data.SQLite.Linq.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Memory.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Numerics.Vectors.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Reactive.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Security.Principal.Windows.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Text.Encodings.Web.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Text.Json.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Threading.Channels.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Threading.Tasks.Extensions.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.ValueTuple.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\websocket-sharp.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Data.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\RestSharp.dll
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Business.pdb
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Business.dll.config
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Entities.pdb
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Entities.dll.config
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\CefSharp.pdb
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\CefSharp.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\CefSharp.Core.pdb
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\CefSharp.Core.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\CefSharp.WinForms.pdb
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\CefSharp.WinForms.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\EntityFramework.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\EntityFramework.SqlServer.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\LiveCharts.pdb
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\LiveCharts.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\LiveCharts.WinForms.pdb
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\LiveCharts.WinForms.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\LiveCharts.Wpf.pdb
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\LiveCharts.Wpf.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Newtonsoft.Json.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Polly.pdb
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Polly.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\SocketIOClient.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Buffers.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Data.SqlClient.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Data.SQLite.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Memory.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Numerics.Vectors.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Reactive.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Security.Principal.Windows.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Text.Encodings.Web.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Text.Json.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Threading.Channels.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.Threading.Tasks.Extensions.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\System.ValueTuple.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\websocket-sharp.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Data.pdb
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\Data.dll.config
+D:\Projects\Fast-alert-desktop-app\DesktopClient\bin\Debug\RestSharp.xml
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\DesktopClient.csproj.AssemblyReference.cache
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\DesktopClient.Forms.FormAlarmsLocations.resources
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\DesktopClient.Forms.FormDashboard.resources
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\DesktopClient.Forms.FormMainApp.resources
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\DesktopClient.Forms.FormAlert.resources
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\DesktopClient.Forms.FormLogin.resources
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\DesktopClient.Forms.FormNotifications.resources
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\DesktopClient.Forms.FormUsers.resources
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\DesktopClient.Properties.Resources.resources
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\DesktopClient.csproj.GenerateResource.cache
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\DesktopClient.csproj.CoreCompileInputs.cache
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\Fast Alarm.exe.manifest
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\Fast Alarm.application
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\DesktopClient.csproj.CopyComplete
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\Fast Alarm.exe
+D:\Projects\Fast-alert-desktop-app\DesktopClient\obj\Debug\Fast Alarm.pdb

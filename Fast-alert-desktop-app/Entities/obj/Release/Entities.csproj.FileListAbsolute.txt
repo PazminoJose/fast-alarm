@@ -1,0 +1,9 @@
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\Entities\bin\Release\Entities.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\Entities\bin\Release\Entities.pdb
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\Entities\bin\Release\Newtonsoft.Json.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\Entities\bin\Release\Newtonsoft.Json.xml
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\Entities\obj\Release\Entities.csproj.AssemblyReference.cache
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\Entities\obj\Release\Entities.csproj.CoreCompileInputs.cache
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\Entities\obj\Release\Entities.csproj.CopyComplete
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\Entities\obj\Release\Entities.dll
+D:\Projects\Visual Studio Community\fast-alarm\DesktopProjectAD\Entities\obj\Release\Entities.pdb
