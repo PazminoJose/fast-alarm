@@ -38,8 +38,8 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    initPlatform(context);
-    _handleLocationPermission(context);
+     initPlatform(context);
+     _handleLocationPermission(context);
     //TODO:Pobar botonews de volumen, cancel de subscripcion
     startListening();
   }
@@ -348,7 +348,6 @@ Future<void> initPlatform(context) async {
 
   //SUBSCRIPCION A ONE SIGNAL PARA RECIBIR Y ENVIAR NOTIFICACIONES
   await OneSignal.shared.setAppId('9fd9a40d-8646-450c-bd3b-d661b0e8ee42');
-
   await OneSignal.shared
       .getDeviceState()
       .then((value) => {print(value?.userId)});
