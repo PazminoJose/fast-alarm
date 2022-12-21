@@ -245,7 +245,7 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-//TODO: Comprobar cedula con 0
+  //TODO: Comprobar cedula con 0
   void _showHomePage(context) async {
     try {
       if (_formKey.currentState.validate()) {
