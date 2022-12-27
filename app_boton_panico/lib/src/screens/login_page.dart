@@ -1,7 +1,8 @@
 import 'package:app_boton_panico/src/providers/user_provider.dart';
+import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:provider/provider.dart';
-
 import 'package:flutter/material.dart';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_boton_panico/src/components/snackbars.dart';
@@ -37,6 +38,7 @@ class LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    var contextPushScreen = context;
     userProvider = Provider.of<UserProvider>(context, listen: false);
 
     // ignore: prefer_const_constructors
@@ -74,7 +76,7 @@ class LoginPageState extends State<LoginPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
                 margin: const EdgeInsets.only(
-                    left: 20, right: 20, top: 260, bottom: 20),
+                    left: 20, right: 20, top: 220, bottom: 20),
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
@@ -113,7 +115,8 @@ class LoginPageState extends State<LoginPage> {
                               return null;
                             },
                           ),
-                          TextFormField(inputFormatters: [
+                          TextFormField(
+                            inputFormatters: [
                               LengthLimitingTextInputFormatter(15),
                             ],
                             textInputAction: TextInputAction.done,
@@ -165,11 +168,12 @@ class LoginPageState extends State<LoginPage> {
                             height: 15,
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text("Guardar Sesión"),
                               const Padding(
                                   padding: EdgeInsets.only(right: 15)),
-                              Switch(
+                              Checkbox(
                                   value: isSwitched,
                                   onChanged: (value) {
                                     setState(() {
@@ -179,9 +183,9 @@ class LoginPageState extends State<LoginPage> {
                             ],
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text("¿No estas registrado?"),
+                              const Text("¿Olvidó su contraseña?"),
                               TextButton(
                                   style: TextButton.styleFrom(
                                     textStyle: TextStyle(
@@ -189,10 +193,10 @@ class LoginPageState extends State<LoginPage> {
                                   ),
                                   onPressed: () {
                                     Navigator.of(context)
-                                        .pushNamed("/register");
+                                        .pushNamed("/rememberPassword");
                                   },
                                   child: const Text(
-                                    "Registrate",
+                                    "Recuerdame",
                                     style: TextStyle(color: Colors.blue),
                                   ))
                             ],
@@ -205,6 +209,29 @@ class LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 30),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                      style: TextButton.styleFrom(backgroundColor: Styles.blur),
+                      onPressed: () => _showRegisterPage(contextPushScreen),
+                      child: Padding(
+                        padding: const EdgeInsets.all(6.0),
+                        child: Text(
+                          "Registrate!",
+                          style: TextStyle(color: Styles.white, fontSize: 16),
+                        ),
+                      ))
+                ],
+              ),
+            ),
+          ],
         ),
         if (_isNotConncet)
           Container(
@@ -223,6 +250,10 @@ class LoginPageState extends State<LoginPage> {
           ),
       ]),
     );
+  }
+
+  void _showRegisterPage(context) {
+    Navigator.of(context).pushNamed("/register");
   }
 
   void _showHomePage(context, usuario, password) async {

@@ -2,8 +2,11 @@ import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/methods/validators.dart';
 import 'package:app_boton_panico/src/models/entities.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
+import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.Dart';
+import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key key}) : super(key: key);
@@ -15,6 +18,8 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   bool _loading = false;
   bool isSwitched = false;
+  TextEditingController dateController = TextEditingController();
+  var serviceUser = UserServices();
 
   String email = "";
   String name = "";
@@ -25,7 +30,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  var serviceUser = UserServices();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    dateController.text;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,205 +51,276 @@ class _RegisterPageState extends State<RegisterPage> {
               ]),
             ),
           ),
-          Center(
-            child: SizedBox(
-              child: Card(
-                semanticContainer: false,
-                elevation: 5.0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                margin: const EdgeInsets.only(
-                    left: 20, right: 20, top: 20, bottom: 15),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 35, vertical: 25),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(top: 25, bottom: 25),
-                          child: Text(
-                            "Registrarse",
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 35),
-                          ),
-                        ),
-                        Form(
-                          key: _formKey,
-                          child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextFormField(
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(10),
-                                  ],
-                                  textInputAction: TextInputAction.next,
-                                  autofocus: true,
-                                  keyboardType: TextInputType.name,
-                                  decoration: const InputDecoration(
-                                    prefixIcon:
-                                        Icon(Icons.person_outline_rounded),
-                                    label: Text("Nombre"),
-                                  ),
-                                  onSaved: (value) => {name = value},
-                                  validator: (value) {
-                                    if (value.isEmpty || value == null) {
-                                      return "Ingrese su nombre";
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                const SizedBox(
-                                  height: 7,
-                                ),
-                                TextFormField(
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(15),
-                                  ],
-                                  keyboardType: TextInputType.name,
-                                  textInputAction: TextInputAction.next,
-                                  decoration: const InputDecoration(
-                                    prefixIcon:
-                                        Icon(Icons.person_outline_rounded),
-                                    label: Text("Apellido"),
-                                  ),
-                                  onSaved: (value) => {suranme = value},
-                                  validator: (value) {
-                                    if (value.isEmpty || value == null) {
-                                      return "Ingrese su apellido";
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                const SizedBox(
-                                  height: 7,
-                                ),
-                                TextFormField(
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(10),
-                                  ],
-                                  keyboardType: TextInputType.number,
-                                  textInputAction: TextInputAction.next,
-                                  decoration: const InputDecoration(
-                                    prefixIcon:
-                                        Icon(Icons.calendar_view_week_outlined),
-                                    label: Text("Cedula"),
-                                  ),
-                                  onSaved: (value) => {idCard = value},
-                                  validator: (value) {
-                                    if (value.isEmpty || value == null) {
-                                      return "Ingrese su cedula";
-                                    } else if (!Validators.isValidateIdCard(
-                                        value)) {
-                                      return "Ingrese una cedula correcta";
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                const SizedBox(
-                                  height: 7,
-                                ),
-                                TextFormField(
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(10),
-                                  ],
-                                  keyboardType: TextInputType.number,
-                                  textInputAction: TextInputAction.next,
-                                  decoration: const InputDecoration(
-                                    hintText: "09673803004",
-                                    prefixIcon: Icon(Icons.phone_outlined),
-                                    label: Text("Teléfono"),
-                                  ),
-                                  onSaved: (value) => {phone = value},
-                                  validator: (value) {
-                                    if (value.isEmpty || value == null) {
-                                      return "Ingrese su telefono";
-                                    } else if (value.length != 10 || value.substring(0,2) != "09") {
-                                      return "Ingrese un telefono correcto";
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                const SizedBox(
-                                  height: 7,
-                                ),
-                                TextFormField(
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(30),
-                                  ],
-                                  keyboardType: TextInputType.emailAddress,
-                                  textInputAction: TextInputAction.next,
-                                  decoration: const InputDecoration(
-                                    prefixIcon: Icon(Icons.email_outlined),
-                                    label: Text("Email"),
-                                  ),
-                                  onSaved: (value) => {email = value},
-                                  validator: (value) {
-                                    if (value.isEmpty || value == null) {
-                                      return "Ingrese su Email";
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                const SizedBox(
-                                  height: 7,
-                                ),
-                                TextFormField(
-                                  inputFormatters: [
-                                    LengthLimitingTextInputFormatter(15),
-                                  ],
-                                  textInputAction: TextInputAction.done,
-                                  obscureText: true,
-                                  decoration: const InputDecoration(
-                                    prefixIcon:
-                                        Icon(Icons.lock_person_outlined),
-                                    label: Text("Contraseña"),
-                                  ),
-                                  onSaved: (value) => {password = value},
-                                  validator: (value) {
-                                    if (value.isEmpty || value == null) {
-                                      return "Ingrese su contraseña";
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ]),
-                        ),
-                        const SizedBox(height: 30),
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              elevation: 10,
-                              padding: const EdgeInsets.symmetric(vertical: 15),
+          Column(
+            children: [
+              SingleChildScrollView(
+                child: Center(
+                  child: SizedBox(
+                    child: Card(
+                      semanticContainer: false,
+                      elevation: 5.0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20)),
+                      margin: const EdgeInsets.only(
+                          left: 15, right: 15, top: 50, bottom: 40),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 18, vertical: 25),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.only(top: 15, bottom: 15),
+                              child: Text(
+                                "Registrarse",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 35),
+                              ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text("Registrarse"),
-                                if (_loading)
-                                  Container(
-                                    width: 20,
-                                    height: 20,
-                                    margin: const EdgeInsets.only(
-                                      left: 20,
+                            Form(
+                              key: _formKey,
+                              child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: TextFormField(
+                                            inputFormatters: [
+                                              LengthLimitingTextInputFormatter(
+                                                  10),
+                                            ],
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            autofocus: true,
+                                            keyboardType: TextInputType.name,
+                                            decoration: InputDecoration(
+                                              prefixIcon: Icon(
+                                                  Icons.person_outline_rounded),
+                                              label: Text(
+                                                "Primer nombre",
+                                                style: Styles.textLabel,
+                                              ),
+                                            ),
+                                            onSaved: (value) => {name = value},
+                                            validator: (value) {
+                                              if (value.isEmpty ||
+                                                  value == null) {
+                                                return "Ingrese su nombre";
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                        ),
+                                        Gap(15),
+                                        Expanded(
+                                          child: TextFormField(
+                                            inputFormatters: [
+                                              LengthLimitingTextInputFormatter(
+                                                  10),
+                                            ],
+                                            textInputAction:
+                                                TextInputAction.next,
+                                            autofocus: true,
+                                            keyboardType: TextInputType.name,
+                                            decoration: InputDecoration(
+                                              prefixIcon: Icon(
+                                                  Icons.person_outline_rounded),
+                                              label: Text(
+                                                "Segundo nombre",
+                                                style: Styles.textLabel,
+                                              ),
+                                            ),
+                                            onSaved: (value) => {name = value},
+                                            validator: (value) {
+                                              if (value.isEmpty ||
+                                                  value == null) {
+                                                return "Ingrese su nombre";
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    child: const CircularProgressIndicator(
-                                      color: Colors.white,
+                                    const SizedBox(
+                                      height: 7,
                                     ),
-                                  )
-                              ],
+                                    TextFormField(
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(15),
+                                      ],
+                                      keyboardType: TextInputType.name,
+                                      textInputAction: TextInputAction.next,
+                                      decoration: const InputDecoration(
+                                        prefixIcon:
+                                            Icon(Icons.person_outline_rounded),
+                                        label: Text("Apellidos"),
+                                      ),
+                                      onSaved: (value) => {suranme = value},
+                                      validator: (value) {
+                                        if (value.isEmpty || value == null) {
+                                          return "Ingrese su apellido";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 7,
+                                    ),
+                                    TextFormField(
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(10),
+                                      ],
+                                      keyboardType: TextInputType.number,
+                                      textInputAction: TextInputAction.next,
+                                      decoration: const InputDecoration(
+                                        prefixIcon: Icon(
+                                            Icons.calendar_view_week_outlined),
+                                        label: Text("Cedula"),
+                                      ),
+                                      onSaved: (value) => {idCard = value},
+                                      validator: (value) {
+                                        if (value.isEmpty || value == null) {
+                                          return "Ingrese su cedula";
+                                        } else if (value.substring(0, 2) !=
+                                            "04") {
+                                          return "Debe ingresar una cedula respectiva a Carchi";
+                                        } else if ((!Validators
+                                            .isValidateIdCard(value))) {
+                                          return "Ingrese una cedula correcta";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 7,
+                                    ),
+                                    TextFormField(
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(10),
+                                      ],
+                                      keyboardType: TextInputType.number,
+                                      textInputAction: TextInputAction.next,
+                                      decoration: const InputDecoration(
+                                        hintText: "09673803004",
+                                        prefixIcon: Icon(Icons.phone_outlined),
+                                        label: Text("Teléfono"),
+                                      ),
+                                      onSaved: (value) => {phone = value},
+                                      validator: (value) {
+                                        if (value.isEmpty || value == null) {
+                                          return "Ingrese su telefono";
+                                        } else if (value.length != 10 ||
+                                            value.substring(0, 2) != "09") {
+                                          return "Ingrese un telefono correcto";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 7,
+                                    ),
+                                    TextFormField(
+                                      keyboardType: TextInputType.datetime,
+                                      textInputAction: TextInputAction.next,
+                                      decoration: const InputDecoration(
+                                        prefixIcon:
+                                            Icon(Icons.calendar_month_outlined),
+                                        label: Text("Fecha de nacimiento"),
+                                      ),
+                                      onSaved: (value) => {email = value},
+                                      readOnly: true,
+                                      controller: dateController,
+                                      onTap: (() async {
+                                        DateTime pickerDate =
+                                            await showDatePicker(
+                                                context: context,
+                                                initialDate: DateTime.now(),
+                                                firstDate: DateTime(1970),
+                                                lastDate: DateTime(2101));
+                                        if (pickerDate != null) {
+                                          final dateFormat =
+                                              DateFormat('dd/MM/yyyy')
+                                                  .format(pickerDate);
+                                          setState(() {
+                                            dateController.text =
+                                                dateFormat.toString();
+                                          });
+                                        } else {
+                                          print("no seleccionado ");
+                                        }
+                                      }),
+                                      validator: (value) {
+                                        if (value.isEmpty || value == null) {
+                                          return "Ingrese su fecha";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 7,
+                                    ),
+                                    TextFormField(
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(30),
+                                      ],
+                                      keyboardType: TextInputType.emailAddress,
+                                      textInputAction: TextInputAction.next,
+                                      decoration: const InputDecoration(
+                                        prefixIcon: Icon(Icons.email_outlined),
+                                        label: Text("Email"),
+                                      ),
+                                      onSaved: (value) => {email = value},
+                                      validator: (value) {
+                                        if (value.isEmpty || value == null) {
+                                          return "Ingrese su Email";
+                                        }
+                                        return null;
+                                      },
+                                    ),
+                                    const SizedBox(
+                                      height: 7,
+                                    ),
+                                  ]),
                             ),
-                            onPressed: () {
-                              _showHomePage(context);
-                            }),
-                      ],
+                            const SizedBox(height: 30),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 10,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Registrarse"),
+                      if (_loading)
+                        Container(
+                          width: 20,
+                          height: 20,
+                          margin: const EdgeInsets.only(
+                            left: 20,
+                          ),
+                          child: const CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                    ],
+                  ),
+                  onPressed: () {
+                    _showHomePage(context);
+                  }),
+            ],
           ),
         ],
       ),

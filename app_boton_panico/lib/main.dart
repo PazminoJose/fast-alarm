@@ -2,6 +2,8 @@ import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/login_page.dart';
 import 'package:app_boton_panico/src/screens/my_home_page.dart';
 import 'package:app_boton_panico/src/screens/register_page.dart';
+import 'package:app_boton_panico/src/screens/rememberPass_page.dart';
+import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -24,9 +26,7 @@ class MyApp extends StatelessWidget {
         //home: MyHomePage()
         theme: theme.copyWith(
           colorScheme: theme.colorScheme.copyWith(
-            primary: const Color.fromRGBO(56, 56, 76, 1),
-            secondary: Colors.blueGrey[800],
-          ),
+              primary: Styles.primaryColor, secondary: Styles.secondaryColor),
         ),
         initialRoute: "/",
         onGenerateRoute: (RouteSettings settings) {
@@ -43,6 +43,9 @@ class MyApp extends StatelessWidget {
               case "/register":
                 // ignore: prefer_const_constructors
                 return RegisterPage();
+                break;
+              case "/rememberPassword":
+                return RememberPassPage();
                 break;
               default:
                 LoginPage();
