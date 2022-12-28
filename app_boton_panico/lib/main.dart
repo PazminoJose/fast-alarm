@@ -1,7 +1,8 @@
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/login_page.dart';
 import 'package:app_boton_panico/src/screens/my_home_page.dart';
-import 'package:app_boton_panico/src/screens/register_page.dart';
+import 'package:app_boton_panico/src/screens/register/register_page.dart';
+import 'package:app_boton_panico/src/screens/register/second_register_page.dart';
 import 'package:app_boton_panico/src/screens/rememberPass_page.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,10 @@ class MyApp extends StatelessWidget {
               case "/register":
                 // ignore: prefer_const_constructors
                 return RegisterPage();
+                break;
+              case "/secondRegisterPage":
+                // ignore: prefer_const_constructors
+                return SecondRegisterPage();
                 break;
               case "/rememberPassword":
                 return RememberPassPage();

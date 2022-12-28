@@ -12,6 +12,11 @@ class Styles {
     fontWeight: FontWeight.bold,
     color: white,
   );
+  static TextStyle textStyleTitle = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: black,
+  );
   static TextStyle textLabel = TextStyle(
     fontSize: 15,
   );

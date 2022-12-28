@@ -48,6 +48,7 @@ dependencies:
   intl: ^0.17.0
   flutter_android_volume_keydown: ^1.0.0
   gap: ^2.0.1
+  image_picker: ^0.8.6
 
 dev_dependencies:
   flutter_test:
@@ -73,15 +74,7 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/image/login.png
-    - assets/image/alert.gif
-    - assets/image/alertButton.gif
-    - assets/image/buttonAlert.gif
-    - assets/image/alarm.png
-    - assets/image/sos.png
-    - assets/image/account.png
-    - assets/image/back_user.jpg
-    - assets/image/fast_alert_logo.png
+    - assets/image/
 
   #   - images/a_dot_ham.jpeg
 
