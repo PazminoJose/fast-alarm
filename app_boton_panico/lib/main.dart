@@ -1,5 +1,6 @@
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/login_page.dart';
+import 'package:app_boton_panico/src/screens/map/map.dart';
 import 'package:app_boton_panico/src/screens/my_home_page.dart';
 import 'package:app_boton_panico/src/screens/register/register_page.dart';
 import 'package:app_boton_panico/src/screens/register/second_register_page.dart';
@@ -32,30 +33,35 @@ class MyApp extends StatelessWidget {
         initialRoute: "/",
         onGenerateRoute: (RouteSettings settings) {
           // ignore: missing_return
-          return MaterialPageRoute(builder: (BuildContext context) {
-            switch (settings.name) {
-              case "/":
-                return LoginPage();
-                break;
-              case "/homePage":
-                // ignore: prefer_const_constructors
-                return MyHomePage();
-                break;
-              case "/register":
-                // ignore: prefer_const_constructors
-                return RegisterPage();
-                break;
-              case "/secondRegisterPage":
-                // ignore: prefer_const_constructors
-                return SecondRegisterPage();
-                break;
-              case "/rememberPassword":
-                return RememberPassPage();
-                break;
-              default:
-                LoginPage();
-            }
-          });
+          return MaterialPageRoute(
+              // ignore: missing_return
+              builder: (BuildContext context) {
+                switch (settings.name) {
+                  case "/":
+                    return LoginPage();
+                    break;
+                  case "/homePage":
+                    // ignore: prefer_const_constructors
+                    return MyHomePage();
+                    break;
+                  case "/register":
+                    // ignore: prefer_const_constructors
+                    return RegisterPage();
+                    break;
+                  case "/secondRegisterPage":
+                    return const SecondRegisterPage();
+                    break;
+                  case "/rememberPassword":
+                    return const RememberPassPage();
+                    break;
+                  case "/mapMarker":
+                    return const SearchPlaces();
+                    break;
+                  default:
+                    LoginPage();
+                }
+              },
+              settings: settings);
         },
       ),
     );

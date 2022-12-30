@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:app_boton_panico/src/components/snackbars.dart';
+import 'package:app_boton_panico/src/models/alarm.dart';
+import 'package:app_boton_panico/src/models/user.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/alerts.dart';
 import 'package:app_boton_panico/src/services/notification_services.dart';
@@ -15,7 +17,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
 
-import '../models/entities.dart';
+import '../models/failure.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key key}) : super(key: key);
@@ -129,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListView(
             children: <Widget>[
               UserAccountsDrawerHeader(
-                accountName: Text("${user.name} ${user.surname}"),
+                accountName: Text("${user.person.firstName} ${user.person.middleName}"),
                 accountEmail: Column(
                   children: [
                     Padding(
@@ -160,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           const SizedBox(
                             width: 10,
                           ),
-                          Text(user.phone),
+                          Text(user.person.phone),
                         ],
                       ),
                     ),
@@ -281,7 +283,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> postNotificationBD() async {
     //CUERPO DE PETICION POST PARA GUARDAR LA NOTIFICACION EN LA BASE DE DATOS
-    var contentAlertPostServer = Alert(
+    var contentAlertPostServer = Alarm(
         user: user.id,
         message: "Incidente en $_currentAddress",
         state: "active",

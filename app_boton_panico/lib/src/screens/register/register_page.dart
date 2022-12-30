@@ -1,6 +1,8 @@
 import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/methods/validators.dart';
-import 'package:app_boton_panico/src/models/entities.dart';
+import 'package:app_boton_panico/src/models/failure.dart';
+import 'package:app_boton_panico/src/models/person.dart';
+import 'package:app_boton_panico/src/models/user.dart';
 import 'package:app_boton_panico/src/screens/register/components/user_photo.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
@@ -18,19 +20,19 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  bool _loading = false;
-  bool isSwitched = false;
-  TextEditingController dateController = TextEditingController();
-  var serviceUser = UserServices();
-
-  String email = "";
-  String name = "";
-  String suranme = "";
-  String idCard = "";
-  String phone = "";
-  String password = "";
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+//TODO: cargar imagen
+  TextEditingController firstName = TextEditingController();
+  TextEditingController middleName = TextEditingController();
+  TextEditingController surname = TextEditingController();
+  TextEditingController idCard = TextEditingController();
+  TextEditingController bithDate = TextEditingController();
+  TextEditingController maritalStatus = TextEditingController();
+  TextEditingController gender = TextEditingController();
+  TextEditingController ethnic = TextEditingController();
+  DateTime pickerDate;
+  bool isDisability = false;
+
   List<String> listMaritalStatus = [
     'Casado',
     'Soltero',
@@ -45,15 +47,12 @@ class _RegisterPageState extends State<RegisterPage> {
     'Blanca'
   ];
   List<String> listGender = ['Masculino', 'Femenino', 'No especificado'];
-  String selectMaritalStatus = "";
-  String selectEthnic = "";
-  String selectGender = "";
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    dateController.text;
+    bithDate.text;
   }
 
   @override
@@ -114,7 +113,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                       child: TextFormField(
                                         inputFormatters: [
                                           LengthLimitingTextInputFormatter(10),
+                                          FilteringTextInputFormatter.allow(
+                                              Styles.exprOnlyLetter),
                                         ],
+                                        controller: firstName,
                                         textInputAction: TextInputAction.next,
                                         autofocus: true,
                                         keyboardType: TextInputType.name,
@@ -126,7 +128,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                             style: Styles.textLabel,
                                           ),
                                         ),
-                                        onSaved: (value) => {name = value},
+                                        onSaved: (value) =>
+                                            {firstName.text = value},
                                         validator: (value) {
                                           if (value.isEmpty || value == null) {
                                             return "Ingrese su nombre";
@@ -140,7 +143,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                       child: TextFormField(
                                         inputFormatters: [
                                           LengthLimitingTextInputFormatter(10),
+                                          FilteringTextInputFormatter.allow(
+                                              Styles.exprOnlyLetter),
                                         ],
+                                        controller: middleName,
                                         textInputAction: TextInputAction.next,
                                         autofocus: true,
                                         keyboardType: TextInputType.name,
@@ -150,7 +156,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                             style: Styles.textLabel,
                                           ),
                                         ),
-                                        onSaved: (value) => {name = value},
+                                        onSaved: (value) =>
+                                            {middleName.text = value},
                                         validator: (value) {
                                           if (value.isEmpty || value == null) {
                                             return "Ingrese su nombre";
@@ -167,7 +174,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                 TextFormField(
                                   inputFormatters: [
                                     LengthLimitingTextInputFormatter(15),
+                                    FilteringTextInputFormatter.allow(
+                                        Styles.exprOnlyLetter),
                                   ],
+                                  controller: surname,
                                   keyboardType: TextInputType.name,
                                   textInputAction: TextInputAction.next,
                                   decoration: const InputDecoration(
@@ -175,7 +185,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         Icon(Icons.person_outline_rounded),
                                     label: Text("Apellidos"),
                                   ),
-                                  onSaved: (value) => {suranme = value},
+                                  onSaved: (value) => {surname.text = value},
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
                                       return "Ingrese su apellido";
@@ -189,7 +199,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                 TextFormField(
                                   inputFormatters: [
                                     LengthLimitingTextInputFormatter(10),
+                                    FilteringTextInputFormatter.allow(
+                                        Styles.exprOnlydigists),
                                   ],
+                                  controller: idCard,
                                   keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
                                   decoration: const InputDecoration(
@@ -197,7 +210,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         Icon(Icons.calendar_view_week_outlined),
                                     label: Text("Cedula"),
                                   ),
-                                  onSaved: (value) => {idCard = value},
+                                  onSaved: (value) => {idCard.text = value},
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
                                       return "Ingrese su cedula";
@@ -221,14 +234,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                         Icon(Icons.calendar_month_outlined),
                                     label: Text("Fecha de nacimiento"),
                                   ),
-                                  onSaved: (value) =>
-                                      {dateController.text = value},
+                                  onSaved: (value) => {bithDate.text = value},
                                   readOnly: true,
-                                  controller: dateController,
+                                  controller: bithDate,
                                   onTap: (() async {
-                                    DateTime pickerDate = await showDatePicker(
+                                    pickerDate = await showDatePicker(
                                         context: context,
-                                        initialDate: DateTime.now(),
+                                        initialDate: DateTime(2000),
                                         firstDate: DateTime(1970),
                                         lastDate: DateTime(2101));
                                     if (pickerDate != null) {
@@ -236,8 +248,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                           DateFormat('dd/MM/yyyy')
                                               .format(pickerDate);
                                       setState(() {
-                                        dateController.text =
-                                            dateFormat.toString();
+                                        bithDate.text = dateFormat.toString();
                                       });
                                     } else {
                                       print("no seleccionado ");
@@ -263,8 +274,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                               value: e,
                                             );
                                           }).toList(),
+                                          validator: (value) => value == null
+                                              ? "Elija su Estado Civil"
+                                              : null,
                                           onChanged: (item) => setState(() {
-                                                selectMaritalStatus = item;
+                                                maritalStatus.text = item;
                                               })),
                                     ),
                                     Gap(10),
@@ -279,8 +293,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                               value: e,
                                             );
                                           }).toList(),
+                                          validator: (value) => value == null
+                                              ? "Elija su Genero"
+                                              : null,
                                           onChanged: (item) => setState(() {
-                                                selectMaritalStatus = item;
+                                                gender.text = item;
                                               })),
                                     ),
                                   ],
@@ -298,8 +315,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                               value: e,
                                             );
                                           }).toList(),
+                                          validator: (value) => value == null
+                                              ? "Elija su Etnia"
+                                              : null,
                                           onChanged: (item) => setState(() {
-                                                selectMaritalStatus = item;
+                                                ethnic.text = item;
                                               })),
                                     ),
                                     Gap(10),
@@ -311,10 +331,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                       children: [
                                         Text("¿Sufre alguna\n discapacidad?"),
                                         Checkbox(
-                                            value: isSwitched,
+                                            activeColor: Styles.primaryColor,
+                                            value: isDisability,
                                             onChanged: (value) {
                                               setState(() {
-                                                isSwitched = value;
+                                                isDisability = value;
                                               });
                                             }),
                                       ],
@@ -363,52 +384,29 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
 //TODO: Comprobar cedula con 0
-  void _showSecondPageRegister(context) async {
+  void _showSecondPageRegister(BuildContext context) {
     try {
-      /* if (_formKey.currentState.validate()) {
+      if (_formKey.currentState.validate()) {
         _formKey.currentState.save();
-        setState(() {
-          _loading = false;
-        });
-        print(Validators.isValidateIdCard(idCard));
-        User user = User(
-            name: name,
-            surname: suranme,
-            idCard: idCard,
-            phone: phone,
-            email: email,
-            password: password,
-            userType: "user");
-        user = await serviceUser.saveUser(user);
-        if (user == null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            elevation: 15,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
-            backgroundColor: Colors.red[400],
-            content: Row(
-              children: const [
-                Icon(
-                  Icons.clear_outlined,
-                  color: Colors.white,
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Text(' Error al ingresar el Usuario'),
-              ],
-            ),
-          ));
-          return;
-        }
-        Navigator.of(context).pushReplacementNamed("/");
-        ScaffoldMessenger.of(context).showSnackBar(
-            MySnackBars.successSaveSnackBar(
-                'Usuario registrado con exito.', 'Perfecto!'));
-      } */
+        //print(bithDate.text);
+        String bithDateCast = DateFormat('yyyy-MM-dd').format(pickerDate);
+        Person person = Person(
+          firstName: firstName.text,
+          middleName: middleName.text,
+          idCard: idCard.text,
+          birthDate: DateTime.parse(bithDateCast),
+          maritalStatus: maritalStatus.text.toLowerCase(),
+          gender: gender.text.toLowerCase(),
+          ethnic: ethnic.text.toLowerCase(),
+          disability: isDisability,
+        );
+        print(person.maritalStatus);
 
-      Navigator.of(context).pushNamed("/secondRegisterPage");
+        Navigator.of(context)
+            .pushNamed("/secondRegisterPage", arguments: person);
+      }
     } catch (e) {
+      print(e);
       ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
           'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
           'Error!'));

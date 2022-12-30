@@ -1,4 +1,4 @@
-import 'package:app_boton_panico/src/models/entities.dart';
+import 'package:app_boton_panico/src/models/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:app_boton_panico/src/services/notification_services.dart';
 import 'package:intl/intl.dart';
@@ -29,7 +29,7 @@ class Alerts extends StatelessWidget {
                 child: Text("Alertas Enviadas"),
               ),
             ),
-            FutureBuilder<List<Alert>>(
+            FutureBuilder<List<Alarm>>(
               future: serviceNotification.getAlertsByUser(user),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {

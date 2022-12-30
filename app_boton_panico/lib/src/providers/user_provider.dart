@@ -1,4 +1,4 @@
-import 'package:app_boton_panico/src/models/entities.dart';
+import 'package:app_boton_panico/src/models/user.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:flutter/material.dart';
 

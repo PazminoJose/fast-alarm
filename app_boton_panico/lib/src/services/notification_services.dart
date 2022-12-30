@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:app_boton_panico/src/global/enviroment.dart';
+import 'package:app_boton_panico/src/models/alarm.dart';
 import 'package:http/http.dart' as http;
-import 'package:app_boton_panico/src/models/entities.dart';
+import 'package:app_boton_panico/src/models/failure.dart';
 
 class NotificationServices {
   static const Map<String, String> headers = {
@@ -15,7 +16,7 @@ class NotificationServices {
 
     try {
       var response =
-          await http.post(url, headers: headers, body: alertToJson(alert));
+          await http.post(url, headers: headers, body: alarmToJson(alert));
       return (response.statusCode == 200) ? true : false;
     } on SocketException {
       throw Failure("Error de socketExpetion");
@@ -26,7 +27,7 @@ class NotificationServices {
     }
   }
 
-  Future<List<Alert>> getAlertsByUser(userId) async {
+  Future<List<Alarm>> getAlertsByUser(userId) async {
     var url = Uri.http(
       Environments.url,
       Environments.getAlertsByUser + userId,
@@ -39,7 +40,7 @@ class NotificationServices {
 
       if (response.statusCode == 200) {
         final List result = json.decode(response.body);
-        return result.map((e) => Alert.fromJson(e)).toList();
+        return result.map((e) => Alarm.fromJson(e)).toList();
       } else {
         return null;
       }

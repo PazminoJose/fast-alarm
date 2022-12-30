@@ -50,6 +50,10 @@ dependencies:
   gap: ^2.0.1
   image_picker: ^0.8.6
 
+  google_maps_flutter: ^2.2.2
+
+  flutter_google_places: ^0.3.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

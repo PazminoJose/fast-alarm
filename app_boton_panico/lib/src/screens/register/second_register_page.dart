@@ -1,14 +1,14 @@
 import 'package:app_boton_panico/src/components/snackbars.dart';
-import 'package:app_boton_panico/src/methods/validators.dart';
-import 'package:app_boton_panico/src/models/entities.dart';
-import 'package:app_boton_panico/src/screens/register/components/user_photo.dart';
+import 'package:app_boton_panico/src/models/person.dart';
+import 'package:app_boton_panico/src/models/user.dart';
+import 'package:app_boton_panico/src/services/person_services.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.Dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
+
 
 class SecondRegisterPage extends StatefulWidget {
   const SecondRegisterPage({Key key}) : super(key: key);
@@ -20,8 +20,24 @@ class SecondRegisterPage extends StatefulWidget {
 class _SecondRegisterPageState extends State<SecondRegisterPage> {
   bool _loading = false;
   bool isSwitched = false;
-  var serviceUser = UserServices();
+  TextEditingController parish = TextEditingController();
+  TextEditingController sideStreet = TextEditingController();
+  TextEditingController mainStreet = TextEditingController();
+  TextEditingController neighborhood = TextEditingController();
+  TextEditingController houseNumber = TextEditingController();
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController passwordConfirm = TextEditingController();
+  TextEditingController controller = TextEditingController();
+  String textButtonSesion = "Registrarse";
+  Person personArguments;
 
+  bool isMatchPaswwords = false;
+
+  var serviceUser = UserServices();
+  var servicePerson = PersonServices();
   List<String> listParroquias = [
     'Chical',
     'El Carmelo',
@@ -35,15 +51,6 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
     'Tulcan',
     'Urbina'
   ];
-  String selectParroquia = "";
-  String email = "";
-  String name = "";
-  String suranme = "";
-  String idCard = "";
-  String phone = "";
-  String password = "";
-  String barrio = "";
-  TextEditingController userNameController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -51,12 +58,15 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    userNameController.text = "P0401527650";
   }
 
   @override
   Widget build(BuildContext context) {
     final size = AppLayout.getSize(context);
+    personArguments = ModalRoute.of(context).settings.arguments as Person;
+    print(personArguments.firstName);
+    userNameController.text =
+        getUserName(personArguments.firstName, personArguments.idCard);
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -92,7 +102,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20)),
                 margin: const EdgeInsets.only(
-                    left: 15, right: 15, top: 90, bottom: 40),
+                    left: 15, right: 15, top: 90, bottom: 20),
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 18, vertical: 20),
@@ -105,54 +115,52 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                           child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  "Domicilio",
-                                  style: Styles.textStyleTitle,
-                                ),
                                 Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Expanded(
-                                      child: DropdownButtonFormField<String>(
-                                          decoration: const InputDecoration(
-                                            label: Text("Parroquia"),
-                                          ),
-                                          items: listParroquias.map((e) {
-                                            return DropdownMenuItem(
-                                              child: Text(e),
-                                              value: e,
-                                            );
-                                          }).toList(),
-                                          onChanged: (item) => setState(() {
-                                                selectParroquia = item;
-                                              })),
-                                    ),
-                                    Expanded(
-                                      child: TextFormField(
-                                        inputFormatters: [
-                                          LengthLimitingTextInputFormatter(10),
-                                        ],
-                                        textInputAction: TextInputAction.next,
-                                        keyboardType: TextInputType.name,
-                                        decoration: InputDecoration(
-                                          label: Text(
-                                            "Barrio",
-                                            style: Styles.textLabel,
-                                          ),
-                                        ),
-                                        onSaved: (value) => {barrio = value},
-                                        validator: (value) {
-                                          if (value.isEmpty || value == null) {
-                                            return "Ingrese su nombre";
-                                          }
-                                          return null;
-                                        },
-                                      ),
+                                    Icon(Icons.house_outlined),
+                                    Gap(20),
+                                    Text(
+                                      "Domicilio",
+                                      style: Styles.textStyleTitle,
                                     ),
                                   ],
                                 ),
-                                Text(
-                                  "Cuenta",
-                                  style: Styles.textStyleTitle,
+                                TextFormField(
+                                  keyboardType: TextInputType.datetime,
+                                  textInputAction: TextInputAction.next,
+                                  decoration: const InputDecoration(
+                                    prefixIcon:
+                                        Icon(Icons.location_on_outlined),
+                                    label: Text("Obtener Dirección"),
+                                  ),
+                                  onSaved: (value) => {controller.text = value},
+                                  readOnly: true,
+                                  controller: controller,
+                                  onTap: () => {
+                                    Navigator.of(context)
+                                        .pushReplacementNamed("/mapMarker")
+                                  },
+                                  validator: (value) {
+                                    if (value.isEmpty || value == null) {
+                                      return "Ingrese su Direccion";
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                Gap(30),
+
+                                //TODO: ¨***********CUENTA*****************
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Icon(Icons.account_box_outlined),
+                                    Gap(20),
+                                    Text(
+                                      "Cuenta",
+                                      style: Styles.textStyleTitle,
+                                    ),
+                                  ],
                                 ),
                                 TextFormField(
                                   inputFormatters: [
@@ -173,17 +181,14 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                   ),
                                   onSaved: (value) =>
                                       {userNameController.text = value},
-                                  validator: (value) {
-                                    if (value.isEmpty || value == null) {
-                                      return "Ingrese su nombre";
-                                    }
-                                    return null;
-                                  },
                                 ),
                                 TextFormField(
                                   inputFormatters: [
                                     LengthLimitingTextInputFormatter(10),
+                                    FilteringTextInputFormatter.allow(
+                                        Styles.exprOnlydigists),
                                   ],
+                                  controller: phone,
                                   keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
                                   decoration: const InputDecoration(
@@ -191,7 +196,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                     prefixIcon: Icon(Icons.phone_outlined),
                                     label: Text("Teléfono"),
                                   ),
-                                  onSaved: (value) => {phone = value},
+                                  onSaved: (value) => {phone..text = value},
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
                                       return "Ingrese su telefono";
@@ -208,14 +213,17 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                 TextFormField(
                                   inputFormatters: [
                                     LengthLimitingTextInputFormatter(30),
+                                    FilteringTextInputFormatter.deny(
+                                        Styles.exprWithoutWhitspace),
                                   ],
+                                  controller: email,
                                   keyboardType: TextInputType.emailAddress,
                                   textInputAction: TextInputAction.next,
                                   decoration: const InputDecoration(
                                     prefixIcon: Icon(Icons.email_outlined),
                                     label: Text("Email"),
                                   ),
-                                  onSaved: (value) => {email = value},
+                                  onSaved: (value) => {email.text = value},
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
                                       return "Ingrese su Email";
@@ -229,18 +237,22 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                 TextFormField(
                                   inputFormatters: [
                                     LengthLimitingTextInputFormatter(15),
+                                    FilteringTextInputFormatter.deny(
+                                        Styles.exprWithoutWhitspace),
                                   ],
+                                  controller: password,
                                   textInputAction: TextInputAction.done,
                                   obscureText: true,
                                   decoration: const InputDecoration(
                                     prefixIcon: Icon(Icons.lock_person),
                                     label: Text("Contraseña"),
                                   ),
-                                  onSaved: (value) => {password = value},
+                                  onSaved: (value) => {password.text = value},
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
                                       return "Ingrese su contraseña";
                                     }
+                                    password.text = value;
                                     return null;
                                   },
                                 ),
@@ -250,26 +262,36 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                 TextFormField(
                                   inputFormatters: [
                                     LengthLimitingTextInputFormatter(15),
+                                    FilteringTextInputFormatter.deny(
+                                        Styles.exprWithoutWhitspace),
                                   ],
+                                  controller: passwordConfirm,
                                   textInputAction: TextInputAction.done,
                                   obscureText: true,
                                   decoration: const InputDecoration(
                                     prefixIcon: Icon(Icons.lock_person),
                                     label: Text("Confirmar contraseña"),
                                   ),
-                                  onSaved: (value) => {password = value},
+                                  onSaved: (value) =>
+                                      {passwordConfirm.text = value},
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
                                       return "Ingrese su contraseña";
                                     }
+                                    print(value);
+                                    print(password.text);
+                                    if (!(password.text == value)) {
+                                      return "Las contraseñas no coinciden";
+                                    }
+
                                     return null;
                                   },
                                 ),
                               ]),
                         ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 20),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -285,8 +307,18 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
                                   children: [
-                                    const Text("Continuar"),
-                                    Icon(Icons.arrow_forward_rounded)
+                                    Text(textButtonSesion),
+                                    if (_loading)
+                                      Container(
+                                        width: 20,
+                                        height: 20,
+                                        margin: const EdgeInsets.only(
+                                          left: 20,
+                                        ),
+                                        child: const CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      )
                                   ],
                                 ),
                                 onPressed: () {
@@ -312,48 +344,96 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
       if (_formKey.currentState.validate()) {
         _formKey.currentState.save();
         setState(() {
+          textButtonSesion = "Registrando";
           _loading = false;
         });
-        print(Validators.isValidateIdCard(idCard));
-        User user = User(
-            name: name,
-            surname: suranme,
-            idCard: idCard,
-            phone: phone,
-            email: email,
-            password: password,
-            userType: "user");
-        user = await serviceUser.saveUser(user);
-        if (user == null) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            elevation: 15,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
-            backgroundColor: Colors.red[400],
-            content: Row(
-              children: const [
-                Icon(
-                  Icons.clear_outlined,
-                  color: Colors.white,
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Text(' Error al ingresar el Usuario'),
-              ],
-            ),
-          ));
+        personArguments.address = parish.text;
+        personArguments.phone = phone.text;
+        personArguments.urlImage = "image";
+        Person person = await servicePerson.postPerson(personArguments);
+        if (person == null) {
+          ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
+              'No se pudo guardar el usuario.\nPor favor compruebe su conexión!',
+              'Error!'));
+          setState(() {
+            _loading = false;
+            textButtonSesion = "Registrarse";
+          });
           return;
+        } else {
+          User user = User(
+            password: passwordConfirm.text,
+            userType: "user",
+            userName: userNameController.text,
+            email: email.text,
+            person: person,
+          );
+          user = await serviceUser.saveUser(user);
+          if (user == null) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              elevation: 15,
+              shape: const RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(15))),
+              backgroundColor: Colors.red[400],
+              content: Row(
+                children: const [
+                  Icon(
+                    Icons.clear_outlined,
+                    color: Colors.white,
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Text(' Error al ingresar el Usuario'),
+                ],
+              ),
+            ));
+            return;
+          }
+          showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Column(
+                      children: [
+                        Text("¡Perfecto!"),
+                        Text("Usuario registrado con exito"),
+                      ],
+                    ),
+                    content: Text(
+                        "Recuerda tu nombre de usuario para poder ingresar\nUsuario: ${user.userName}"),
+                    actions: [
+                      TextButton(
+                          onPressed: (() =>
+                              Navigator.of(context).pushReplacementNamed("/")),
+                          child: Text(
+                            "OK",
+                            style:
+                                Styles.textLabel.copyWith(color: Colors.blue),
+                          ))
+                    ],
+                  ));
         }
-        Navigator.of(context).pushReplacementNamed("/");
-        ScaffoldMessenger.of(context).showSnackBar(
-            MySnackBars.successSaveSnackBar(
-                'Usuario registrado con exito.', 'Perfecto!'));
       }
     } catch (e) {
+      print(e);
       ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
           'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
           'Error!'));
+      setState(() {
+        _loading = false;
+        textButtonSesion = "Registrarse";
+      });
     }
+  }
+
+  void matchPaswwords(pass, passcConf) {
+    setState(() {
+      isMatchPaswwords = (pass == passcConf);
+    });
+  }
+
+  String getUserName(String name, String idCard) {
+    return (name.substring(0, 1) + idCard);
   }
 }
