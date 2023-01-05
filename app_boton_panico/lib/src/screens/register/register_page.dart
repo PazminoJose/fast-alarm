@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/methods/validators.dart';
 import 'package:app_boton_panico/src/models/failure.dart';
@@ -10,6 +13,7 @@ import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.Dart';
 import 'package:gap/gap.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -24,7 +28,7 @@ class _RegisterPageState extends State<RegisterPage> {
 //TODO: cargar imagen
   TextEditingController firstName = TextEditingController();
   TextEditingController middleName = TextEditingController();
-  TextEditingController surname = TextEditingController();
+  TextEditingController lastName = TextEditingController();
   TextEditingController idCard = TextEditingController();
   TextEditingController bithDate = TextEditingController();
   TextEditingController maritalStatus = TextEditingController();
@@ -32,7 +36,7 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController ethnic = TextEditingController();
   DateTime pickerDate;
   bool isDisability = false;
-
+  XFile imageFile;
   List<String> listMaritalStatus = [
     'Casado',
     'Soltero',
@@ -101,7 +105,22 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        UserPhoto(),
+                        UserPhoto(
+                            imageFile: imageFile,
+                            onImageSelected: ((file) {
+                              setState(() {
+                                imageFile = file;
+                              });
+                            })),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "La imagen es obligatoria",
+                              style: TextStyle(color: Colors.red[400]),
+                            )
+                          ],
+                        ),
                         Form(
                           key: _formKey,
                           child: Column(
@@ -177,7 +196,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     FilteringTextInputFormatter.allow(
                                         Styles.exprOnlyLetter),
                                   ],
-                                  controller: surname,
+                                  controller: lastName,
                                   keyboardType: TextInputType.name,
                                   textInputAction: TextInputAction.next,
                                   decoration: const InputDecoration(
@@ -185,7 +204,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         Icon(Icons.person_outline_rounded),
                                     label: Text("Apellidos"),
                                   ),
-                                  onSaved: (value) => {surname.text = value},
+                                  onSaved: (value) => {lastName.text = value},
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
                                       return "Ingrese su apellido";
@@ -384,7 +403,7 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
 //TODO: Comprobar cedula con 0
-  void _showSecondPageRegister(BuildContext context) {
+  Future<void> _showSecondPageRegister(BuildContext context) async {
     try {
       if (_formKey.currentState.validate()) {
         _formKey.currentState.save();
@@ -393,7 +412,9 @@ class _RegisterPageState extends State<RegisterPage> {
         Person person = Person(
           firstName: firstName.text,
           middleName: middleName.text,
+          lastName: lastName.text,
           idCard: idCard.text,
+          urlImage: imageFile,
           birthDate: DateTime.parse(bithDateCast),
           maritalStatus: maritalStatus.text.toLowerCase(),
           gender: gender.text.toLowerCase(),

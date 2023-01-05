@@ -3,18 +3,17 @@ import 'dart:io';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 
-class UserPhoto extends StatefulWidget {
-  const UserPhoto({Key key}) : super(key: key);
+typedef OnImageSelected = Function(XFile imageFile);
 
-  @override
-  State<UserPhoto> createState() => _UserPhotoState();
-}
-
-class _UserPhotoState extends State<UserPhoto> {
-  File image;
+class UserPhoto extends StatelessWidget {
+  final XFile imageFile;
+  final OnImageSelected onImageSelected;
+  const UserPhoto({@required this.imageFile, @required this.onImageSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +28,11 @@ class _UserPhotoState extends State<UserPhoto> {
               children: [
                 CircleAvatar(backgroundColor: Styles.primaryColor, radius: 65),
                 CircleAvatar(
-                    backgroundImage: image != null
-                        ? FileImage(image)
-                        : const AssetImage("assets/image/person.png"),
+                    backgroundImage: imageFile != null
+                        ? FileImage(File(imageFile.path))
+                        : /* SvgPicture.asset("assets/svg/user.svg")
+                            as ImageProvider */
+                        const AssetImage("assets/image/person.png"),
                     radius: 62)
               ],
             )),
@@ -88,27 +89,10 @@ class _UserPhotoState extends State<UserPhoto> {
 
   Future _pickImage(BuildContext context, ImageSource source) async {
     try {
-      print(source.toString());
       final ImagePicker _picker = ImagePicker();
-      switch (source.toString()) {
-        case "ImageSource.camera":
-          final image = await _picker.pickImage(source: source);
-          if (image == null) return;
-          final imagTemp = File(image.path);
-          setState(() {
-            this.image = imagTemp;
-          });
-          break;
-        case "ImageSource.gallery":
-          final image = await _picker.pickImage(source: source);
-          if (image == null) return;
-          final imagTemp = File(image.path);
-          setState(() {
-            this.image = imagTemp;
-          });
-          break;
-        default:
-      }
+      final image = await _picker.pickImage(source: source, imageQuality: 25);
+      if (image == null) return;
+      this.onImageSelected(image);
     } on PlatformException catch (e) {
       print("Failed to pick image $e");
     }

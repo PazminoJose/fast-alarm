@@ -4,7 +4,6 @@
 
 import 'dart:convert';
 
-
 import 'package:app_boton_panico/src/models/person.dart';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
@@ -43,6 +42,7 @@ class User {
       );
 
   Map<String, dynamic> toJson() => {
+        "_id": id,
         "userName": userName,
         "email": email,
         "password": password,

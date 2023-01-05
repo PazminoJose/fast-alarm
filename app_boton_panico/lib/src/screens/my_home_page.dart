@@ -7,6 +7,7 @@ import 'package:app_boton_panico/src/models/user.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/alerts.dart';
 import 'package:app_boton_panico/src/services/notification_services.dart';
+import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
 import 'package:geocoding/geocoding.dart';
@@ -20,18 +21,19 @@ import 'package:vibration/vibration.dart';
 import '../models/failure.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key key}) : super(key: key);
+  MyHomePage({Key key}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+String idOneSignal;
 var serviceNotification = NotificationServices();
 
 class _MyHomePageState extends State<MyHomePage> {
   int pressVolumeId;
-
   User user;
+  String token;
   String _currentAddress;
   Position _currentPosition;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -40,10 +42,10 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-     initPlatform(context);
-     _handleLocationPermission(context);
+    initPlatform(context);
+    _handleLocationPermission(context);
     //TODO:Pobar botonews de volumen, cancel de subscripcion
-    startListening();
+    //startListening();
   }
 
   void startListening() {
@@ -58,7 +60,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    user = Provider.of<UserProvider>(context).user;
+    user = Provider.of<UserProvider>(context).userData["user"];
+    token = Provider.of<UserProvider>(context).userData["token"];
+    setIdOneSignal();
+
     return Scaffold(
         key: _scaffoldKey,
         body: Container(
@@ -131,7 +136,8 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ListView(
             children: <Widget>[
               UserAccountsDrawerHeader(
-                accountName: Text("${user.person.firstName} ${user.person.middleName}"),
+                accountName:
+                    Text("${user.person.firstName} ${user.person.middleName}"),
                 accountEmail: Column(
                   children: [
                     Padding(
@@ -295,11 +301,24 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _cerrarSesion(context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.remove("email");
-    preferences.remove("password");
+    preferences.remove("user");
+    preferences.remove("token");
     Navigator.of(context).pushReplacementNamed("/");
     var userProvider = Provider.of<UserProvider>(context, listen: false);
     userProvider.resetUser();
+  }
+//TODO:comprobar set idOneSignal
+  Future<void> setIdOneSignal() async {
+    UserServices userServices = UserServices();
+    print(user.idOneSignal);
+    print(idOneSignal);
+    if (user.idOneSignal == null || (user.idOneSignal != idOneSignal)) {
+      String idOne =
+          await userServices.postIdOneSignal(user.id, idOneSignal, token);
+      user.idOneSignal = idOne;
+    } else {
+      return;
+    }
   }
 }
 
@@ -349,8 +368,9 @@ Future<void> initPlatform(context) async {
   });
 
   //SUBSCRIPCION A ONE SIGNAL PARA RECIBIR Y ENVIAR NOTIFICACIONES
+
   await OneSignal.shared.setAppId('9fd9a40d-8646-450c-bd3b-d661b0e8ee42');
   await OneSignal.shared
       .getDeviceState()
-      .then((value) => {print(value?.userId)});
+      .then((value) => {idOneSignal = value?.userId});
 }

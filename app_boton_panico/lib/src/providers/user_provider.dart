@@ -3,22 +3,35 @@ import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:flutter/material.dart';
 
 class UserProvider extends ChangeNotifier {
-  var user;
+  Map<String, dynamic> userData;
 
-  Future<User> getUser(credentials) async {
-    if (user != null) {
-      return user;
+  Future<Map<String, dynamic>> getUser(credentials,
+      [User user, String token]) async {
+    if (userData != null) {
+      return userData;
     }
 
-    var service = UserServices();
-    user = await service.getUser(credentials);
+    if (user != null && token != null) {
+      userData = {
+        "user": user,
+        "token": token,
+      };
+    } else {
+      var service = UserServices();
+      Map userMap = await service.getUser(credentials);
+      userData = {
+        "user": userMap["user"],
+        "token": userMap["token"],
+      };
+    }
+
     notifyListeners();
-    return user;
+    return userData;
   }
 
   bool resetUser() {
-    if (user != null) {
-      user = null;
+    if (userData != null) {
+      userData = null;
       return true;
     } else {
       return false;

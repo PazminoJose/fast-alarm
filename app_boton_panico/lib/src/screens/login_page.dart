@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:app_boton_panico/src/models/user.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +26,7 @@ class LoginPageState extends State<LoginPage> {
   final email = TextEditingController();
   final password = TextEditingController();
 
-  String emailValue = "";
+  String userNameValue = "";
   String passwordValue = "";
   String textButtonSesion = "Iniciar Sesión";
   final formKey = GlobalKey<FormState>();
@@ -67,171 +70,178 @@ class LoginPageState extends State<LoginPage> {
             ),
           ],
         ),
-        Transform.translate(
-          offset: const Offset(0, -30),
-          child: Center(
-            child: SingleChildScrollView(
-              child: Card(
-                elevation: 5.0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                margin: const EdgeInsets.only(
-                    left: 20, right: 20, top: 220, bottom: 20),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 35, vertical: 20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(top: 15, bottom: 15),
-                        child: Text(
-                          "Bienvenido",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 30),
+        Center(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Card(
+                  elevation: 5.0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  margin: const EdgeInsets.only(
+                      left: 20, right: 20, top: 220, bottom: 20),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 35, vertical: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(top: 15, bottom: 15),
+                          child: Text(
+                            "Bienvenido",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30),
+                          ),
                         ),
-                      ),
-                      Form(
-                        key: formKey,
-                        child: Column(children: [
-                          TextFormField(
-                            inputFormatters: [
-                              LengthLimitingTextInputFormatter(30),
-                            ],
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.emailAddress,
-                            controller: email,
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(Icons.email),
-                              label: Text("Email"),
-                            ),
-                            onSaved: (value) => {emailValue = value},
-                            validator: (value) {
-                              if (value.isEmpty || value == null) {
-                                return "Ingrese su correo electronico";
-                              }
-                              return null;
-                            },
-                          ),
-                          TextFormField(
-                            inputFormatters: [
-                              LengthLimitingTextInputFormatter(15),
-                            ],
-                            textInputAction: TextInputAction.done,
-                            obscureText: true,
-                            controller: password,
-                            decoration: const InputDecoration(
-                              prefixIcon: Icon(Icons.lock_person),
-                              label: Text("Contraseña"),
-                            ),
-                            onSaved: (value) => {passwordValue = value},
-                            validator: (value) {
-                              if (value.isEmpty || value == null) {
-                                return "Ingrese su contraseña";
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 30),
-                          ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 15),
+                        Form(
+                          key: formKey,
+                          child: Column(children: [
+                            TextFormField(
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(30),
+                                FilteringTextInputFormatter.deny(
+                                    Styles.exprWithoutWhitspace),
+                              ],
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.name,
+                              controller: email,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(Icons.person),
+                                label: Text("Nombre de Usuario"),
                               ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(textButtonSesion),
-                                  if (_loading)
-                                    Container(
-                                      width: 20,
-                                      height: 20,
-                                      margin: const EdgeInsets.only(
-                                        left: 20,
-                                      ),
-                                      child: const CircularProgressIndicator(
-                                        color: Colors.white,
-                                      ),
-                                    )
-                                ],
+                              onSaved: (value) => {userNameValue = value},
+                              validator: (value) {
+                                if (value.isEmpty || value == null) {
+                                  return "Ingrese su Nombre de Usuario";
+                                }
+                                return null;
+                              },
+                            ),
+                            TextFormField(
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(15),
+                              ],
+                              textInputAction: TextInputAction.done,
+                              obscureText: true,
+                              controller: password,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(Icons.lock_person),
+                                label: Text("Contraseña"),
                               ),
-                              onPressed: () {
-                                emailValue = email.text;
-                                passwordValue = password.text;
+                              onSaved: (value) => {passwordValue = value},
+                              validator: (value) {
+                                if (value.isEmpty || value == null) {
+                                  return "Ingrese su contraseña";
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 30),
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(textButtonSesion),
+                                    if (_loading)
+                                      Container(
+                                        width: 20,
+                                        height: 20,
+                                        margin: const EdgeInsets.only(
+                                          left: 20,
+                                        ),
+                                        child: const CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                  ],
+                                ),
+                                onPressed: () {
+                                  userNameValue = email.text;
+                                  passwordValue = password.text;
 
-                                _showHomePage(
-                                    context, emailValue, passwordValue);
-                              }),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text("Guardar Sesión"),
-                              const Padding(
-                                  padding: EdgeInsets.only(right: 15)),
-                              Checkbox(
-                                  value: isSwitched,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      isSwitched = value;
-                                    });
-                                  }),
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text("¿Olvidó su contraseña?"),
-                              TextButton(
-                                  style: TextButton.styleFrom(
-                                    textStyle: TextStyle(
-                                        color: Theme.of(context).primaryColor),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pushNamed("/rememberPassword");
-                                  },
-                                  child: const Text(
-                                    "Recuerdame",
-                                    style: TextStyle(color: Colors.blue),
-                                  ))
-                            ],
-                          )
-                        ]),
-                      ),
-                    ],
+                                  _showHomePage(
+                                      context, userNameValue, passwordValue);
+                                }),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text("Guardar Sesión"),
+                                const Padding(
+                                    padding: EdgeInsets.only(right: 15)),
+                                Checkbox(
+                                    value: isSwitched,
+                                    onChanged: (value) {
+                                      setState(() {
+                                        isSwitched = value;
+                                      });
+                                    }),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text("¿Olvidó su contraseña?"),
+                                TextButton(
+                                    style: TextButton.styleFrom(
+                                      textStyle: TextStyle(
+                                          color:
+                                              Theme.of(context).primaryColor),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .pushNamed("/rememberPassword");
+                                    },
+                                    child: const Text(
+                                      "Recuerdame",
+                                      style: TextStyle(color: Colors.blue),
+                                    ))
+                              ],
+                            )
+                          ]),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                              style: TextButton.styleFrom(
+                                  backgroundColor: Styles.blur),
+                              onPressed: () =>
+                                  _showRegisterPage(contextPushScreen),
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Text(
+                                  "Registrate!",
+                                  style: TextStyle(
+                                      color: Styles.white, fontSize: 16),
+                                ),
+                              ))
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-        ),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 30),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                      style: TextButton.styleFrom(backgroundColor: Styles.blur),
-                      onPressed: () => _showRegisterPage(contextPushScreen),
-                      child: Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Text(
-                          "Registrate!",
-                          style: TextStyle(color: Styles.white, fontSize: 16),
-                        ),
-                      ))
-                ],
-              ),
-            ),
-          ],
         ),
         if (_isNotConncet)
           Container(
@@ -260,7 +270,7 @@ class LoginPageState extends State<LoginPage> {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
       Map<String, dynamic> credentials = {
-        "email": usuario,
+        "userName": usuario,
         "password": password
       };
 
@@ -272,14 +282,17 @@ class LoginPageState extends State<LoginPage> {
           textButtonSesion = "Iniciando";
         });
         try {
-          user = await userProvider.getUser(credentials);
+          var userData = await userProvider.getUser(credentials);
+          user = userData["user"];
+          var token = userData["token"];
           print(user);
           if (user != null) {
             if (isSwitched) {
               SharedPreferences preferences =
                   await SharedPreferences.getInstance();
-              preferences.setString("email", usuario);
-              preferences.setString("password", password);
+              var userMap = jsonDecode(jsonEncode(userToJson(user)));
+              preferences.setString("user", userMap);
+              preferences.setString("token", token);
             }
 
             Navigator.of(context).pushReplacementNamed("/homePage");
@@ -294,6 +307,7 @@ class LoginPageState extends State<LoginPage> {
             });
           }
         } catch (e) {
+          print(e);
           ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
               'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
               'Error!'));
@@ -310,11 +324,12 @@ class LoginPageState extends State<LoginPage> {
     try {
       WidgetsFlutterBinding.ensureInitialized();
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      var email = preferences.getString("email");
-      var password = preferences.getString("password");
-      Map<String, dynamic> credentials = {"email": email, "password": password};
-      if (email != null && password != null) {
-        user = await userProvider.getUser(credentials);
+      user = preferences.getString("user");
+      var token = preferences.getString("token");
+      //Map<String, dynamic> credentials = {"email": email, "password": password};
+      user = User.fromJson(jsonDecode(user));
+      if (user != null && token != null) {
+        await userProvider.getUser(null, user, token);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           elevation: 15,
           shape: const RoundedRectangleBorder(
@@ -345,18 +360,12 @@ class LoginPageState extends State<LoginPage> {
         Navigator.of(context).pushReplacementNamed("/homePage");
       } else {
         setState(() {
-          _isNotConncet = false;
+          _isNotConncet = true;
         });
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-              'Los permisos de localización están permanentemente denegados, no podemos solicitar permisos.'),
-        ),
-      );
       setState(() {
-        _isNotConncet = true;
+        _isNotConncet = false;
       });
     }
   }

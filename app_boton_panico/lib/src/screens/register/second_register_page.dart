@@ -1,6 +1,7 @@
 import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/models/user.dart';
+import 'package:app_boton_panico/src/screens/map/map.dart';
 import 'package:app_boton_panico/src/services/person_services.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
@@ -8,7 +9,8 @@ import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.Dart';
 import 'package:gap/gap.dart';
-
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class SecondRegisterPage extends StatefulWidget {
   const SecondRegisterPage({Key key}) : super(key: key);
@@ -30,9 +32,10 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController passwordConfirm = TextEditingController();
-  TextEditingController controller = TextEditingController();
+  TextEditingController address = TextEditingController();
   String textButtonSesion = "Registrarse";
   Person personArguments;
+  LatLng directions;
 
   bool isMatchPaswwords = false;
 
@@ -67,6 +70,9 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
     print(personArguments.firstName);
     userNameController.text =
         getUserName(personArguments.firstName, personArguments.idCard);
+    address.text =
+        (personArguments.address == null) ? "" : personArguments.address;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -134,12 +140,13 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                         Icon(Icons.location_on_outlined),
                                     label: Text("Obtener Dirección"),
                                   ),
-                                  onSaved: (value) => {controller.text = value},
+                                  onSaved: (value) => {address.text = value},
                                   readOnly: true,
-                                  controller: controller,
+                                  controller: address,
                                   onTap: () => {
-                                    Navigator.of(context)
-                                        .pushReplacementNamed("/mapMarker")
+                                    Navigator.of(context).pushReplacementNamed(
+                                        "/mapMarker",
+                                        arguments: personArguments)
                                   },
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
@@ -347,73 +354,59 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
           textButtonSesion = "Registrando";
           _loading = false;
         });
-        personArguments.address = parish.text;
         personArguments.phone = phone.text;
-        personArguments.urlImage = "image";
-        Person person = await servicePerson.postPerson(personArguments);
-        if (person == null) {
-          ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
-              'No se pudo guardar el usuario.\nPor favor compruebe su conexión!',
-              'Error!'));
-          setState(() {
-            _loading = false;
-            textButtonSesion = "Registrarse";
-          });
+        personArguments.address = address.text;
+        // Person person = await servicePerson.postPerson(personArguments);
+
+        User user = User(
+          password: passwordConfirm.text,
+          userType: "user",
+          userName: userNameController.text,
+          email: email.text,
+        );
+        user = await serviceUser.saveUser(user, personArguments);
+        if (user == null) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            elevation: 15,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
+            backgroundColor: Colors.red[400],
+            content: Row(
+              children: const [
+                Icon(
+                  Icons.clear_outlined,
+                  color: Colors.white,
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Text(' Error al ingresar el Usuario'),
+              ],
+            ),
+          ));
           return;
-        } else {
-          User user = User(
-            password: passwordConfirm.text,
-            userType: "user",
-            userName: userNameController.text,
-            email: email.text,
-            person: person,
-          );
-          user = await serviceUser.saveUser(user);
-          if (user == null) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              elevation: 15,
-              shape: const RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(15))),
-              backgroundColor: Colors.red[400],
-              content: Row(
-                children: const [
-                  Icon(
-                    Icons.clear_outlined,
-                    color: Colors.white,
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Text(' Error al ingresar el Usuario'),
-                ],
-              ),
-            ));
-            return;
-          }
-          showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                    title: Column(
-                      children: [
-                        Text("¡Perfecto!"),
-                        Text("Usuario registrado con exito"),
-                      ],
-                    ),
-                    content: Text(
-                        "Recuerda tu nombre de usuario para poder ingresar\nUsuario: ${user.userName}"),
-                    actions: [
-                      TextButton(
-                          onPressed: (() =>
-                              Navigator.of(context).pushReplacementNamed("/")),
-                          child: Text(
-                            "OK",
-                            style:
-                                Styles.textLabel.copyWith(color: Colors.blue),
-                          ))
-                    ],
-                  ));
         }
+        showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+                  title: Column(
+                    children: [
+                      Text("¡Perfecto!"),
+                      Text("Usuario registrado con exito"),
+                    ],
+                  ),
+                  content: Text(
+                      "Recuerda tu nombre de usuario para poder ingresar\nUsuario: ${user.userName}"),
+                  actions: [
+                    TextButton(
+                        onPressed: (() =>
+                            Navigator.of(context).pushReplacementNamed("/")),
+                        child: Text(
+                          "OK",
+                          style: Styles.textLabel.copyWith(color: Colors.blue),
+                        ))
+                  ],
+                ));
       }
     } catch (e) {
       print(e);

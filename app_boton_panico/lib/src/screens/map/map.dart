@@ -1,16 +1,22 @@
+import 'dart:developer';
+
+import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:gap/gap.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 
-class SearchPlaces extends StatefulWidget {
-  const SearchPlaces({Key key}) : super(key: key);
+typedef OnDirecctionSelected = Function(LatLng direcctionSelected);
 
+class SearchPlaces extends StatefulWidget {
+  const SearchPlaces({
+    Key key,
+  }) : super(key: key);
   @override
   State<SearchPlaces> createState() => _SearchPlacesState();
 }
@@ -19,12 +25,15 @@ const kGoogleApiKey = 'AIzaSyCfK3Fp-ScPOOhLGtTki7nejALoQXZs96o';
 final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 class _SearchPlacesState extends State<SearchPlaces> {
+  LatLng direction;
   Set<Marker> markersList = {};
   Position _currentPosition;
   GoogleMapController googleMapController;
-  static const CameraPosition _initialCameraPosition =
-      CameraPosition(target: LatLng(37.42796, -122.08574), zoom: 14.0);
+  static const CameraPosition _initialCameraPosition = CameraPosition(
+      target: LatLng(0.8148998285180321, -77.7182745106789), zoom: 15.0);
   final Mode _mode = Mode.overlay;
+  Person personArguments;
+  String _currentAddress;
 
   @override
   void initState() {
@@ -34,6 +43,8 @@ class _SearchPlacesState extends State<SearchPlaces> {
 
   @override
   Widget build(BuildContext context) {
+    personArguments = ModalRoute.of(context).settings.arguments as Person;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       key: homeScaffoldKey,
@@ -68,7 +79,7 @@ class _SearchPlacesState extends State<SearchPlaces> {
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: GoogleMap(
-              zoomControlsEnabled: false,
+              zoomControlsEnabled: true,
               initialCameraPosition: _initialCameraPosition,
               myLocationButtonEnabled: true,
               myLocationEnabled: true,
@@ -95,6 +106,7 @@ class _SearchPlacesState extends State<SearchPlaces> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 FloatingActionButton.extended(
+                  heroTag: "btn1",
                   onPressed: _handlePressButton,
                   label: Text("Buscar dirección"),
                   icon: Icon(Icons.search),
@@ -103,13 +115,32 @@ class _SearchPlacesState extends State<SearchPlaces> {
             ),
           ),
           FloatingActionButton(
-            onPressed: (() {}),
+            heroTag: "btn2",
+            onPressed: (() async {
+              await _getAddressFromLatLng(direction);
+              personArguments.address = _currentAddress;
+              Navigator.of(context).pushReplacementNamed("/secondRegisterPage",
+                  arguments: personArguments);
+            }),
             child: Icon(Icons.check_rounded),
             backgroundColor: Colors.green,
           ),
         ],
       ),
     );
+  }
+
+  Future<void> _getAddressFromLatLng(LatLng position) async {
+    try {
+      await placemarkFromCoordinates(position.latitude, position.longitude)
+          .then((List<Placemark> placemarks) {
+        _currentAddress = '${placemarks[1].street}, ${placemarks[2].street}';
+      }).catchError((e) {
+        print(e);
+      });
+    } catch (e) {
+      log(e);
+    }
   }
 
   Future<bool> _handleLocationPermission(context) async {
@@ -202,15 +233,15 @@ class _SearchPlacesState extends State<SearchPlaces> {
       final lat = detail.result.geometry.location.lat;
       final lng = detail.result.geometry.location.lng;
 
-      markersList.clear();
-      markersList.add(Marker(
-        draggable: true,
-        onDrag: (value) {
-          print(value);
-        },
-        markerId: const MarkerId("0"),
-        position: LatLng(lat, lng),
-      ));
+      setState(() {
+        print(lat);
+        markersList.clear();
+        markersList.add(Marker(
+          markerId: const MarkerId("0"),
+          position: LatLng(lat, lng),
+        ));
+        direction = LatLng(lat, lng);
+      });
 
       googleMapController
           .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
@@ -223,18 +254,19 @@ class _SearchPlacesState extends State<SearchPlaces> {
       final lat = latLng.latitude;
       final lng = latLng.longitude;
 
-      markersList.clear();
-      markersList.add(Marker(
-        draggable: true,
-        onDrag: (value) {
-          print(value);
-        },
-        markerId: const MarkerId("0"),
-        position: LatLng(lat, lng),
-      ));
+      setState(() {
+        markersList.clear();
+        markersList.add(Marker(
+          markerId: const MarkerId("0"),
+          position: LatLng(lat, lng),
+        ));
+        direction = LatLng(lat, lng);
+      });
 
       googleMapController
           .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 18.0));
     }
   }
 }
+
+void onImages() {}
