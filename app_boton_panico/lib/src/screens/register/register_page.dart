@@ -37,6 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
   DateTime pickerDate;
   bool isDisability = false;
   XFile imageFile;
+  bool isPhoto = false;
   List<String> listMaritalStatus = [
     'Casado',
     'Soltero',
@@ -112,15 +113,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                 imageFile = file;
                               });
                             })),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "La imagen es obligatoria",
-                              style: TextStyle(color: Colors.red[400]),
-                            )
-                          ],
-                        ),
+                        if (isPhoto)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "La imagen es obligatoria",
+                                style: TextStyle(color: Colors.red[400]),
+                              )
+                            ],
+                          ),
                         Form(
                           key: _formKey,
                           child: Column(
@@ -258,6 +260,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   controller: bithDate,
                                   onTap: (() async {
                                     pickerDate = await showDatePicker(
+                                        //locale: const Locale("es", "EC"),
                                         context: context,
                                         initialDate: DateTime(2000),
                                         firstDate: DateTime(1970),
@@ -405,9 +408,9 @@ class _RegisterPageState extends State<RegisterPage> {
 //TODO: Comprobar cedula con 0
   Future<void> _showSecondPageRegister(BuildContext context) async {
     try {
+      if (checkImage()) return;
       if (_formKey.currentState.validate()) {
         _formKey.currentState.save();
-        //print(bithDate.text);
         String bithDateCast = DateFormat('yyyy-MM-dd').format(pickerDate);
         Person person = Person(
           firstName: firstName.text,
@@ -431,6 +434,20 @@ class _RegisterPageState extends State<RegisterPage> {
       ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
           'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
           'Error!'));
+    }
+  }
+
+  bool checkImage() {
+    if (imageFile == null) {
+      setState(() {
+        isPhoto = true;
+      });
+      return true;
+    } else {
+      setState(() {
+        isPhoto = false;
+      });
+      return false;
     }
   }
 }

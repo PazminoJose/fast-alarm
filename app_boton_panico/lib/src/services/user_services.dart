@@ -38,51 +38,7 @@ class UserServices {
     }
   }
 
-  /*  Future<User> saveUser(User user, Person person) async {
-    Map<String, String> headers = {
-      HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
-    };
-    var url = Uri.http(Environments.url, Environments.postUser);
-    var request = http.MultipartRequest("POST", url);
-    //request.fields =
-    try {
-      /* Map<String, String> userData = {
-        "userName": user.userName,
-        "email": user.email,
-        "password": user.password,
-        "userType": user.userType,
-      };
-      Map<String, dynamic> userPersonPost = {
-        "user": userData,
-        "person": person
-      }; */
-      Map<String, dynamic> userPersonPost = {"image": person.urlImage};
-/*       final response = await http.post(url,
-          headers: headers, body: jsonEncode(userPersonPost)); */
-
-      //request.fields["user"] = jsonEncode(userPersonPost);
-      request.fields['user'] = 'io';
-      request.files.add(await http.MultipartFile.fromPath(
-          "img", person.urlImage,
-          contentType: MediaType("image", "jpg")));
-      request.headers.addAll({
-        "Content-type": "multipart/form-data",
-      });
-
-      var response = await request.send();
-      if (response.statusCode == 200) {
-        /* var decoded = json.decode(json.encode(response.stream.bytesToString()));
-        user = userFromJson(decoded);
-        return user; */
-      } else {
-        return null;
-      }
-    } catch (e) {
-      print(e);
-    }
-  } */
-
-  Future<String> postIdOneSignal(
+  Future<Map<String, dynamic>> postIdOneSignal(
       String id, String idOneSignal, String token) async {
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
@@ -97,10 +53,10 @@ class UserServices {
       final response = await http.post(url,
           headers: headers, body: jsonEncode(idOneSignalPost));
       if (response.statusCode == 200) {
-        var decoded = response.body;
-        return decoded;
+        Map<String, dynamic> map = jsonDecode(response.body);
+        return map;
       } else {
-        return "";
+        return null;
       }
     } on SocketException {
       throw Failure("Error de socketExpetion");
@@ -111,7 +67,7 @@ class UserServices {
     }
   }
 
-  Future<User> saveUser(User user, Person person) async {
+  Future<Map<String, dynamic>> saveUser(User user, Person person) async {
     try {
       //SE ALMACENA LA DAT DE LA PERSONA Y USUARIO E UNA SOLA
       Map<String, String> userData = {
@@ -137,16 +93,66 @@ class UserServices {
 
       var response = await request.send();
       if (response.statusCode == 200) {
-        //var decoded =
-        //json.decode(json.encode(await response.stream.bytesToString()));
-        String decoded = await response.stream.bytesToString();
-        
-        //log(decoded);
+        Map<String, dynamic> map =
+            jsonDecode(await response.stream.bytesToString());
+        return map;
       } else {
         return null;
       }
     } catch (e) {
       print(e);
+    }
+  }
+
+  Future<Map<String, dynamic>> postChangePassword(
+      Map changePasswordData) async {
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
+    };
+    var url = Uri.http(Environments.url, Environments.postChangePassword);
+    try {
+      final response = await http.post(url,
+          headers: headers, body: jsonEncode(changePasswordData));
+
+      if (response.statusCode == 200) {
+        final decoded = await json.decode(response.body);
+        Map<String, dynamic> responseData = decoded;
+        return responseData;
+      } else {
+        return null;
+      }
+    } on SocketException {
+      throw Failure("Error de socketExpetion");
+    } on HttpException {
+      throw Failure("Couldn't find the post");
+    } on FormatException {
+      throw Failure("Bad response format");
+    }
+  }
+
+  Future<Map<String, dynamic>> postSendEmailChangePassword(
+      Map changePasswordData) async {
+    Map<String, String> headers = {
+      HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
+    };
+    var url = Uri.http(Environments.url, Environments.postChangePassword);
+    try {
+      final response = await http.post(url,
+          headers: headers, body: jsonEncode(changePasswordData));
+
+      if (response.statusCode == 200) {
+        final decoded = await json.decode(response.body);
+        Map<String, dynamic> responseData = decoded;
+        return responseData;
+      } else {
+        return null;
+      }
+    } on SocketException {
+      throw Failure("Error de socketExpetion");
+    } on HttpException {
+      throw Failure("Couldn't find the post");
+    } on FormatException {
+      throw Failure("Bad response format");
     }
   }
 }

@@ -283,15 +283,14 @@ class LoginPageState extends State<LoginPage> {
         });
         try {
           var userData = await userProvider.getUser(credentials);
-          user = userData["user"];
-          var token = userData["token"];
-          print(user);
-          if (user != null) {
+          if (userData != null) {
+            user = userData["user"];
+            var token = userData["token"];
             if (isSwitched) {
               SharedPreferences preferences =
                   await SharedPreferences.getInstance();
-              var userMap = jsonDecode(jsonEncode(userToJson(user)));
-              preferences.setString("user", userMap);
+              var userString = jsonDecode(jsonEncode(userToJson(user)));
+              preferences.setString("user", userString);
               preferences.setString("token", token);
             }
 
@@ -330,25 +329,8 @@ class LoginPageState extends State<LoginPage> {
       user = User.fromJson(jsonDecode(user));
       if (user != null && token != null) {
         await userProvider.getUser(null, user, token);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          elevation: 15,
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
-          backgroundColor: Colors.green,
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: const [
-              Icon(
-                Icons.key_outlined,
-                color: Colors.white,
-              ),
-              SizedBox(
-                width: 20,
-              ),
-              Text(' Ya ha iniciado sesión'),
-            ],
-          ),
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(MySnackBars.simpleSnackbar(
+            "Ya ha iniciado sesión", Icons.key_outlined, Styles.green));
         print(user);
         Future.delayed(const Duration(seconds: 4), () {
           if (mounted) {

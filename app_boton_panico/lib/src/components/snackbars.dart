@@ -72,4 +72,23 @@ class MySnackBars {
       xlarge: false,
     ),
   );
+  static simpleSnackbar(String message, IconData icon, Color color) => SnackBar(
+        elevation: 15,
+        /* shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(15))), */
+        backgroundColor: color,
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Icon(
+              icon,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            Text(message),
+          ],
+        ),
+      );
 }

@@ -54,6 +54,7 @@ dependencies:
 
   flutter_google_places: ^0.3.0
   flutter_svg_provider: ^1.0.3
+  flutter_localization: ^0.1.9
 
 dev_dependencies:
   flutter_test:

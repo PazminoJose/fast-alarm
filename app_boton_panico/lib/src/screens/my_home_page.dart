@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/models/alarm.dart';
@@ -8,8 +9,11 @@ import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/alerts.dart';
 import 'package:app_boton_panico/src/services/notification_services.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
+import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.Dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
+import 'package:gap/gap.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:map_launcher/map_launcher.dart';
@@ -17,8 +21,6 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vibration/vibration.dart';
-
-import '../models/failure.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key}) : super(key: key);
@@ -38,6 +40,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Position _currentPosition;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   StreamSubscription<HardwareButton> subscription;
+  TextEditingController password = TextEditingController();
+  TextEditingController passwordConfirm = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -62,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     user = Provider.of<UserProvider>(context).userData["user"];
     token = Provider.of<UserProvider>(context).userData["token"];
-    setIdOneSignal();
+    //setIdOneSignal();
 
     return Scaffold(
         key: _scaffoldKey,
@@ -133,8 +138,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         endDrawer: Drawer(
           width: 270,
-          child: ListView(
-            children: <Widget>[
+          child: Column(
+            children: [
               UserAccountsDrawerHeader(
                 accountName:
                     Text("${user.person.firstName} ${user.person.middleName}"),
@@ -182,15 +187,38 @@ class _MyHomePageState extends State<MyHomePage> {
                         image: AssetImage("assets/image/back_user.jpg"),
                         fit: BoxFit.fill)),
               ),
-              ListTile(
-                  title: const Text("Cerrar Sesión"),
-                  trailing: const Icon(Icons.exit_to_app_rounded),
-                  onTap: () => _cerrarSesion(context)),
-              const Divider(),
-              ListTile(
-                title: const Text("Cancel"),
-                trailing: const Icon(Icons.cancel),
-                onTap: () => Navigator.pop(context),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Column(
+                      children: [
+                        ListTile(
+                            title: const Text("Cambiar Contraseña"),
+                            trailing: const Icon(Icons.lock_open_rounded),
+                            onTap: () => _openFormChangePassword(context)),
+                        const Divider(
+                          height: 20,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        ListTile(
+                          title: const Text("Cancel"),
+                          trailing: const Icon(Icons.cancel),
+                          onTap: () => Navigator.pop(context),
+                        ),
+                        const Divider(),
+                        ListTile(
+                            title: const Text("Cerrar Sesión"),
+                            trailing: const Icon(Icons.exit_to_app_rounded),
+                            onTap: () => _logOut(context)),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -299,7 +327,7 @@ class _MyHomePageState extends State<MyHomePage> {
     await serviceNotification.postNotfication(contentAlertPostServer);
   }
 
-  _cerrarSesion(context) async {
+  void _logOut(context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove("user");
     preferences.remove("token");
@@ -307,17 +335,188 @@ class _MyHomePageState extends State<MyHomePage> {
     var userProvider = Provider.of<UserProvider>(context, listen: false);
     userProvider.resetUser();
   }
-//TODO:comprobar set idOneSignal
+
+  void _logOutChangePassword(context) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.remove("user");
+    preferences.remove("token");
+  }
+
   Future<void> setIdOneSignal() async {
     UserServices userServices = UserServices();
-    print(user.idOneSignal);
-    print(idOneSignal);
     if (user.idOneSignal == null || (user.idOneSignal != idOneSignal)) {
-      String idOne =
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      Map idOne =
           await userServices.postIdOneSignal(user.id, idOneSignal, token);
-      user.idOneSignal = idOne;
+      user.idOneSignal = idOne["idOneSignal"];
+      var userString = jsonDecode(jsonEncode(userToJson(user)));
+      preferences.setString("user", userString);
     } else {
       return;
+    }
+  }
+
+  Future _openFormChangePassword(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: <Widget>[
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              "Cambiar Contraseña",
+                              style: Styles.textLabel.copyWith(
+                                  color: Styles.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(15),
+                                  FilteringTextInputFormatter.deny(
+                                      Styles.exprWithoutWhitspace),
+                                ],
+                                controller: password,
+                                textInputAction: TextInputAction.done,
+                                obscureText: true,
+                                decoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.lock_person),
+                                  label: Text("Contraseña"),
+                                ),
+                                onSaved: (value) => {password.text = value},
+                                validator: (value) {
+                                  if (value.isEmpty || value == null) {
+                                    return "Ingrese su contraseña";
+                                  }
+                                  password.text = value;
+                                  return null;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TextFormField(
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(15),
+                                  FilteringTextInputFormatter.deny(
+                                      Styles.exprWithoutWhitspace),
+                                ],
+                                controller: passwordConfirm,
+                                textInputAction: TextInputAction.done,
+                                obscureText: true,
+                                decoration: const InputDecoration(
+                                  prefixIcon: Icon(Icons.lock_person),
+                                  label: Text("Confirmar contraseña"),
+                                ),
+                                onSaved: (value) =>
+                                    {passwordConfirm.text = value},
+                                validator: (value) {
+                                  if (value.isEmpty || value == null) {
+                                    return "Ingrese su contraseña";
+                                  }
+                                  if (!(password.text == value)) {
+                                    return "Las contraseñas no coinciden";
+                                  }
+
+                                  return null;
+                                },
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                        backgroundColor: Styles.secondaryColor),
+                                    child: Text("Cancelar"),
+                                    onPressed: (() {
+                                      Navigator.of(context).pop();
+                                    }),
+                                  ),
+                                  ElevatedButton(
+                                    child: Text("Aceptar"),
+                                    onPressed: () => _changePassword(context),
+                                  ),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  Future<void> initPlatform(context) async {
+    OneSignal.shared.setNotificationOpenedHandler(
+        (OSNotificationOpenedResult result) async {
+      //OBTENER DATOS DESDE LA NOTIFICACION PUSH
+      Map<String, dynamic> valueNotify = result.notification.additionalData;
+      //OBTENER LA UBICACION EXACTA DEL USUASRIO PARA REDIRECCION EN GOOGLE MAPS
+      //var ubication = await location.getLocation();
+      var longitude = valueNotify["longitude"];
+      var latitude = valueNotify["latitude"];
+
+      if (await MapLauncher.isMapAvailable(MapType.google)) {
+        MapLauncher.showDirections(
+          mapType: MapType.google,
+          destination: Coords(latitude, longitude),
+          //origin: Coords(ubication.latitude, ubication.longitude)
+        );
+      }
+    });
+
+    //SUBSCRIPCION A ONE SIGNAL PARA RECIBIR Y ENVIAR NOTIFICACIONES
+    await OneSignal.shared.setAppId('9fd9a40d-8646-450c-bd3b-d661b0e8ee42');
+    await OneSignal.shared
+        .getDeviceState()
+        .then((value) => {idOneSignal = value?.userId});
+    var deviceState = await OneSignal.shared.getDeviceState();
+    idOneSignal = deviceState.userId;
+
+    setIdOneSignal();
+  }
+
+  void _changePassword(context) async {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      Map<String, String> changePasswordData = {
+        "userId": user.id,
+        "password": password.text,
+      };
+      UserServices userServices = UserServices();
+      Map response = await userServices.postChangePassword(changePasswordData);
+      if (response == null) {
+        ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
+            'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
+            'Error!'));
+        return;
+      }
+      _scaffoldKey.currentState.closeEndDrawer();
+
+      _logOutChangePassword(context);
+      Navigator.of(context).pop();
+      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.simpleSnackbar(
+          "${response["message"]}", Icons.lock_reset_rounded, Styles.green));
     }
   }
 }
@@ -343,34 +542,4 @@ Future<List<String>> getDevices(playerId) async {
   }
   listPlayers.remove(playerId);
   return listPlayers;
-}
-
-Future<void> initPlatform(context) async {
-  OneSignal.shared
-      .setNotificationOpenedHandler((OSNotificationOpenedResult result) async {
-    //OBTENER DATOS DESDE LA NOTIFICACION PUSH
-    Map<String, dynamic> valueNotify = result.notification.additionalData;
-
-    //OBTENER LA UBICACION EXACTA DEL USUASRIO PARA REDIRECCION EN GOOGLE MAPS
-    //Location location = Location();
-
-    //var ubication = await location.getLocation();
-    var longitude = valueNotify["longitude"];
-    var latitude = valueNotify["latitude"];
-
-    if (await MapLauncher.isMapAvailable(MapType.google)) {
-      MapLauncher.showDirections(
-        mapType: MapType.google,
-        destination: Coords(latitude, longitude),
-        //origin: Coords(ubication.latitude, ubication.longitude)
-      );
-    }
-  });
-
-  //SUBSCRIPCION A ONE SIGNAL PARA RECIBIR Y ENVIAR NOTIFICACIONES
-
-  await OneSignal.shared.setAppId('9fd9a40d-8646-450c-bd3b-d661b0e8ee42');
-  await OneSignal.shared
-      .getDeviceState()
-      .then((value) => {idOneSignal = value?.userId});
 }

@@ -5,6 +5,8 @@ class Styles {
   static Color secondaryColor = Colors.blueGrey[800];
   static Color white = Colors.white;
   static Color black = Colors.black;
+  static Color green = Colors.green;
+  static Color red = Colors.red[300];
   static Color tranparent = Colors.transparent;
   static Color blur = Color.fromARGB(48, 255, 255, 255);
   static RegExp exprOnlyLetter = RegExp(r'[ a-zA-Z]');

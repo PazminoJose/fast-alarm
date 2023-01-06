@@ -1,5 +1,6 @@
 import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
+import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
@@ -14,25 +15,15 @@ class RememberPassPage extends StatefulWidget {
 }
 
 class _RememberPassPageState extends State<RememberPassPage> {
-  var userProvider;
   final formKey = GlobalKey<FormState>();
-  var user;
   bool _loading = false;
-  bool _isNotConncet;
-  bool isSwitched = false;
 
-  final email = TextEditingController();
-  final password = TextEditingController();
-
-  String emailValue = "";
-  String passwordValue = "";
+  String userNameValue = "";
   String textButtonSesion = "Recuperar";
 
   @override
   Widget build(BuildContext context) {
     final size = AppLayout.getSize(context);
-    userProvider = Provider.of<UserProvider>(context, listen: false);
-
     return Scaffold(
       body: Container(
         height: double.infinity,
@@ -75,94 +66,87 @@ class _RememberPassPageState extends State<RememberPassPage> {
                 ),
               ],
             ),
-            Transform.translate(
-              offset: const Offset(0, -30),
-              child: Center(
-                child: SingleChildScrollView(
-                  child: Card(
-                    elevation: 5.0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20)),
-                    margin: const EdgeInsets.only(
-                        left: 20, right: 20, top: 60, bottom: 20),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 35, vertical: 20),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(top: 15, bottom: 15),
-                            child: Text(
-                              "¿Ha olvidado su contraseña?",
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 30),
-                            ),
+            Center(
+              child: SingleChildScrollView(
+                child: Card(
+                  elevation: 5.0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  margin: const EdgeInsets.only(
+                      left: 20, right: 20, top: 60, bottom: 0),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 35, vertical: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.only(top: 15, bottom: 15),
+                          child: Text(
+                            "¿Ha olvidado su contraseña?",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.only(top: 15, bottom: 5),
-                            child: Text(
-                              "Se enviará una contraseña temporal a su correo electrónico",
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 15),
-                            ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.only(top: 15, bottom: 5),
+                          child: Text(
+                            "Se enviará una contraseña temporal a su correo electrónico.\n\nIngrese su nombre de usuario",
+                            style: TextStyle(color: Colors.black, fontSize: 15),
                           ),
-                          Form(
-                            key: formKey,
-                            child: Column(children: [
-                              TextFormField(
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(30),
-                                ],
-                                textInputAction: TextInputAction.next,
-                                keyboardType: TextInputType.emailAddress,
-                                controller: email,
-                                decoration: const InputDecoration(
-                                  prefixIcon: Icon(Icons.email),
-                                  label: Text("Email"),
-                                ),
-                                onSaved: (value) => {emailValue = value},
-                                validator: (value) {
-                                  if (value.isEmpty || value == null) {
-                                    return "Ingrese su correo electronico";
-                                  }
-                                  return null;
-                                },
+                        ),
+                        Form(
+                          key: formKey,
+                          child: Column(children: [
+                            TextFormField(
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(30),
+                              ],
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(Icons.person_outline_rounded),
+                                label: Text("Usuario"),
                               ),
-                              const SizedBox(height: 30),
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 15),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(textButtonSesion),
-                                      if (_loading)
-                                        Container(
-                                          width: 20,
-                                          height: 20,
-                                          margin: const EdgeInsets.only(
-                                            left: 20,
-                                          ),
-                                          child:
-                                              const CircularProgressIndicator(
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                    ],
-                                  ),
-                                  onPressed: () {
-                                    emailValue = email.text;
-                                    _showHomePage(context, emailValue);
-                                  }),
-                            ]),
-                          ),
-                        ],
-                      ),
+                              onSaved: (value) => {userNameValue = value},
+                              validator: (value) {
+                                if (value.isEmpty || value == null) {
+                                  return "Ingrese su nombre de usuario";
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 30),
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 15),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(textButtonSesion),
+                                    if (_loading)
+                                      Container(
+                                        width: 20,
+                                        height: 20,
+                                        margin: const EdgeInsets.only(
+                                          left: 20,
+                                        ),
+                                        child: const CircularProgressIndicator(
+                                          color: Colors.white,
+                                        ),
+                                      )
+                                  ],
+                                ),
+                                onPressed: () {
+                                  _showHomePage(context);
+                                }),
+                          ]),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -174,25 +158,29 @@ class _RememberPassPageState extends State<RememberPassPage> {
     );
   }
 
-  void _showHomePage(context, usuario) async {
+  void _showHomePage(context) async {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
-      Map<String, dynamic> credentials = {
-        "email": usuario,
+      Map<String, dynamic> changePasswordData = {
+        "userName": userNameValue,
       };
 
       if (!_loading) {
         try {
-          user = await userProvider.getUser(credentials);
+          UserServices userServices = UserServices();
+          Map response = await userServices
+              .postSendEmailChangePassword(changePasswordData);
 
-          if (user != null) {
-            Navigator.of(context).pushReplacementNamed("/homePage");
+          if (response != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                MySnackBars.simpleSnackbar("${response["message"]}",
+                    Icons.lock_reset_rounded, Styles.green));
+            Navigator.of(context).pushReplacementNamed("/");
           } else {
-            ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
-                'Usuario o Contraseña Incorrecta.\nPor favor intente de nuevo!',
-                'Incorrecto!'));
-            //_showToast("Usuario o Contraseña Incorrecta", "red", "error");
             setState(() {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  MySnackBars.simpleSnackbar("Verifique su nombre de Usuario",
+                      Icons.dangerous, Styles.red));
               _loading = false;
               textButtonSesion = "Recuperar";
             });

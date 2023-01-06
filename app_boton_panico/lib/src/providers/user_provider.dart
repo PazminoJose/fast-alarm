@@ -19,6 +19,7 @@ class UserProvider extends ChangeNotifier {
     } else {
       var service = UserServices();
       Map userMap = await service.getUser(credentials);
+      if (userMap == null) return null;
       userData = {
         "user": userMap["user"],
         "token": userMap["token"],

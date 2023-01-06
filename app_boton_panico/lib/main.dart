@@ -1,5 +1,5 @@
 import 'package:app_boton_panico/src/providers/user_provider.dart';
-import 'package:app_boton_panico/src/screens/login_page.dart';
+import 'package:app_boton_panico/src/screens/login/login_page.dart';
 import 'package:app_boton_panico/src/screens/map/map.dart';
 import 'package:app_boton_panico/src/screens/my_home_page.dart';
 import 'package:app_boton_panico/src/screens/register/register_page.dart';
@@ -8,8 +8,9 @@ import 'package:app_boton_panico/src/screens/rememberPass_page.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart';
 
-//id=ee435e81-1546-40fe-9cd7-af3cbf1f5688
 void main() {
   runApp(const MyApp());
 }
@@ -23,6 +24,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
       child: MaterialApp(
+        /* localizationsDelegates: <LocalizationsDelegate<Object>>[
+          globa
+        ], */
+        //supportedLocales: const [Locale("es", "EC")],
         debugShowCheckedModeBanner: false,
         title: 'Material App',
         //home: MyHomePage()

@@ -364,8 +364,8 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
           userName: userNameController.text,
           email: email.text,
         );
-        user = await serviceUser.saveUser(user, personArguments);
-        if (user == null) {
+        Map map = await serviceUser.saveUser(user, personArguments);
+        if (map == null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             elevation: 15,
             shape: const RoundedRectangleBorder(
@@ -387,16 +387,17 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
           return;
         }
         showDialog(
+          barrierDismissible: false,
             context: context,
             builder: (context) => AlertDialog(
                   title: Column(
                     children: [
                       Text("¡Perfecto!"),
-                      Text("Usuario registrado con exito"),
+                      Text(map["message"]),
                     ],
                   ),
                   content: Text(
-                      "Recuerda tu nombre de usuario para poder ingresar\nUsuario: ${user.userName}"),
+                      "Recuerda tu nombre de usuario para poder ingresar\nUsuario: ${map["userName"]}"),
                   actions: [
                     TextButton(
                         onPressed: (() =>
