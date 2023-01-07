@@ -55,6 +55,9 @@ dependencies:
   flutter_google_places: ^0.3.0
   flutter_svg_provider: ^1.0.3
   flutter_localization: ^0.1.9
+  socket_io_client: ^2.0.0
+  badges: ^2.0.3
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,7 @@
 import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/models/user.dart';
-import 'package:app_boton_panico/src/screens/map/map.dart';
+import 'package:app_boton_panico/src/screens/map/map_direcctions.dart';
 import 'package:app_boton_panico/src/services/person_services.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';

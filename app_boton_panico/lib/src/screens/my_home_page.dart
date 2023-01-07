@@ -3,13 +3,18 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:app_boton_panico/src/components/snackbars.dart';
+import 'package:app_boton_panico/src/global/enviroment.dart';
 import 'package:app_boton_panico/src/models/alarm.dart';
 import 'package:app_boton_panico/src/models/user.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/alerts.dart';
 import 'package:app_boton_panico/src/services/notification_services.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
+import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
+import 'package:badges/badges.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.Dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
@@ -20,6 +25,8 @@ import 'package:map_launcher/map_launcher.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:vibration/vibration.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -42,15 +49,32 @@ class _MyHomePageState extends State<MyHomePage> {
   StreamSubscription<HardwareButton> subscription;
   TextEditingController password = TextEditingController();
   TextEditingController passwordConfirm = TextEditingController();
+  IO.Socket socket;
+  StreamSubscription<Position> _positionStream;
   final _formKey = GlobalKey<FormState>();
+
+  bool isSendLocation = false;
+
+  String textButton = "Envío de alerta de Incidente";
+
+  int count = 0;
 
   @override
   void initState() {
     super.initState();
     initPlatform(context);
-    _handleLocationPermission(context);
+    Permissions.handleLocationPermission(context);
+    initSocket();
+
     //TODO:Pobar botonews de volumen, cancel de subscripcion
     //startListening();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    socket.disconnect();
+    super.dispose();
   }
 
   void startListening() {
@@ -67,8 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     user = Provider.of<UserProvider>(context).userData["user"];
     token = Provider.of<UserProvider>(context).userData["token"];
-    //setIdOneSignal();
-
+    final Size size = AppLayout.getSize(context);
     return Scaffold(
         key: _scaffoldKey,
         body: Container(
@@ -79,22 +102,27 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 23),
-                  child: IconButton(
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-                        shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(20))),
-                        builder: (context) => Alerts(
-                          user: user.id,
-                        ),
-                      );
-                    },
-                    icon: const Icon(Icons.notification_important,
-                        color: Colors.white),
+                  padding: const EdgeInsets.only(top: 23, left: 10),
+                  child: Badge(
+                    badgeContent: Text("$count"),
+                    padding: EdgeInsets.all(5.5),
+                    animationType: BadgeAnimationType.slide,
+                    child: InkWell(
+                      child: Icon(Icons.notification_important,
+                          size: 27, color: Colors.white),
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(20))),
+                          builder: (context) => Alerts(
+                            user: user.id,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
                 Padding(
@@ -111,25 +139,74 @@ class _MyHomePageState extends State<MyHomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   //crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text("Envío de alerta de Incidente",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                            color: Colors.white)),
-                    InkWell(
-                        splashColor: Colors.white,
-                        onLongPress: () {
-                          Timer(const Duration(seconds: 3),
-                              (_handleSendNotification));
-                        },
-                        child: const Image(
-                          image: AssetImage("assets/image/sos.png"),
-                          height: 230,
-                        )),
-                    const Text(
-                      "Presione durante 3 segundos para enviar alerta",
-                      style: TextStyle(color: Colors.white),
-                    )
+                    Text(textButton, style: Styles.textStyleBody),
+                    if (!isSendLocation) ...[
+                      InkWell(
+                          splashColor: Colors.yellow,
+                          onLongPress: () {
+                            Timer(const Duration(seconds: 3),
+                                (_handleSendNotification));
+                          },
+                          child: const Image(
+                            image: AssetImage("assets/image/sos.png"),
+                            height: 230,
+                          )),
+                      const Text(
+                        "Presione durante 3 segundos para enviar alerta",
+                        style: TextStyle(color: Colors.white),
+                      )
+                    ] else ...[
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          ClipOval(
+                            child: Material(
+                              elevation: 20,
+                              child: Container(
+                                color: Colors.grey[350],
+                                child: SizedBox(
+                                  width: size.width * 0.59,
+                                  height: size.width * 0.59,
+                                ),
+                              ),
+                            ),
+                          ),
+                          ClipOval(
+                            child: Material(
+                              color: Colors.green, // Button color
+                              child: InkWell(
+                                splashColor: Colors.white, // Splash color
+                                onLongPress: () {
+                                  Timer(const Duration(seconds: 3),
+                                      (cancelSendLocation));
+                                },
+                                child: SizedBox(
+                                    width: size.width * 0.55,
+                                    height: size.width * 0.55,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.check_rounded,
+                                          size: 80,
+                                        ),
+                                        Text(
+                                          "¡Ya Estoy Seguro!",
+                                          style: Styles.textStyleTitle,
+                                        )
+                                      ],
+                                    )),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Text(
+                        "Presione durante 3 segundos para terminar alerta",
+                        style: TextStyle(color: Colors.white),
+                      )
+                    ]
                   ],
                 ),
               )
@@ -179,8 +256,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ],
                 ),
-                currentAccountPicture: GestureDetector(
-                  child: Image.asset("assets/image/account.png"),
+                currentAccountPicture: ClipOval(
+                  child: SizedBox(
+                    child: CachedNetworkImage(
+                      width: size.width * 0.9,
+                      height: size.width * 0.07,
+                      fit: BoxFit.cover,
+                      imageUrl:
+                          "https://www.afondochile.cl/site/wp-content/uploads/2018/06/jose-vaisman-e1529942487664.jpg",
+                      errorWidget: (context, url, error) =>
+                          Icon(Icons.error_outline),
+                      placeholder: (context, url) =>
+                          CircularProgressIndicator(),
+                    ),
+                  ),
                 ),
                 decoration: const BoxDecoration(
                     image: DecorationImage(
@@ -195,12 +284,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     Column(
                       children: [
                         ListTile(
-                            title: const Text("Cambiar Contraseña"),
-                            trailing: const Icon(Icons.lock_open_rounded),
+                            title: const Text("Nucleo de Confianza"),
+                            trailing: const Icon(Icons.family_restroom),
                             onTap: () => _openFormChangePassword(context)),
                         const Divider(
-                          height: 20,
+                          height: 10,
                         ),
+                        ListTile(
+                            title: const Text("Cambiar Contraseña"),
+                            trailing: const Icon(Icons.lock_rounded),
+                            onTap: () => _openFormChangePassword(context)),
                       ],
                     ),
                     Column(
@@ -225,43 +318,71 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  Future<bool> _handleLocationPermission(context) async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Los servicos de localización estan deshabilitados, Por favor habilite lo servicios')));
-      return false;
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Permisos de loxalización han sido denegados.')));
-        return false;
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Los permisos de localización están permanentemente denegados, no podemos solicitar permisos.')));
-      return false;
-    }
-    return true;
-  }
-
-  Future<void> _getCurrentPosition() async {
-    final hasPermission = await _handleLocationPermission(context);
+  Future<void> _getLivePosition() async {
+    final hasPermission = await Permissions.handleLocationPermission(context);
     if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+    LocationSettings locationSettings;
+
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      locationSettings = AndroidSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 100,
+          forceLocationManager: true,
+          intervalDuration: const Duration(seconds: 10),
+          //(Optional) Set foreground notification config to keep the app alive
+          //when going to the background
+          foregroundNotificationConfig: const ForegroundNotificationConfig(
+            notificationText:
+                "Example app will continue to receive your location even when you aren't using it",
+            notificationTitle: "Running in Background",
+            enableWakeLock: true,
+          ));
+    } else if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      locationSettings = AppleSettings(
+        accuracy: LocationAccuracy.high,
+        activityType: ActivityType.fitness,
+        distanceFilter: 100,
+        pauseLocationUpdatesAutomatically: true,
+        // Only set to true if our app will be started up in the background.
+        showBackgroundLocationIndicator: false,
+      );
+    } else {
+      locationSettings = const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 100,
+      );
+    }
+    setState(() {
+      isSendLocation = true;
+      textButton = "Se esta enviando tu ubicación...";
+    });
+    _positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((position) {
+      if (position == null) {
+        return;
+      } else {
+        log('${position.latitude}, ${position.longitude}');
+        Map coords = {"lat": position.latitude, "lng": position.longitude};
+        socket.emit('position-change', jsonEncode(coords));
+      }
+    });
+    /* await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
       _currentPosition = position;
     }).catchError((e) {
       print(e);
+    }); */
+  }
+
+  void cancelSendLocation() async {
+    log("message");
+
+    await _positionStream.cancel();
+    setState(() {
+      isSendLocation = false;
+      textButton = "Envío de alerta de Incidente";
     });
   }
 
@@ -279,9 +400,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void _handleSendNotification() async {
     try {
       //CORDENADAS DE DONDE OCURRE EL INCIDENTE PARA ENVIO DE NOTIFICACION PUSH
-      await _getCurrentPosition();
+      await _getLivePosition();
       //Obtener direccion excata del usuario
-      await _getAddressFromLatLng(_currentPosition);
+      /*  await _getAddressFromLatLng(_currentPosition);
       print(_currentAddress);
       Map<String, dynamic> cordinates = {
         "longitude": _currentPosition.longitude,
@@ -307,7 +428,7 @@ class _MyHomePageState extends State<MyHomePage> {
       await postNotificationBD();
       Vibration.vibrate(duration: 1000);
       // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.successSnackBar);
+      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.successSnackBar); */
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
           'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
@@ -325,6 +446,20 @@ class _MyHomePageState extends State<MyHomePage> {
         longitude: _currentPosition.longitude);
 
     await serviceNotification.postNotfication(contentAlertPostServer);
+  }
+
+  Future<void> initSocket() async {
+    try {
+      socket = IO.io("http://${Environments.url}", <String, dynamic>{
+        'transports': ['websocket'],
+        'autoConnect': true,
+      });
+      log(socket.io.uri);
+      socket.connect();
+      socket.onConnect((data) => {print("Connectado. ${socket.id}")});
+    } catch (e) {
+      log(e);
+    }
   }
 
   void _logOut(context) async {

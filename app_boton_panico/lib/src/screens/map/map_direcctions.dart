@@ -268,5 +268,3 @@ class _SearchPlacesState extends State<SearchPlaces> {
     }
   }
 }
-
-void onImages() {}

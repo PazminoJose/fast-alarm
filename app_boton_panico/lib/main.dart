@@ -1,6 +1,6 @@
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/login/login_page.dart';
-import 'package:app_boton_panico/src/screens/map/map.dart';
+import 'package:app_boton_panico/src/screens/map/map_direcctions.dart';
 import 'package:app_boton_panico/src/screens/my_home_page.dart';
 import 'package:app_boton_panico/src/screens/register/register_page.dart';
 import 'package:app_boton_panico/src/screens/register/second_register_page.dart';
