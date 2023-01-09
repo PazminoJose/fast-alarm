@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
@@ -143,37 +144,9 @@ class _SearchPlacesState extends State<SearchPlaces> {
     }
   }
 
-  Future<bool> _handleLocationPermission(context) async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Los servicos de localización estan deshabilitados, Por favor habilite lo servicios')));
-      return false;
-    }
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Permisos de loxalización han sido denegados.')));
-        return false;
-      }
-    }
-    if (permission == LocationPermission.deniedForever) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Los permisos de localización están permanentemente denegados, no podemos solicitar permisos.')));
-      return false;
-    }
-    return true;
-  }
 
   Future<void> _getCurrentPosition() async {
-    final hasPermission = await _handleLocationPermission(context);
+    final hasPermission = await Permissions.handleLocationPermission(context);
     if (!hasPermission) return;
     await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((Position position) {
