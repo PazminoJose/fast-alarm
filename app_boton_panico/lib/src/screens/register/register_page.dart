@@ -141,6 +141,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                         textInputAction: TextInputAction.next,
                                         autofocus: true,
                                         keyboardType: TextInputType.name,
+                                        textCapitalization:
+                                            TextCapitalization.sentences,
                                         decoration: InputDecoration(
                                           prefixIcon: Icon(
                                               Icons.person_outline_rounded),
@@ -171,6 +173,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                         textInputAction: TextInputAction.next,
                                         autofocus: true,
                                         keyboardType: TextInputType.name,
+                                        textCapitalization:
+                                            TextCapitalization.sentences,
                                         decoration: InputDecoration(
                                           label: Text(
                                             "Segundo nombre",
@@ -201,6 +205,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                   controller: lastName,
                                   keyboardType: TextInputType.name,
                                   textInputAction: TextInputAction.next,
+                                  textCapitalization:
+                                            TextCapitalization.words,
                                   decoration: const InputDecoration(
                                     prefixIcon:
                                         Icon(Icons.person_outline_rounded),

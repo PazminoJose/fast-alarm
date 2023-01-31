@@ -30,6 +30,8 @@ class UserProvider extends ChangeNotifier {
     return userData;
   }
 
+  
+
   bool resetUser() {
     if (userData != null) {
       userData = null;

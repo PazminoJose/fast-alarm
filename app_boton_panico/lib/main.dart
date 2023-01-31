@@ -1,7 +1,9 @@
+import 'package:app_boton_panico/src/providers/socket_provider.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/login/login_page.dart';
 import 'package:app_boton_panico/src/screens/map/map_direcctions.dart';
-import 'package:app_boton_panico/src/screens/my_home_page.dart';
+import 'package:app_boton_panico/src/screens/home/my_home_page.dart';
+import 'package:app_boton_panico/src/screens/map/map_location.dart';
 import 'package:app_boton_panico/src/screens/register/register_page.dart';
 import 'package:app_boton_panico/src/screens/register/second_register_page.dart';
 import 'package:app_boton_panico/src/screens/rememberPass_page.dart';
@@ -22,7 +24,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = ThemeData();
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+        Provider(create: (_) => SocketProvider())
+      ],
       child: MaterialApp(
         /* localizationsDelegates: <LocalizationsDelegate<Object>>[
           globa
@@ -61,6 +66,9 @@ class MyApp extends StatelessWidget {
                     break;
                   case "/mapMarker":
                     return const SearchPlaces();
+                    break;
+                  case "/mapLocation":
+                    return const LocationMap();
                     break;
                   default:
                     LoginPage();

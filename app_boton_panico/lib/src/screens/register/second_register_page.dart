@@ -1,8 +1,7 @@
 import 'package:app_boton_panico/src/components/snackbars.dart';
+import 'package:app_boton_panico/src/methods/formats.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/models/user.dart';
-import 'package:app_boton_panico/src/screens/map/map_direcctions.dart';
-import 'package:app_boton_panico/src/services/person_services.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.Dart';
 import 'package:gap/gap.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 class SecondRegisterPage extends StatefulWidget {
   const SecondRegisterPage({Key key}) : super(key: key);
@@ -22,11 +20,7 @@ class SecondRegisterPage extends StatefulWidget {
 class _SecondRegisterPageState extends State<SecondRegisterPage> {
   bool _loading = false;
   bool isSwitched = false;
-  TextEditingController parish = TextEditingController();
-  TextEditingController sideStreet = TextEditingController();
-  TextEditingController mainStreet = TextEditingController();
-  TextEditingController neighborhood = TextEditingController();
-  TextEditingController houseNumber = TextEditingController();
+
   TextEditingController userNameController = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController email = TextEditingController();
@@ -40,20 +34,6 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
   bool isMatchPaswwords = false;
 
   var serviceUser = UserServices();
-  var servicePerson = PersonServices();
-  List<String> listParroquias = [
-    'Chical',
-    'El Carmelo',
-    'Gonazales Suarez',
-    'Julio Andrade',
-    'Maldonado',
-    'Pioter',
-    'Santa Marta de Cuba',
-    'Tobar Donoso',
-    'Tufiño',
-    'Tulcan',
-    'Urbina'
-  ];
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -203,7 +183,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                     prefixIcon: Icon(Icons.phone_outlined),
                                     label: Text("Teléfono"),
                                   ),
-                                  onSaved: (value) => {phone..text = value},
+                                  onSaved: (value) => {phone.text = value},
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
                                       return "Ingrese su telefono";
@@ -354,7 +334,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
           textButtonSesion = "Registrando";
           _loading = false;
         });
-        personArguments.phone = phone.text;
+        personArguments.phone = Formats.FormatPhoneNumber(phone.text);
         personArguments.address = address.text;
         // Person person = await servicePerson.postPerson(personArguments);
 
@@ -386,8 +366,9 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
           ));
           return;
         }
+
         showDialog(
-          barrierDismissible: false,
+            barrierDismissible: false,
             context: context,
             builder: (context) => AlertDialog(
                   title: Column(

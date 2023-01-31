@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:app_boton_panico/src/global/enviroment.dart';
 import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
@@ -22,7 +23,6 @@ class SearchPlaces extends StatefulWidget {
   State<SearchPlaces> createState() => _SearchPlacesState();
 }
 
-const kGoogleApiKey = 'AIzaSyCfK3Fp-ScPOOhLGtTki7nejALoQXZs96o';
 final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 class _SearchPlacesState extends State<SearchPlaces> {
@@ -140,18 +140,17 @@ class _SearchPlacesState extends State<SearchPlaces> {
         print(e);
       });
     } catch (e) {
-      log(e);
+      print(e);
     }
   }
-
 
   Future<void> _getCurrentPosition() async {
     final hasPermission = await Permissions.handleLocationPermission(context);
     if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      _currentPosition = position;
-    }).catchError((e) {
+    _currentPosition = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) => position)
+        .catchError((e) {
       print(e);
     });
   }
@@ -159,7 +158,7 @@ class _SearchPlacesState extends State<SearchPlaces> {
   Future<void> _handlePressButton() async {
     Prediction p = await PlacesAutocomplete.show(
         context: context,
-        apiKey: kGoogleApiKey,
+        apiKey: Environments.apiGoogle,
         onError: onError,
         mode: _mode,
         language: 'en',
@@ -197,7 +196,7 @@ class _SearchPlacesState extends State<SearchPlaces> {
       Prediction p, ScaffoldState currentState) async {
     if (p != null) {
       GoogleMapsPlaces places = GoogleMapsPlaces(
-          apiKey: kGoogleApiKey,
+          apiKey: Environments.apiGoogle,
           apiHeaders: await const GoogleApiHeaders().getHeaders());
 
       PlacesDetailsResponse detail =

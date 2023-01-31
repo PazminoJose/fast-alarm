@@ -66,4 +66,23 @@ class NotificationServices {
       throw Failure("Bad response format");
     }
   }
+
+  Future<bool> sendNotificationFamilyGroup(String userId) async {
+    try {
+      Map data = {"user": userId};
+
+      var url =
+          Uri.http(Environments.url, Environments.sendNotificationFamilyGroup);
+      final response =
+          await http.post(url, headers: headers, body: jsonEncode(data));
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
+        return decoded["status"];
+      } else {
+        return false;
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 }

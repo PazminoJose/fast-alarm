@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:app_boton_panico/src/models/user.dart';
+import 'package:app_boton_panico/src/providers/socket_provider.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:provider/provider.dart';
@@ -101,11 +102,12 @@ class LoginPageState extends State<LoginPage> {
                           child: Column(children: [
                             TextFormField(
                               inputFormatters: [
-                                LengthLimitingTextInputFormatter(30),
+                                LengthLimitingTextInputFormatter(11),
                                 FilteringTextInputFormatter.deny(
                                     Styles.exprWithoutWhitspace),
                               ],
                               textInputAction: TextInputAction.next,
+                              textCapitalization: TextCapitalization.words,
                               keyboardType: TextInputType.name,
                               controller: email,
                               decoration: const InputDecoration(

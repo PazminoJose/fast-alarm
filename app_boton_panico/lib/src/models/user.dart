@@ -48,6 +48,6 @@ class User {
         "password": password,
         "idOneSignal": idOneSignal,
         "userType": userType,
-        "person": person.toJson(),
+        "person": person.toJsonWithId(),
       };
 }

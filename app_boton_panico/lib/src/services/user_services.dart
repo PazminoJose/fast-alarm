@@ -11,6 +11,9 @@ import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 
 class UserServices {
+  Map<String, String> headers = {
+    HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
+  };
   Future<Map<String, dynamic>> getUser(credentials) async {
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
@@ -76,11 +79,6 @@ class UserServices {
         "password": user.password,
         "userType": user.userType,
       };
-      Map<String, dynamic> userPersonPost = {
-        "user": userData,
-        "person": person
-      };
-
       var url = Uri.http(Environments.url, Environments.postUser);
       var request = http.MultipartRequest("POST", url);
       request.fields["user"] = jsonEncode(userData);
@@ -135,7 +133,8 @@ class UserServices {
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
     };
-    var url = Uri.http(Environments.url, Environments.postChangePassword);
+    var url =
+        Uri.http(Environments.url, Environments.postSendEmailChangePassword);
     try {
       final response = await http.post(url,
           headers: headers, body: jsonEncode(changePasswordData));
@@ -146,6 +145,29 @@ class UserServices {
         return responseData;
       } else {
         return null;
+      }
+    } on SocketException {
+      throw Failure("Error de socketExpetion");
+    } on HttpException {
+      throw Failure("Couldn't find the post");
+    } on FormatException {
+      throw Failure("Bad response format");
+    }
+  }
+
+  Future<bool> putStateByUser(String userId) async {
+    var url = Uri.http(Environments.url, "${Environments.putStateByUser}/$userId");
+    Map data = {"state": "danger"};
+    try {
+      final response =
+          await http.put(url, headers: headers, body: jsonEncode(data));
+
+      if (response.statusCode == 200) {
+        final decoded = await json.decode(response.body);
+        var responseData = decoded["state"];
+        return responseData;
+      } else {
+        return false;
       }
     } on SocketException {
       throw Failure("Error de socketExpetion");

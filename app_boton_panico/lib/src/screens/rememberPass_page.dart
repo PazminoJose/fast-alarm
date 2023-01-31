@@ -167,6 +167,10 @@ class _RememberPassPageState extends State<RememberPassPage> {
 
       if (!_loading) {
         try {
+          setState(() {
+            _loading = true;
+            textButtonSesion = "Enviando";
+          });
           UserServices userServices = UserServices();
           Map response = await userServices
               .postSendEmailChangePassword(changePasswordData);

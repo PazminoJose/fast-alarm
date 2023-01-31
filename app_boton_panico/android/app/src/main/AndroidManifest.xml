@@ -12,9 +12,9 @@
 
     
    <application
-        android:label="Fast Alert"
+        android:label="Vivo Vivo"
         android:name="${applicationName}"
-        android:icon="@mipmap/fast_alert_logo">
+        android:icon="@mipmap/vivo_vivo_logo">
 
         <activity
             android:name=".MainActivity"

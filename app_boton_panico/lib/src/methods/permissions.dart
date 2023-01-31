@@ -18,7 +18,7 @@ class Permissions {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-            content: Text('Permisos de loxalización han sido denegados.')));
+            content: Text('Permisos de localización han sido denegados.')));
         return false;
       }
     }

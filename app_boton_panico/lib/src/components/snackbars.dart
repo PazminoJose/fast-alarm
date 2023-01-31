@@ -87,7 +87,9 @@ class MySnackBars {
             SizedBox(
               width: 20,
             ),
-            Text(message),
+            Expanded(
+              child: Text(message),
+            ),
           ],
         ),
       );
