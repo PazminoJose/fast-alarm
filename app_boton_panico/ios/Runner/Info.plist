@@ -56,6 +56,9 @@
 
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This app needs access to location when in the background.</string>
+
+	<key> NSCameraUsageDescription </key>
+	<string> Necesitamos acceso a tu cámara para tomar fotos.</string>
 	
 	<key>UIBackgroundModes</key>
 	<string>location</string>

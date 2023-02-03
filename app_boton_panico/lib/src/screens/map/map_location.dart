@@ -2,12 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:app_boton_panico/src/components/photo.dart';
 import 'package:app_boton_panico/src/global/enviroment.dart';
 import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/models/user.dart';
 import 'package:app_boton_panico/src/providers/socket_provider.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
+import 'package:app_boton_panico/src/utils/app_layout.dart';
+import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
@@ -52,6 +55,11 @@ class _LocationMapState extends State<LocationMap> {
     super.dispose();
   }
 
+  /// _getCurrentPosition() is a function that gets the current position of the user and sets the state of
+  /// the current position to the position of the user
+  ///
+  /// Returns:
+  ///   A Future<void>
   Future<void> _getCurrentPosition() async {
     final hasPermission = await Permissions.handleLocationPermission(context);
     if (!hasPermission) return;
@@ -65,6 +73,11 @@ class _LocationMapState extends State<LocationMap> {
     });
   }
 
+  /// I'm trying to get the location of the user and update the map with the new location
+  ///
+  /// Args:
+  ///   context: The context of the widget.
+  ///   user (User): The user who is currently logged in.
   void initSocket(context, User user) async {
     try {
       final socketProvider =
@@ -74,8 +87,9 @@ class _LocationMapState extends State<LocationMap> {
       socketProvider.onLocation(
         widget.person.id,
         (data) async {
-
           //var dataRecive = jsonDecode(data);
+          //log(data);
+          log(widget.person.id);
           Map latlng = data["position"];
           final GoogleMapController controller = await _controllerMap.future;
           controller.animateCamera(
@@ -102,7 +116,7 @@ class _LocationMapState extends State<LocationMap> {
             setState(() {
               _markers[MarkerId("destination")] = destinantionPosition;
 
-              getPolyPoints(LatLng(latlng["lat"], latlng["lng"]));
+              
             });
           }
         },
@@ -120,6 +134,13 @@ class _LocationMapState extends State<LocationMap> {
     );
     _markers[MarkerId("source")] = sourcePosition;
   }
+
+  /// It takes a destination as a parameter, then it uses the PolylinePoints class to get the route
+  /// between the current location and the destination, then it adds the route to the polylineCoordinates
+  /// list
+  ///
+  /// Args:
+  ///   destination (LatLng): LatLng
 
   void getPolyPoints(LatLng destination) async {
     try {
@@ -145,28 +166,113 @@ class _LocationMapState extends State<LocationMap> {
   Widget build(BuildContext context) {
     user = Provider.of<UserProvider>(context).userData["user"];
     initSocket(context, user);
-
+    final Size size = AppLayout.getSize(context);
     return Scaffold(
+      appBar: AppBar(centerTitle: true, title: Text(widget.person.firstName)),
+      extendBody: true,
       body: _currentPosition == null
           ? const Center(child: Text("Cargando..."))
-          : GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(
-                    _currentPosition.latitude, _currentPosition.longitude),
-              ),
-              mapType: MapType.normal,
-              polylines: {
-                Polyline(
-                    polylineId: PolylineId("route"),
-                    points: polylineCoordinates,
-                    color: Colors.blue,
-                    width: 6),
-              },
-              onMapCreated: (GoogleMapController controller) {
-                _controllerMap.complete(controller);
-              },
-              markers: Set<Marker>.of(_markers.values),
+          : Stack(
+              children: [
+                GoogleMap(
+                  zoomControlsEnabled: false,
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(
+                        _currentPosition.latitude, _currentPosition.longitude),
+                  ),
+                  mapType: MapType.normal,
+                  polylines: {
+                    Polyline(
+                        polylineId: PolylineId("route"),
+                        points: polylineCoordinates,
+                        color: Colors.blue,
+                        width: 6),
+                  },
+                  onMapCreated: (GoogleMapController controller) {
+                    _controllerMap.complete(controller);
+                  },
+                  markers: Set<Marker>.of(_markers.values),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Wrap(
+                      direction: Axis.vertical,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(top: 10),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: const Color.fromARGB(139, 255, 255, 255)),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        "Distancia",
+                                        style: Styles.textStyleBotttomTitle,
+                                      ),
+                                      Text("2KM"),
+                                    ],
+                                  ),
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(
+                                        "Tiempo",
+                                        style: Styles.textStyleBotttomTitle,
+                                      ),
+                                      Text("1H"),
+                                    ],
+                                  ),
+                                ]),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ],
             ),
+      bottomNavigationBar: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(26.0),
+          topRight: Radius.circular(26.0),
+        ),
+        child: BottomAppBar(
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: UIComponents.photo(size, widget.person),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Recibiendo ubicación en tiempo real",
+                    style: Styles.textStyleBotttomTitle,
+                  ),
+                  Text("${widget.person.firstName} ${widget.person.lastName}"),
+                  Text(
+                    "Estado: En peligro",
+                    style: Styles.textState,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

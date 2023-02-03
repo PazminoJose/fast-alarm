@@ -325,7 +325,13 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
     );
   }
 
-//TODO: Comprobar cedula con 0
+  ///  _showHomePage() It is a function that verifies the user in the database and allows entry to the application.
+  /// A function that receives a context, a user and a password and returns a future.
+  /// 
+  /// Args:
+  ///   context: The context of the current page.
+  ///   usuario: The username of the user who is trying to log in.
+  ///   password: The password of the user.
   void _showHomePage(context) async {
     try {
       if (_formKey.currentState.validate()) {
@@ -334,7 +340,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
           textButtonSesion = "Registrando";
           _loading = false;
         });
-        personArguments.phone = Formats.FormatPhoneNumber(phone.text);
+        personArguments.phone = Formats.formatPhoneNumber(phone.text);
         personArguments.address = address.text;
         // Person person = await servicePerson.postPerson(personArguments);
 
@@ -402,12 +408,14 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
     }
   }
 
-  void matchPaswwords(pass, passcConf) {
-    setState(() {
-      isMatchPaswwords = (pass == passcConf);
-    });
-  }
-
+/// It takes a name and an idCard and returns the first letter of the name and the idCard
+/// 
+/// Args:
+///   name (String): The name of the user.
+///   idCard (String): The ID card number of the user.
+/// 
+/// Returns:
+///   The first character of the name and the idCard.
   String getUserName(String name, String idCard) {
     return (name.substring(0, 1) + idCard);
   }

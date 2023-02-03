@@ -142,7 +142,7 @@ class _RememberPassPageState extends State<RememberPassPage> {
                                   ],
                                 ),
                                 onPressed: () {
-                                  _showHomePage(context);
+                                  rememberPass(context);
                                 }),
                           ]),
                         ),
@@ -158,7 +158,14 @@ class _RememberPassPageState extends State<RememberPassPage> {
     );
   }
 
-  void _showHomePage(context) async {
+ /// The function is called when the user clicks on the button, it validates the form, if it is valid,
+ /// it saves the form, it creates a map with the data of the form, it calls the service that sends the
+ /// email to the user, if the service returns a response, it shows a snackbar with the response
+ /// message, if the service does not return a response, it shows a snackbar with an error message
+ /// 
+ /// Args:
+ ///   context: The context of the widget.
+  void rememberPass(context) async {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
       Map<String, dynamic> changePasswordData = {

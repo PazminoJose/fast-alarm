@@ -65,7 +65,7 @@ class LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.only(top: 50),
               child: Image.asset(
-                "assets/image/fast_alert_logo.png",
+                "assets/image/vivo_vivo_logo.png",
                 height: 170,
               ),
             ),
@@ -268,6 +268,13 @@ class LoginPageState extends State<LoginPage> {
     Navigator.of(context).pushNamed("/register");
   }
 
+  ///  _showHomePage() It is a function that verifies the user in the database and allows entry to the application.
+  /// A function that receives a context, a user and a password and returns a future.
+  ///
+  /// Args:
+  ///   context: The context of the current page.
+  ///   usuario: The username of the user who is trying to log in.
+  ///   password: The password of the user.
   void _showHomePage(context, usuario, password) async {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
@@ -321,6 +328,10 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
+  /// It open the user preferences to check if the user has saved their session and start without entering the credentials
+  ///
+  /// Args:
+  ///   context: The context of the page you're calling this function from.
   Future<void> openUserPreferences(context) async {
     try {
       WidgetsFlutterBinding.ensureInitialized();

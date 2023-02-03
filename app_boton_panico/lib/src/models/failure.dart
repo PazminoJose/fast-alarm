@@ -1,3 +1,4 @@
+/// Failure is a class that represents a failure.
 
 class Failure {
   // Use something like "int code;" if you want to translate error messages

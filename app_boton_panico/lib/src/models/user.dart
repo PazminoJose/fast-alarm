@@ -11,6 +11,7 @@ User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toJson());
 
 class User {
+  /// A constructor.
   User({
     this.id,
     this.userName,
@@ -30,7 +31,11 @@ class User {
   String userType;
   Person person;
   List<Person> coreTrust;
-//TODO: aquii
+
+  /// It takes a JSON string and returns a User object
+  /// 
+  /// Args:
+  ///   json (Map<String, dynamic>): The JSON string that you want to convert to a Dart object.
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["_id"],
         userName: json["userName"],
@@ -41,6 +46,7 @@ class User {
         person: personFromJson(jsonEncode(json["person"])),
       );
 
+/// It converts the object to a map.
   Map<String, dynamic> toJson() => {
         "_id": id,
         "userName": userName,

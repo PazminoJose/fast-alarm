@@ -4,6 +4,7 @@ Alarm alarmFromJson(String str) => Alarm.fromJson(json.decode(str));
 String alarmToJson(Alarm data) => json.encode(data.toJson());
 
 
+/// The class Alarm has a constructor that takes a Map<String, dynamic> and returns an Alarm object
 class Alarm {
   Alarm({
     this.id,
@@ -23,6 +24,10 @@ class Alarm {
   double longitude;
   DateTime createdAt;
 
+  /// This function takes a JSON object and returns an Alarm object
+  /// 
+  /// Args:
+  ///   json (Map<String, dynamic>): The JSON data that you want to convert to a Dart object.
   factory Alarm.fromJson(Map<String, dynamic> json) => Alarm(
         user: json["user"],
         message: json["message"],
@@ -32,6 +37,7 @@ class Alarm {
         createdAt: DateTime.parse(json["createdAt"]),
       );
 
+ /// It takes a JSON object and returns a Dart object
   Map<String, dynamic> toJson() => {
         "user": user,
         "message": message,

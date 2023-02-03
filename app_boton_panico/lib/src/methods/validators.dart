@@ -1,4 +1,12 @@
 class Validators {
+  /// The first two digits of the ID must be 04, the third digit must be less than 6, and the last digit
+  /// must be the result of a calculation based on the other digits
+  /// 
+  /// Args:
+  ///   cedula (String): The ID number to be validated.
+  /// 
+  /// Returns:
+  ///   A bool value.
   static bool isValidateIdCard(String cedula) {
     bool cedulaCorrecta = false;
 

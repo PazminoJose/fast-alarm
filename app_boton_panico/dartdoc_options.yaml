@@ -1,0 +1,7 @@
+dartdoc:
+  input_files:
+    - /lib/src/services/user_services.dart
+    - /lib/src/
+  recurse: true
+  include_private: true
+  documentPrivate: true

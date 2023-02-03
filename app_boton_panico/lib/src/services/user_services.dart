@@ -14,7 +14,16 @@ class UserServices {
   Map<String, String> headers = {
     HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
   };
-  Future<Map<String, dynamic>> getUser(credentials) async {
+
+  /// It takes a map of credentials, makes a post request to the server, and returns a map of user and
+  /// token if the response is 200, otherwise it returns null
+  ///
+  /// Args:
+  ///   credentials (Map): {"email": "email@email.com", "password": "password"}
+  ///
+  /// Returns:
+  ///   A Future<Map<String, dynamic>>
+  Future<Map<String, dynamic>> getUser(Map credentials) async {
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
     };
@@ -41,6 +50,15 @@ class UserServices {
     }
   }
 
+  /// It's a function that sends a POST request to the server with the user's id and the idOneSignal.
+  ///
+  /// Args:
+  ///   id (String): The user's id
+  ///   idOneSignal (String): The OneSignal user ID.
+  ///   token (String): The token that you get from the login
+  ///
+  /// Returns:
+  ///   A map of dynamic values.
   Future<Map<String, dynamic>> postIdOneSignal(
       String id, String idOneSignal, String token) async {
     Map<String, String> headers = {
@@ -90,6 +108,7 @@ class UserServices {
           filename: "image_${person.urlImage.name}"));
 
       var response = await request.send();
+
       if (response.statusCode == 200) {
         Map<String, dynamic> map =
             jsonDecode(await response.stream.bytesToString());
@@ -99,6 +118,7 @@ class UserServices {
       }
     } catch (e) {
       print(e);
+      return null;
     }
   }
 
@@ -155,9 +175,10 @@ class UserServices {
     }
   }
 
-  Future<bool> putStateByUser(String userId) async {
-    var url = Uri.http(Environments.url, "${Environments.putStateByUser}/$userId");
-    Map data = {"state": "danger"};
+  Future<bool> putStateByUser(String userId, String state) async {
+    var url =
+        Uri.http(Environments.url, "${Environments.putStateByUser}/$userId");
+    Map data = {"state": state};
     try {
       final response =
           await http.put(url, headers: headers, body: jsonEncode(data));

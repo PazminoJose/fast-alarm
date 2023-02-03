@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// It's a class that contains static variables that are used throughout the app
 class Styles {
   static Color primaryColor = const Color.fromRGBO(56, 56, 76, 1);
   static Color secondaryColor = Colors.blueGrey[800];
@@ -22,6 +23,12 @@ class Styles {
   );
   static TextStyle textStyleTitle = TextStyle(
     fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: black,
+  );
+
+  static TextStyle textStyleBotttomTitle = TextStyle(
+    fontSize: 14,
     fontWeight: FontWeight.bold,
     color: black,
   );

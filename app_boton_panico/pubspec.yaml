@@ -60,6 +60,7 @@ dependencies:
   cached_network_image: ^3.2.3
   flutter_polyline_points: ^1.0.0
   simple_ripple_animation: ^0.0.3
+  permission_handler: ^10.2.0
 
 dev_dependencies:
   flutter_test:

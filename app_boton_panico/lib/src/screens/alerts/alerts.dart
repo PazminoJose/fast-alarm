@@ -7,6 +7,7 @@ import 'package:app_boton_panico/src/services/notification_services.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
+/// It's a StatelessWidget that receives a list of UserAlerts and displays them in a ListView.builder
 class Alerts extends StatelessWidget {
   Alerts({Key key, this.usersAlerts}) : super(key: key);
   final List<UserAlert> usersAlerts;

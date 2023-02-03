@@ -1,3 +1,4 @@
+import 'package:app_boton_panico/src/components/photo.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/models/user_alert.dart';
 import 'package:app_boton_panico/src/screens/map/map_location.dart';
@@ -8,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 
+/// Is a card component with view alerts for user
 class CardAlert extends StatelessWidget {
   const CardAlert({Key key, this.userAlert}) : super(key: key);
   final UserAlert userAlert;
@@ -40,7 +42,9 @@ class CardAlert extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
-                      children: [photo(size, userAlert.user.person)],
+                      children: [
+                        UIComponents.photo(size, userAlert.user.person)
+                      ],
                     ),
                     Expanded(
                       child: Column(
@@ -90,36 +94,47 @@ class CardAlert extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LocationMap(
-                                      person: userAlert.user.person,
-                                    )));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Seguir Ubicación",
-                            style: Styles.textButtonTrackLocation,
-                          ),
-                          Gap(10),
-                          (userAlert.state == "danger")
-                              ? RotatedBox(
-                                  //turns: AlwaysStoppedAnimation(45 / 360),
-                                  quarterTurns: 1,
-                                  child: Icon(
-                                    Icons.navigation_rounded,
-                                    color: colorState,
-                                  ),
-                                )
-                              : null
-                        ],
-                      ),
-                    )
+                    if (userAlert.state == "danger")
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LocationMap(
+                                        person: userAlert.user.person,
+                                      )));
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [                         
+                              Text(
+                                "Seguir Ubicación",
+                                style: Styles.textButtonTrackLocation,
+                              )
+                            ,
+                            Gap(10),                           
+                              RotatedBox(
+                                //turns: AlwaysStoppedAnimation(45 / 360),
+                                quarterTurns: 1,
+                                child: Icon(
+                                  Icons.navigation_rounded,
+                                  color: colorState,
+                                ),
+                              )
+                          ],
+                        ),
+                      )
+                      else 
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [                      
+                              Text(
+                                "Seguro",
+                                style: Styles.textButtonTrackLocation
+                                    .copyWith(color: Styles.green),
+                              ),                            
+                          ],
+                        ),
                   ],
                 )
               ],
@@ -128,18 +143,3 @@ class CardAlert extends StatelessWidget {
     );
   }
 }
-
-Widget photo(Size size, Person person) => Padding(
-      padding: const EdgeInsets.only(top: 10, right: 10, bottom: 10),
-      child: ClipOval(
-        child: CachedNetworkImage(
-          width: size.width * 0.2,
-          height: size.width * 0.2,
-          fit: BoxFit.cover,
-          imageUrl:
-              "https://wl-genial.cf.tsp.li/resize/728x/jpg/f6e/ef6/b5b68253409b796f61f6ecd1f1.jpg",
-          errorWidget: (context, url, error) => Icon(Icons.error_outline),
-          placeholder: (context, url) => CircularProgressIndicator(),
-        ),
-      ),
-    );

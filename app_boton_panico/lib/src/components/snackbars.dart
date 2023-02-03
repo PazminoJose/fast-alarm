@@ -1,9 +1,15 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 
+/// A class that contains all the snackbars that I use in my app.
 class MySnackBars {
   /// failure
 
+  /// It returns a SnackBar widget.
+  /// 
+  /// Args:
+  ///   message (String): The message you want to display
+  ///   title (String): The title of the snackbar
   static failureSnackBar(String message, String title) => SnackBar(
         elevation: 0,
         behavior: SnackBarBehavior.floating,
@@ -18,6 +24,7 @@ class MySnackBars {
       );
 
   /// help
+  /// A static variable that is a SnackBar widget.
   static var helpSnackBar = SnackBar(
     elevation: 0,
     behavior: SnackBarBehavior.floating,
@@ -33,6 +40,7 @@ class MySnackBars {
   );
 
   /// success
+  /// A static variable that is a SnackBar widget.
   static var successSnackBar = SnackBar(
     elevation: 0,
     behavior: SnackBarBehavior.floating,
@@ -46,6 +54,13 @@ class MySnackBars {
       xlarge: false,
     ),
   );
+
+
+  /// It returns a SnackBar widget.
+  /// 
+  /// Args:
+  ///   message (String): The message you want to display.
+  ///   title (String): The title of the snackbar.
   static successSaveSnackBar(String message, String title) => SnackBar(
         elevation: 0,
         behavior: SnackBarBehavior.floating,
@@ -60,6 +75,7 @@ class MySnackBars {
       );
 
   /// warning
+  /// A static variable that is a SnackBar widget.
   static var warningSnackBar = SnackBar(
     elevation: 0,
     behavior: SnackBarBehavior.floating,
@@ -72,6 +88,13 @@ class MySnackBars {
       xlarge: false,
     ),
   );
+
+ /// It returns a SnackBar widget.
+ /// 
+ /// Args:
+ ///   message (String): The message you want to display in the snackbar.
+ ///   icon (IconData): The icon you want to display on the left side of the snackbar.
+ ///   color (Color): The background color of the snackbar.
   static simpleSnackbar(String message, IconData icon, Color color) => SnackBar(
         elevation: 15,
         /* shape: const RoundedRectangleBorder(

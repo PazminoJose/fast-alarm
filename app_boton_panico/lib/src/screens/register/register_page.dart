@@ -411,7 +411,10 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-//TODO: Comprobar cedula con 0
+
+/// records all user data to move to a second screen that records the remaining data
+/// Returns:
+///   The person object is being returned.
   Future<void> _showSecondPageRegister(BuildContext context) async {
     try {
       if (checkImage()) return;

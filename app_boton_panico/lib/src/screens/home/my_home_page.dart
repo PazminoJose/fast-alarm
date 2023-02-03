@@ -28,7 +28,6 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:vibration/vibration.dart';
 
@@ -69,7 +68,12 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     userAlerts = [];
     initPlatform(context);
-    Permissions.handleLocationPermission(context);
+    //Permissions.handleLocationPermission(context);
+    user = Provider.of<UserProvider>(context, listen: false).userData["user"];
+    token = Provider.of<UserProvider>(context, listen: false).userData["token"];
+    socketProvider = Provider.of<SocketProvider>(context, listen: false);
+    initSocket(user);
+    getUsersAlerts(user.person.id);
   }
 
   @override
@@ -77,19 +81,32 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
+  /// The function takes a user object as a parameter and then connects to the socket using the user
+  /// object
+  ///
+  /// Args:
+  ///   user (User): The user object that contains the user's information.
   void initSocket(User user) async {
-    socketProvider = Provider.of<SocketProvider>(context, listen: false);
     socketProvider.connect(user);
   }
 
+  /// The function is called when the user logs in, and it sets up a listener for the socket.io server to
+  /// send a message to the client when the user's alarms are updated
+  ///
+  /// Args:
+  ///   personId: The id of the user that is logged in.
   void onAlerts(personId) {
-    socketProvider = Provider.of<SocketProvider>(context, listen: false);
     socketProvider.onAlerts("update-alarms-$personId", (_) {
       getUsersAlerts(personId);
     });
   }
 
-  void getUsersAlerts(personId) async {
+  /// It gets a list of users from a service, then it filters the list to get the number of users with a
+  /// specific state
+  ///
+  /// Args:
+  ///   personId (String): is the id of the person who is logged in
+  void getUsersAlerts(String personId) async {
     List<UserAlert> users = await serviceAlert.getUsersAlertsByPerson(personId);
     setState(() {
       userAlerts = users;
@@ -111,10 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    user = Provider.of<UserProvider>(context).userData["user"];
-    token = Provider.of<UserProvider>(context).userData["token"];
-    initSocket(user);
     onAlerts(user.person.id);
+
     final Size size = AppLayout.getSize(context);
 
     return Scaffold(
@@ -125,40 +140,41 @@ class _MyHomePageState extends State<MyHomePage> {
           decoration: const BoxDecoration(color: Color.fromRGBO(56, 56, 76, 1)),
           child: Stack(
             children: [
-              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 23, left: 10),
-                  child: Badge(
-                    badgeContent: Text("$count"),
-                    padding: const EdgeInsets.all(5.5),
-                    animationType: BadgeAnimationType.slide,
-                    child: InkWell(
-                      child: const Icon(Icons.notification_important,
-                          size: 27, color: Colors.white),
-                      onTap: () {
-                        showBarModalBottomSheet(
-                          context: context,
-                          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-                          shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.vertical(
-                                  top: Radius.circular(20))),
-                          builder: (context) => Alerts(
-                            usersAlerts: userAlerts,
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.only(top: 23),
-                    child: IconButton(
-                      onPressed: () {
-                        _scaffoldKey.currentState.openEndDrawer();
-                      },
-                      icon: const Icon(Icons.menu, color: Colors.white),
-                    )),
-              ]),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: size.height * 0.04, left: 10, bottom: 15),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      InkWell(
+                        child: Badge(
+                          badgeContent: Text("$count"),
+                          padding: const EdgeInsets.all(5.5),
+                          animationType: BadgeAnimationType.slide,
+                          child: const Icon(Icons.notification_important,
+                              size: 27, color: Colors.white),
+                        ),
+                        onTap: () {
+                          showBarModalBottomSheet(
+                            context: context,
+                            backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20))),
+                            builder: (context) => Alerts(
+                              usersAlerts: userAlerts,
+                            ),
+                          );
+                        },
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          _scaffoldKey.currentState.openEndDrawer();
+                        },
+                        icon: const Icon(Icons.menu, color: Colors.white),
+                      ),
+                    ]),
+              ),
               Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -343,6 +359,13 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
+  /// _openFormChangePassword() is a function that opens a dialog with a form to change the password
+  ///
+  /// Args:
+  ///   context (BuildContext): context,
+  ///
+  /// Returns:
+  ///   A Future.
   Future _openFormChangePassword(BuildContext context) {
     return showDialog(
         context: context,
@@ -453,6 +476,12 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  /// _getLivePosition() is a function that gets the user's location every 2 seconds and sends it to the
+  /// server.
+  /// </code>
+  ///
+  /// Returns:
+  ///   The position is being returned, but the position is not being updated.
   Future<void> _getLivePosition() async {
     final hasPermission = await Permissions.handleLocationPermission(context);
     if (!hasPermission) return;
@@ -461,7 +490,6 @@ class _MyHomePageState extends State<MyHomePage> {
     if (defaultTargetPlatform == TargetPlatform.android) {
       locationSettings = AndroidSettings(
           accuracy: LocationAccuracy.best,
-          distanceFilter: 2,
           forceLocationManager: true,
           intervalDuration: const Duration(seconds: 2),
           //(Optional) Set foreground notification config to keep the app alive
@@ -477,7 +505,6 @@ class _MyHomePageState extends State<MyHomePage> {
       locationSettings = AppleSettings(
         accuracy: LocationAccuracy.best,
         activityType: ActivityType.fitness,
-        distanceFilter: 100,
         pauseLocationUpdatesAutomatically: true,
         // Only set to true if our app will be started up in the background.
         showBackgroundLocationIndicator: false,
@@ -493,14 +520,14 @@ class _MyHomePageState extends State<MyHomePage> {
       textButton = "Se esta enviando tu ubicación...";
     });
     UserServices serviceUser = UserServices();
-    await serviceUser.putStateByUser(user.id);
+    await serviceUser.putStateByUser(user.id, "danger");
     _positionStream =
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((position) {
       if (position == null) {
         return;
       } else {
-        //log('${position.latitude}, ${position.longitude}');
+        log('${position.latitude}, ${position.longitude}');
         Map coords = {
           "personId": user.person.id,
           "position": {"lat": position.latitude, "lng": position.longitude}
@@ -519,6 +546,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void cancelSendLocation() async {
     await _positionStream.cancel();
     socketProvider.disconnect();
+    UserServices serviceUser = UserServices();
+    await serviceUser.putStateByUser(user.id, "ok");
     setState(() {
       isSendLocation = false;
       textButton = "Envío de alerta de Incidente";
@@ -536,6 +565,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  /// _handleSendNotification() is a function that sends a notification to the user's phone
   void _handleSendNotification() async {
     try {
       //CORDENADAS DE DONDE OCURRE EL INCIDENTE PARA ENVIO DE NOTIFICACION PUSH
@@ -566,6 +596,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  /// It sends a POST request to the server to save the notification in the database.
   Future<void> postNotificationBD() async {
     //CUERPO DE PETICION POST PARA GUARDAR LA NOTIFICACION EN LA BASE DE DATOS
     var contentAlertPostServer = Alarm(
@@ -578,6 +609,11 @@ class _MyHomePageState extends State<MyHomePage> {
     await serviceNotification.postNotfication(contentAlertPostServer);
   }
 
+  /// _logOut() is a function that removes the user and token from the shared preferences and navigates to
+  /// the login page
+  ///
+  /// Args:
+  ///   context: The context of the current widget.
   void _logOut(context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove("user");
@@ -587,12 +623,24 @@ class _MyHomePageState extends State<MyHomePage> {
     userProvider.resetUser();
   }
 
+  /// _logOutChangePassword() is a function that removes the user and token from the shared preferences
+  ///
+  /// Args:
+  ///   context: The context of the current screen.
   void _logOutChangePassword(context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove("user");
     preferences.remove("token");
   }
 
+  /// It checks if the user has an idOneSignal, if not, it sends the idOneSignal to the server and saves
+  /// it in the user object
+  ///
+  /// Args:
+  ///   idOS (String): The OneSignal user ID.
+  ///
+  /// Returns:
+  ///   The return is a Future<void>
   Future<void> setIdOneSignal(String idOS) async {
     UserServices userServices = UserServices();
     if (user.idOneSignal == null || (user.idOneSignal != idOS)) {
@@ -605,12 +653,12 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> setSmsNumber(smsNumber) async {
-    if (smsNumber == null) {
-      await OneSignal.shared.setSMSNumber(smsNumber: user.person.phone);
-    }
-  }
-
+  /// If the user clicks on a notification, the app will open and the function will be called. The
+  /// function will then get the additional data from the notification and use it to open Google Maps with
+  /// the destination coordinates
+  ///
+  /// Args:
+  ///   context: The context of the widget that is calling the method.
   Future<void> initPlatform(context) async {
     OneSignal.shared.setNotificationOpenedHandler(
         (OSNotificationOpenedResult result) async {
@@ -630,7 +678,7 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     });
 
-    //SUBSCRIPCION A ONE SIGNAL PARA RECIBIR Y ENVIAR TANTO SMS Y NOTIFICACIONES
+    ///SUBSCRIPCION A ONE SIGNAL PARA RECIBIR Y ENVIAR TANTO SMS Y NOTIFICACIONES
     await OneSignal.shared.setAppId('9fd9a40d-8646-450c-bd3b-d661b0e8ee42');
     await OneSignal.shared.getDeviceState().then((value) {
       print(value.userId);
@@ -639,6 +687,13 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  /// _changePassword() is a function that takes a context as a parameter and returns a Future
+  ///
+  /// Args:
+  ///   context: BuildContext
+  ///
+  /// Returns:
+  ///   A Map with a message and a status.
   void _changePassword(context) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();

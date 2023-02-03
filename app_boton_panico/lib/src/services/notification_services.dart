@@ -11,7 +11,14 @@ class NotificationServices {
     HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
   };
 
-  Future<bool> postNotfication(alert) async {
+/// It takes an object of type Alarm, converts it to a json string, and sends it to the server
+/// 
+/// Args:
+///   alert (Alarm): is the object that I want to send to the server
+/// 
+/// Returns:
+///   A Future<bool>
+  Future<bool> postNotfication(Alarm alert) async {
     var url = Uri.http(Environments.url, Environments.postNotification);
 
     try {
@@ -27,10 +34,17 @@ class NotificationServices {
     }
   }
 
-  Future<List<Alarm>> getAlertsByUser(userId) async {
+  /// It gets a list of alarms from the server, and returns a list of alarms
+  /// 
+  /// Args:
+  ///   userId (String): String
+  /// 
+  /// Returns:
+  ///   A list of Alarm objects.
+  Future<List<Alarm>> getAlertsByUser(String userId) async {
     var url = Uri.http(
       Environments.url,
-      Environments.getAlertsByUser + userId,
+      Environments.getAlertsByUser+userId,
     );
     try {
       final response = await http.get(
@@ -53,6 +67,10 @@ class NotificationServices {
     }
   }
 
+/// It makes a GET request to the server and returns the response.
+/// 
+/// Returns:
+///   A Future<dynamic>
   Future<dynamic> getDevices() async {
     var url = Uri.http(Environments.url, Environments.getDevices);
     try {
@@ -66,6 +84,13 @@ class NotificationServices {
       throw Failure("Bad response format");
     }
   }
+/// It sends a notification to a user's family group
+/// 
+/// Args:
+///   userId (String): The user id of the user who is sending the notification
+/// 
+/// Returns:
+///   A boolean value.
 
   Future<bool> sendNotificationFamilyGroup(String userId) async {
     try {

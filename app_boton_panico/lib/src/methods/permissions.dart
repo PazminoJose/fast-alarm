@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
+/// This class is used to check if the user has enabled location services and if the user has granted
+/// location permissions
 class Permissions {
+  /// If the user has denied location permissions, we can't ask for them again
+  /// 
+  /// Args:
+  ///   context: The context of the widget that is calling the function.
+  /// 
+  /// Returns:
+  ///   A Future<bool>
   static Future<bool> handleLocationPermission(context) async {
     bool serviceEnabled;
     LocationPermission permission;
