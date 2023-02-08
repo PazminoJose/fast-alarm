@@ -18,13 +18,11 @@ import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.Dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:http/http.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -33,6 +31,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:vibration/vibration.dart';
 import 'package:location/location.dart' as LC;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key key}) : super(key: key);
@@ -85,22 +84,13 @@ class _MyHomePageState extends State<MyHomePage> {
     initSocket(user);
     getUsersAlerts(user.person.id);
     onAlerts(user.person.id);
+    openStateUser();
   }
 
   @override
   void dispose() {
     super.dispose();
   }
-
-  /*  void startListening() {
-    subscription = FlutterAndroidVolumeKeydown.stream.listen((event) {
-      if (event == HardwareButton.volume_down) {
-        print("Volume down received");
-      } else if (event == HardwareButton.volume_up) {
-        print("Volume up received");
-      }
-    }); 
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -139,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(20))),
                             builder: (context) => Alerts(
-                              usersAlerts: userAlerts,
+                              personId: user.person.id,
                             ),
                           );
                         },
@@ -162,8 +152,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       InkWell(
                           splashColor: Colors.yellow,
                           onLongPress: () {
-                            Timer(const Duration(seconds: 3),
-                                (_handleSendNotification));
+                            Timer(const Duration(seconds: 3), (sendLocation));
                           },
                           child: const Image(
                             image: AssetImage("assets/image/sos.png"),
@@ -339,13 +328,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ));
   }
 
-  /// _openFormChangePassword() is a function that opens a dialog with a form to change the password
-  ///
-  /// Args:
-  ///   context (BuildContext): context,
-  ///
-  /// Returns:
-  ///   A Future.
   Future _openFormChangePassword(BuildContext context) {
     return showDialog(
         context: context,
@@ -456,31 +438,16 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  /// The function takes a user object as a parameter and then connects to the socket using the user
-  /// object
-  ///
-  /// Args:
-  ///   user (User): The user object that contains the user's information.
   void initSocket(User user) async {
     socketProvider.connect(user);
   }
 
-  /// The function is called when the user logs in, and it sets up a listener for the socket.io server to
-  /// send a message to the client when the user's alarms are updated
-  ///
-  /// Args:
-  ///   personId: The id of the user that is logged in.
   void onAlerts(personId) {
     socketProvider.onAlerts("${Environments.event}-$personId", (_) {
       getUsersAlerts(personId);
     });
   }
 
-  /// It gets a list of users from a service, then it filters the list to get the number of users with a
-  /// specific state
-  ///
-  /// Args:
-  ///   personId (String): is the id of the person who is logged in
   void getUsersAlerts(String personId) async {
     List<UserAlert> users = await serviceAlert.getUsersAlertsByPerson(personId);
     if (mounted) {
@@ -506,60 +473,57 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  /// _getLivePosition() is a function that gets the user's location every 2 seconds and sends it to the
-  /// server.
-  /// </code>
-  ///
-  /// Returns:
-  ///   The position is being returned, but the position is not being updated.
-  Future<void> _getLivePosition() async {
-    final hasPermission = await Permissions.handleLocationPermission(context);
-    if (!hasPermission) return;
-
-    await _getCurrentPosition();
-    /* LocationSettings locationSettings;
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      locationSettings = AndroidSettings(
-          accuracy: LocationAccuracy.best,
-          forceLocationManager: true,
-          intervalDuration: const Duration(seconds: 2),
-          //(Optional) Set foreground notification config to keep the app alive
-          //when going to the background
-          foregroundNotificationConfig: const ForegroundNotificationConfig(
-            notificationText:
-                "La aplicación Vivo Vivo seguirá recibiendo tu ubicación incluso cuando no la estés usando",
-            notificationTitle: "Vivo Vivo se esta ejecutando en Segundo Plano",
-            enableWakeLock: true,
-          ));
-    } else if (defaultTargetPlatform == TargetPlatform.iOS ||
-        defaultTargetPlatform == TargetPlatform.macOS) {
-      locationSettings = AppleSettings(
-        accuracy: LocationAccuracy.best,
-        activityType: ActivityType.fitness,
-        pauseLocationUpdatesAutomatically: true,
-        // Only set to true if our app will be started up in the background.
-        showBackgroundLocationIndicator: false,
-      );
-    } else {
-      locationSettings = const LocationSettings(
-        accuracy: LocationAccuracy.best,
-        distanceFilter: 100,
-      );
-    } */
-    setState(() {
-      isSendLocation = true;
-      textButton = "Se esta enviando tu ubicación...";
-    });
-    UserServices serviceUser = UserServices();
-    await serviceUser.putStateByUser(user.id, "danger");
-    await postAlarmBD(_currentPosition.latitude, _currentPosition.longitude);
-
+  void sendLocation() async {
     try {
+      await _getLivePosition();
+      Vibration.vibrate(duration: 1000);
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.successSnackBar);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
+          'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
+          'Error!'));
+    }
+  }
+
+  Future<void> _getLivePosition() async {
+    try {
+      final hasPermission = await Permissions.handleLocationPermission(context);
+      if (!hasPermission) return;
+
+      await _getCurrentPosition();
+
+      setState(() {
+        isSendLocation = true;
+        textButton = "Se esta enviando tu ubicación...";
+      });
+      UserServices serviceUser = UserServices();
+      await serviceUser.putStateByUser(user.id, "danger");
+      await postAlarmBD(_currentPosition.latitude, _currentPosition.longitude);
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      preferences.setString("state", "danger");
+      await serviceNotification.sendNotificationFamilyGroup(user.id);
       startListening();
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('error de envio'),
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Error de envio'),
       ));
+    }
+  }
+
+  void openStateUser() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String state = preferences.getString("state");
+    if (state == "danger") {
+      setState(() {
+        isSendLocation = true;
+        textButton = "Se esta enviando tu ubicación...";
+      });
+    } else {
+      setState(() {
+        isSendLocation = false;
+        textButton = "Envío de alerta de Incidente";
+      });
     }
   }
 
@@ -571,10 +535,6 @@ class _MyHomePageState extends State<MyHomePage> {
       users.forEach((user) {
         familyGroupIds.add(user.person.id);
       });
-    });
-
-    familyGroupIds.forEach((element) {
-      print(element);
     });
   }
 
@@ -595,7 +555,7 @@ class _MyHomePageState extends State<MyHomePage> {
         "position": {"lat": position.latitude, "lng": position.longitude},
         "familyGroup": familyGroupIds
       };
-      
+
       socketProvider.emitLocation("send-alarm", jsonEncode(data));
     });
   }
@@ -610,19 +570,30 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void cancelSendLocation() async {
-    await locationSubscription.cancel();
-    UserServices serviceUser = UserServices();
-    await serviceUser.putStateByUser(user.id, "ok");
-    Position lastPosition = await _getLastKnownPosition();
-    bool isCancel = await putAlarmBD(idAlarm, "cancelada",
-        lastPosition.latitude, lastPosition.longitude, true);
-    Vibration.vibrate(duration: 100);
-    log(isCancel.toString());
-    if (isCancel) {
-      setState(() {
-        isSendLocation = false;
-        textButton = "Envío de alerta de Incidente";
-      });
+    try {
+      await locationSubscription.cancel();
+      UserServices serviceUser = UserServices();
+      await serviceUser.putStateByUser(user.id, "ok");
+      Position lastPosition = await _getLastKnownPosition();
+      bool isCancel = await putAlarmBD(idAlarm, "cancelada",
+          lastPosition.latitude, lastPosition.longitude, true);
+      Vibration.vibrate(duration: 100);
+      if (isCancel) {
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        preferences.setString("state", "ok");
+        setState(() {
+          isSendLocation = false;
+          textButton = "Envío de alerta de Incidente";
+        });
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('No se pudo cancelar, Intente de nuevo'),
+        ));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
+          'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
+          'Error!'));
     }
   }
 
@@ -635,20 +606,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }).catchError((e) {
       print(e);
     });
-  }
-
-  /// _handleSendNotification() is a function that sends a notification to the user's phone
-  void _handleSendNotification() async {
-    try {
-      await _getLivePosition();
-      Vibration.vibrate(duration: 1000);
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.successSnackBar);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
-          'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
-          'Error!'));
-    }
   }
 
   /// It sends a POST request to the server to save the notification in the database.
@@ -708,24 +665,6 @@ class _MyHomePageState extends State<MyHomePage> {
     userProvider.resetUser();
   }
 
-  /// _logOutChangePassword() is a function that removes the user and token from the shared preferences
-  ///
-  /// Args:
-  ///   context: The context of the current screen.
-  void _logOutChangePassword(context) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    preferences.remove("user");
-    preferences.remove("token");
-  }
-
-  /// It checks if the user has an idOneSignal, if not, it sends the idOneSignal to the server and saves
-  /// it in the user object
-  ///
-  /// Args:
-  ///   idOS (String): The OneSignal user ID.
-  ///
-  /// Returns:
-  ///   The return is a Future<void>
   Future<void> setIdOneSignal(String idOS) async {
     UserServices userServices = UserServices();
     if (user.idOneSignal == null || (user.idOneSignal != idOS)) {
@@ -762,9 +701,10 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       }
     });
+    await dotenv.load(fileName: ".env");
 
     ///SUBSCRIPCION A ONE SIGNAL PARA RECIBIR Y ENVIAR TANTO SMS Y NOTIFICACIONES
-    await OneSignal.shared.setAppId('9fd9a40d-8646-450c-bd3b-d661b0e8ee42');
+    await OneSignal.shared.setAppId(dotenv.env['API_ONE_SIGNAL']);
     await OneSignal.shared.getDeviceState().then((value) {
       print(value.userId);
       setIdOneSignal(value.userId);
@@ -796,7 +736,6 @@ class _MyHomePageState extends State<MyHomePage> {
       }
       _scaffoldKey.currentState.closeEndDrawer();
 
-      _logOutChangePassword(context);
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(MySnackBars.simpleSnackbar(
           "${response["message"]}", Icons.lock_reset_rounded, Styles.green));

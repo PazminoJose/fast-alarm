@@ -31,19 +31,20 @@ class LoginPageState extends State<LoginPage> {
   String passwordValue = "";
   String textButtonSesion = "Iniciar Sesión";
   final formKey = GlobalKey<FormState>();
-  var userProvider;
+  UserProvider userProvider;
 
   @override
   void initState() {
     super.initState();
     _isNotConncet = true;
     openUserPreferences(context);
+    userProvider = Provider.of<UserProvider>(context, listen: false);
+
   }
 
   @override
   Widget build(BuildContext context) {
-    var contextPushScreen = context;
-    userProvider = Provider.of<UserProvider>(context, listen: false);
+    BuildContext contextPushScreen = context;
 
     // ignore: prefer_const_constructors
     return Scaffold(
@@ -268,13 +269,6 @@ class LoginPageState extends State<LoginPage> {
     Navigator.of(context).pushNamed("/register");
   }
 
-  ///  _showHomePage() It is a function that verifies the user in the database and allows entry to the application.
-  /// A function that receives a context, a user and a password and returns a future.
-  ///
-  /// Args:
-  ///   context: The context of the current page.
-  ///   usuario: The username of the user who is trying to log in.
-  ///   password: The password of the user.
   void _showHomePage(context, usuario, password) async {
     if (formKey.currentState.validate()) {
       formKey.currentState.save();
@@ -290,25 +284,20 @@ class LoginPageState extends State<LoginPage> {
           _loading = true;
           textButtonSesion = "Iniciando";
         });
+
         try {
           var userData = await userProvider.getUser(credentials);
           if (userData != null) {
             user = userData["user"];
             var token = userData["token"];
-            if (isSwitched) {
-              SharedPreferences preferences =
-                  await SharedPreferences.getInstance();
-              var userString = jsonDecode(jsonEncode(userToJson(user)));
-              preferences.setString("user", userString);
-              preferences.setString("token", token);
-            }
+
+            saveCredentials(user, token);
 
             Navigator.of(context).pushReplacementNamed("/homePage");
           } else {
             ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
                 'Usuario o Contraseña Incorrecta.\nPor favor intente de nuevo!',
                 'Incorrecto!'));
-            //_showToast("Usuario o Contraseña Incorrecta", "red", "error");
             setState(() {
               _loading = false;
               textButtonSesion = "Iniciar Sesión";
@@ -328,40 +317,35 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-  /// It open the user preferences to check if the user has saved their session and start without entering the credentials
-  ///
-  /// Args:
-  ///   context: The context of the page you're calling this function from.
+  Future<void> saveCredentials(user, String token) async {
+    if (isSwitched) {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+      var userString = jsonDecode(jsonEncode(userToJson(user)));
+      preferences.setString("user", userString);
+      preferences.setString("token", token);
+    }
+  }
+
+
   Future<void> openUserPreferences(context) async {
     try {
       WidgetsFlutterBinding.ensureInitialized();
       SharedPreferences preferences = await SharedPreferences.getInstance();
       user = preferences.getString("user");
-      var token = preferences.getString("token");
-      //Map<String, dynamic> credentials = {"email": email, "password": password};
-      user = User.fromJson(jsonDecode(user));
-      if (user != null && token != null) {
+      String token = preferences.getString("token");
+      print(user);
+      if (user != "" && token != "") {
+        user = User.fromJson(jsonDecode(user));
         await userProvider.getUser(null, user, token);
         ScaffoldMessenger.of(context).showSnackBar(MySnackBars.simpleSnackbar(
-            "Ya ha iniciado sesión", Icons.key_outlined, Styles.green));
-        print(user);
-        Future.delayed(const Duration(seconds: 4), () {
-          if (mounted) {
-            setState(() {
-              _isNotConncet = false;
-            });
-          }
-        });
+            "Ya ha iniciado sesión", Icons.key_outlined, Styles.green));        
         Navigator.of(context).pushReplacementNamed("/homePage");
       } else {
-        setState(() {
-          _isNotConncet = true;
-        });
+        return;
       }
     } catch (e) {
-      setState(() {
-        _isNotConncet = false;
-      });
+      print(e.toString());
+      return;
     }
   }
 }

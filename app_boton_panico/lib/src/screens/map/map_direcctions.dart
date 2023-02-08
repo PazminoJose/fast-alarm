@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-import 'package:app_boton_panico/src/global/enviroment.dart';
 import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -170,9 +170,11 @@ class _SearchPlacesState extends State<SearchPlaces> {
   }
 
   Future<void> _handlePressButton() async {
+    await dotenv.load(fileName: ".env");
+
     Prediction p = await PlacesAutocomplete.show(
         context: context,
-        apiKey: Environments.apiGoogle,
+        apiKey: dotenv.env['API_KEY_GOOGLE'],
         onError: onError,
         mode: _mode,
         language: 'en',
@@ -215,9 +217,11 @@ class _SearchPlacesState extends State<SearchPlaces> {
 ///   currentState (ScaffoldState): The current state of the scaffold.
   Future<void> displayPrediction(
       Prediction p, ScaffoldState currentState) async {
+    await dotenv.load(fileName: ".env");
+
     if (p != null) {
       GoogleMapsPlaces places = GoogleMapsPlaces(
-          apiKey: Environments.apiGoogle,
+          apiKey: dotenv.env['API_KEY_GOOGLE'],
           apiHeaders: await const GoogleApiHeaders().getHeaders());
 
       PlacesDetailsResponse detail =

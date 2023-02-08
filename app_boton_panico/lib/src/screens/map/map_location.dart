@@ -12,6 +12,7 @@ import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -141,9 +142,11 @@ class _LocationMapState extends State<LocationMap> {
   ///   destination (LatLng): LatLng
 
   void getPolyPoints(LatLng destination) async {
+        await dotenv.load(fileName: ".env");
+
     try {
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-        Environments.apiGoogle,
+        dotenv.env['API_KEY_GOOGLE'],
         PointLatLng(0.326190, -78.174692),
         PointLatLng(destination.latitude, destination.longitude),
       );

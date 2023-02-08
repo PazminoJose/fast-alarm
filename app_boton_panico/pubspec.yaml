@@ -62,6 +62,7 @@ dependencies:
   simple_ripple_animation: ^0.0.3
   permission_handler: ^10.2.0
   location: ^4.4.0
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -89,6 +90,7 @@ flutter:
   assets:
     - assets/image/
     - assets/svg/
+    - .env
 
   #   - images/a_dot_ham.jpeg
 

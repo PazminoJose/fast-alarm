@@ -1,7 +1,6 @@
 /// This class is used to store the endpoints of the API
 class Environments {
   static String url = "206.189.224.140";
-  static String apiGoogle = "AIzaSyCfK3Fp-ScPOOhLGtTki7nejALoQXZs96o";
 
   static String getUser = "/api/user/login";
   static String getDevices = "/api/GetDevices";
