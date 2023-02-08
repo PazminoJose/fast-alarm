@@ -10,7 +10,6 @@ import 'package:app_boton_panico/src/screens/rememberPass_page.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 
 
 /// `runApp` is a function that takes a widget and displays it on the screen

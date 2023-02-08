@@ -115,8 +115,6 @@ class _LocationMapState extends State<LocationMap> {
           if (mounted) {
             setState(() {
               _markers[MarkerId("destination")] = destinantionPosition;
-
-              
             });
           }
         },
@@ -170,76 +168,73 @@ class _LocationMapState extends State<LocationMap> {
     return Scaffold(
       appBar: AppBar(centerTitle: true, title: Text(widget.person.firstName)),
       extendBody: true,
-      body: _currentPosition == null
-          ? const Center(child: Text("Cargando..."))
-          : Stack(
-              children: [
-                GoogleMap(
-                  zoomControlsEnabled: false,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                        _currentPosition.latitude, _currentPosition.longitude),
-                  ),
-                  mapType: MapType.normal,
-                  polylines: {
-                    Polyline(
-                        polylineId: PolylineId("route"),
-                        points: polylineCoordinates,
-                        color: Colors.blue,
-                        width: 6),
-                  },
-                  onMapCreated: (GoogleMapController controller) {
-                    _controllerMap.complete(controller);
-                  },
-                  markers: Set<Marker>.of(_markers.values),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Wrap(
-                      direction: Axis.vertical,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(5),
-                          margin: const EdgeInsets.only(top: 10),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: const Color.fromARGB(139, 255, 255, 255)),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        "Distancia",
-                                        style: Styles.textStyleBotttomTitle,
-                                      ),
-                                      Text("2KM"),
-                                    ],
-                                  ),
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        "Tiempo",
-                                        style: Styles.textStyleBotttomTitle,
-                                      ),
-                                      Text("1H"),
-                                    ],
-                                  ),
-                                ]),
-                          ),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ],
+      body: Stack(
+        children: [
+          GoogleMap(
+            zoomControlsEnabled: false,
+            initialCameraPosition: const CameraPosition(
+              target: LatLng(-1.273798, -78.645353),
+              zoom: 10,
             ),
+            mapType: MapType.normal,
+            polylines: {
+              Polyline(
+                  polylineId: PolylineId("route"),
+                  points: polylineCoordinates,
+                  color: Colors.blue,
+                  width: 6),
+            },
+            onMapCreated: (GoogleMapController controller) {
+              _controllerMap.complete(controller);
+            },
+            markers: Set<Marker>.of(_markers.values),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Wrap(
+                direction: Axis.vertical,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    margin: const EdgeInsets.only(top: 10),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: const Color.fromARGB(139, 255, 255, 255)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Distancia",
+                                  style: Styles.textStyleBotttomTitle,
+                                ),
+                                Text("2KM"),
+                              ],
+                            ),
+                            Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  "Tiempo",
+                                  style: Styles.textStyleBotttomTitle,
+                                ),
+                                Text("1H"),
+                              ],
+                            ),
+                          ]),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ],
+      ),
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(26.0),

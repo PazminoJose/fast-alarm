@@ -61,6 +61,7 @@ dependencies:
   flutter_polyline_points: ^1.0.0
   simple_ripple_animation: ^0.0.3
   permission_handler: ^10.2.0
+  location: ^4.4.0
 
 dev_dependencies:
   flutter_test:

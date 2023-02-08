@@ -7,7 +7,9 @@ class Environments {
   static String getDevices = "/api/GetDevices";
   static String getAlertsByUser = "/api/alert/getbyUser/";
   static String getUsersAlertsByPersson = "/api/family-group/person";
+  static String getfamilyGropuByUser = "/api/family-group/user";
   static String getImage = "$url/public/images";
+  static String event = "update-alarms";
 
   static String postPerson = "/api/person";
   static String postUser = "/api/user";
@@ -16,7 +18,8 @@ class Environments {
   static String postSendEmailChangePassword = "/api/user/recovery-password";
   static String postSendNotificationPushAllDevices =
       "/api/SendNotificationAllDevices";
-  static String postNotification = "/api/alert";
+  static String postAlarm = "/api/alarm";
+  static String putAlarm = "/api/alarm";
 
   static String putStateByUser = "/api/family-group/user-state";
   static String sendNotificationFamilyGroup =

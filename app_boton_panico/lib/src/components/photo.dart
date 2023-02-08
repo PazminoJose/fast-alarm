@@ -18,8 +18,8 @@ class UIComponents {
             fit: BoxFit.cover,
             imageUrl:
                 "http://${Environments.getImage}/${person.urlImage}",
-            errorWidget: (context, url, error) => Icon(Icons.error_outline),
-            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => const Icon(Icons.error_outline),
+            placeholder: (context, url) => const CircularProgressIndicator(),
           ),
         ),
       );

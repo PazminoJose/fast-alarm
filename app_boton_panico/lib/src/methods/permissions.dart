@@ -5,10 +5,10 @@ import 'package:geolocator/geolocator.dart';
 /// location permissions
 class Permissions {
   /// If the user has denied location permissions, we can't ask for them again
-  /// 
+  ///
   /// Args:
   ///   context: The context of the widget that is calling the function.
-  /// 
+  ///
   /// Returns:
   ///   A Future<bool>
   static Future<bool> handleLocationPermission(context) async {
@@ -17,10 +17,7 @@ class Permissions {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text(
-              'Los servicos de localización estan deshabilitados, Por favor habilite lo servicios')));
-      return false;
+      permission = await Geolocator.requestPermission();
     }
     permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {

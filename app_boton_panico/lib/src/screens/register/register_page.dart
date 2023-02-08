@@ -205,8 +205,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   controller: lastName,
                                   keyboardType: TextInputType.name,
                                   textInputAction: TextInputAction.next,
-                                  textCapitalization:
-                                            TextCapitalization.words,
+                                  textCapitalization: TextCapitalization.words,
                                   decoration: const InputDecoration(
                                     prefixIcon:
                                         Icon(Icons.person_outline_rounded),
@@ -269,7 +268,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         //locale: const Locale("es", "EC"),
                                         context: context,
                                         initialDate: DateTime(2000),
-                                        firstDate: DateTime(1970),
+                                        firstDate: DateTime(1950),
                                         lastDate: DateTime(2101));
                                     if (pickerDate != null) {
                                       final dateFormat =
@@ -411,10 +410,9 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-
-/// records all user data to move to a second screen that records the remaining data
-/// Returns:
-///   The person object is being returned.
+  /// records all user data to move to a second screen that records the remaining data
+  /// Returns:
+  ///   The person object is being returned.
   Future<void> _showSecondPageRegister(BuildContext context) async {
     try {
       if (checkImage()) return;

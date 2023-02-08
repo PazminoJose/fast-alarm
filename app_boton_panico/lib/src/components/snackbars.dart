@@ -107,7 +107,7 @@ class MySnackBars {
               icon,
               color: Colors.white,
             ),
-            SizedBox(
+            const SizedBox(
               width: 20,
             ),
             Expanded(

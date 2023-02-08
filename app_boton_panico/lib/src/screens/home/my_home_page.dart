@@ -11,6 +11,7 @@ import 'package:app_boton_panico/src/providers/socket_provider.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/alerts/alerts.dart';
 import 'package:app_boton_panico/src/services/alerts_services.dart';
+import 'package:app_boton_panico/src/services/family_group_services.dart';
 import 'package:app_boton_panico/src/services/notification_services.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
@@ -23,6 +24,7 @@ import 'package:flutter/services.Dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
 import 'package:map_launcher/map_launcher.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -30,9 +32,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:vibration/vibration.dart';
+import 'package:location/location.dart' as LC;
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key}) : super(key: key);
+  const MyHomePage({Key key}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -44,6 +47,7 @@ var serviceNotification = NotificationServices();
 class _MyHomePageState extends State<MyHomePage> {
   int pressVolumeId;
   User user;
+
   String token;
   String _currentAddress;
   Position _currentPosition;
@@ -56,64 +60,36 @@ class _MyHomePageState extends State<MyHomePage> {
   StreamSubscription<Position> _positionStream;
   final _formKey = GlobalKey<FormState>();
   AlertsServices serviceAlert = AlertsServices();
+  String idAlarm;
+  LC.Location location = LC.Location();
+  StreamSubscription<LC.LocationData> locationSubscription;
+  List<String> familyGroupIds;
 
   bool isSendLocation = false;
 
   String textButton = "Envío de alerta de Incidente";
 
   int count = 0;
+  int countSocket = 0;
 
   @override
   void initState() {
     super.initState();
     userAlerts = [];
+    familyGroupIds = [];
     initPlatform(context);
-    //Permissions.handleLocationPermission(context);
+    Permissions.handleLocationPermission(context);
     user = Provider.of<UserProvider>(context, listen: false).userData["user"];
     token = Provider.of<UserProvider>(context, listen: false).userData["token"];
     socketProvider = Provider.of<SocketProvider>(context, listen: false);
     initSocket(user);
     getUsersAlerts(user.person.id);
+    onAlerts(user.person.id);
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  /// The function takes a user object as a parameter and then connects to the socket using the user
-  /// object
-  ///
-  /// Args:
-  ///   user (User): The user object that contains the user's information.
-  void initSocket(User user) async {
-    socketProvider.connect(user);
-  }
-
-  /// The function is called when the user logs in, and it sets up a listener for the socket.io server to
-  /// send a message to the client when the user's alarms are updated
-  ///
-  /// Args:
-  ///   personId: The id of the user that is logged in.
-  void onAlerts(personId) {
-    socketProvider.onAlerts("update-alarms-$personId", (_) {
-      getUsersAlerts(personId);
-    });
-  }
-
-  /// It gets a list of users from a service, then it filters the list to get the number of users with a
-  /// specific state
-  ///
-  /// Args:
-  ///   personId (String): is the id of the person who is logged in
-  void getUsersAlerts(String personId) async {
-    List<UserAlert> users = await serviceAlert.getUsersAlertsByPerson(personId);
-    setState(() {
-      userAlerts = users;
-      count =
-          userAlerts.where((userAlert) => userAlert.state == "danger").length;
-    });
-    log(count.toString());
   }
 
   /*  void startListening() {
@@ -128,8 +104,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    onAlerts(user.person.id);
-
     final Size size = AppLayout.getSize(context);
 
     return Scaffold(
@@ -142,17 +116,20 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Padding(
                 padding: EdgeInsets.only(
-                    top: size.height * 0.04, left: 10, bottom: 15),
+                    top: size.height * 0.04, left: 1, bottom: 15),
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
-                        child: Badge(
-                          badgeContent: Text("$count"),
-                          padding: const EdgeInsets.all(5.5),
-                          animationType: BadgeAnimationType.slide,
-                          child: const Icon(Icons.notification_important,
-                              size: 27, color: Colors.white),
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Badge(
+                            badgeContent: Text("$count"),
+                            padding: const EdgeInsets.all(5.5),
+                            animationType: BadgeAnimationType.slide,
+                            child: const Icon(Icons.notification_important,
+                                size: 27, color: Colors.white),
+                          ),
                         ),
                         onTap: () {
                           showBarModalBottomSheet(
@@ -297,18 +274,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ],
                 ),
-                currentAccountPicture: ClipOval(
-                  child: SizedBox(
-                    child: CachedNetworkImage(
-                      width: size.width * 0.9,
-                      height: size.width * 0.07,
-                      fit: BoxFit.cover,
-                      imageUrl:
-                          "http://${Environments.getImage}/${user.person.urlImage}",
-                      errorWidget: (context, url, error) =>
-                          Icon(Icons.error_outline),
-                      placeholder: (context, url) =>
-                          CircularProgressIndicator(),
+                currentAccountPicture: Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: ClipOval(
+                    child: SizedBox(
+                      child: CachedNetworkImage(
+                        width: size.width * 0.9,
+                        height: size.width * 0.07,
+                        fit: BoxFit.cover,
+                        imageUrl:
+                            "http://${Environments.getImage}/${user.person.urlImage}",
+                        errorWidget: (context, url, error) =>
+                            Icon(Icons.error_outline),
+                        placeholder: (context, url) =>
+                            CircularProgressIndicator(),
+                      ),
                     ),
                   ),
                 ),
@@ -476,6 +456,56 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  /// The function takes a user object as a parameter and then connects to the socket using the user
+  /// object
+  ///
+  /// Args:
+  ///   user (User): The user object that contains the user's information.
+  void initSocket(User user) async {
+    socketProvider.connect(user);
+  }
+
+  /// The function is called when the user logs in, and it sets up a listener for the socket.io server to
+  /// send a message to the client when the user's alarms are updated
+  ///
+  /// Args:
+  ///   personId: The id of the user that is logged in.
+  void onAlerts(personId) {
+    socketProvider.onAlerts("${Environments.event}-$personId", (_) {
+      getUsersAlerts(personId);
+    });
+  }
+
+  /// It gets a list of users from a service, then it filters the list to get the number of users with a
+  /// specific state
+  ///
+  /// Args:
+  ///   personId (String): is the id of the person who is logged in
+  void getUsersAlerts(String personId) async {
+    List<UserAlert> users = await serviceAlert.getUsersAlertsByPerson(personId);
+    if (mounted) {
+      setState(() {
+        userAlerts = users;
+        count =
+            userAlerts.where((userAlert) => userAlert.state == "danger").length;
+      });
+    }
+  }
+
+  Future<void> _getCurrentPosition() async {
+    final hasPermission = await Permissions.handleLocationPermission(context);
+    if (!hasPermission) return;
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+      });
+      log(_currentPosition.latitude.toString());
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
   /// _getLivePosition() is a function that gets the user's location every 2 seconds and sends it to the
   /// server.
   /// </code>
@@ -485,8 +515,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _getLivePosition() async {
     final hasPermission = await Permissions.handleLocationPermission(context);
     if (!hasPermission) return;
-    LocationSettings locationSettings;
 
+    await _getCurrentPosition();
+    /* LocationSettings locationSettings;
     if (defaultTargetPlatform == TargetPlatform.android) {
       locationSettings = AndroidSettings(
           accuracy: LocationAccuracy.best,
@@ -514,44 +545,85 @@ class _MyHomePageState extends State<MyHomePage> {
         accuracy: LocationAccuracy.best,
         distanceFilter: 100,
       );
-    }
+    } */
     setState(() {
       isSendLocation = true;
       textButton = "Se esta enviando tu ubicación...";
     });
     UserServices serviceUser = UserServices();
     await serviceUser.putStateByUser(user.id, "danger");
-    _positionStream =
-        Geolocator.getPositionStream(locationSettings: locationSettings)
-            .listen((position) {
-      if (position == null) {
-        return;
-      } else {
-        log('${position.latitude}, ${position.longitude}');
-        Map coords = {
-          "personId": user.person.id,
-          "position": {"lat": position.latitude, "lng": position.longitude}
-        };
-        socketProvider.emitLocation('send-alarm', jsonEncode(coords));
-      }
+    await postAlarmBD(_currentPosition.latitude, _currentPosition.longitude);
+
+    try {
+      startListening();
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('error de envio'),
+      ));
+    }
+  }
+
+  void getfamilyGruop() async {
+    FamilyGroupServices familyGroupServices = FamilyGroupServices();
+    List<User> users = await familyGroupServices.getfamilyGropuByUser(user.id);
+
+    setState(() {
+      users.forEach((user) {
+        familyGroupIds.add(user.person.id);
+      });
     });
-    /* await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      _currentPosition = position;
-    }).catchError((e) {
-      print(e);
-    }); */
+
+    familyGroupIds.forEach((element) {
+      print(element);
+    });
+  }
+
+  void startListening() {
+    getfamilyGruop();
+    location.enableBackgroundMode(enable: true);
+/* location.changeNotificationOptions(
+          channelName: "channel",
+          subtitle: "sub",
+          description: "desc",
+          title: "title",
+          color: Colors.red); */
+    locationSubscription =
+        location.onLocationChanged.listen((LC.LocationData position) {
+      log('${position.latitude}, ${position.longitude}');
+
+      Map data = {
+        "position": {"lat": position.latitude, "lng": position.longitude},
+        "familyGroup": familyGroupIds
+      };
+      
+      socketProvider.emitLocation("send-alarm", jsonEncode(data));
+    });
+  }
+
+  Future<Position> _getLastKnownPosition() async {
+    final position = await Geolocator.getLastKnownPosition();
+    if (position != null) {
+      return position;
+    } else {
+      return null;
+    }
   }
 
   void cancelSendLocation() async {
-    await _positionStream.cancel();
-    socketProvider.disconnect();
+    await locationSubscription.cancel();
     UserServices serviceUser = UserServices();
     await serviceUser.putStateByUser(user.id, "ok");
-    setState(() {
-      isSendLocation = false;
-      textButton = "Envío de alerta de Incidente";
-    });
+    Position lastPosition = await _getLastKnownPosition();
+    bool isCancel = await putAlarmBD(idAlarm, "cancelada",
+        lastPosition.latitude, lastPosition.longitude, true);
+    Vibration.vibrate(duration: 100);
+    log(isCancel.toString());
+    if (isCancel) {
+      setState(() {
+        isSendLocation = false;
+        textButton = "Envío de alerta de Incidente";
+      });
+    }
   }
 
   Future<void> _getAddressFromLatLng(Position position) async {
@@ -568,24 +640,7 @@ class _MyHomePageState extends State<MyHomePage> {
   /// _handleSendNotification() is a function that sends a notification to the user's phone
   void _handleSendNotification() async {
     try {
-      //CORDENADAS DE DONDE OCURRE EL INCIDENTE PARA ENVIO DE NOTIFICACION PUSH
-
       await _getLivePosition();
-      //Obtener direccion excata del usuario
-/* 
-      Map<String, dynamic> cordinates = {
-        "lat": _currentPosition.latitude,
-        "lng": _currentPosition.longitude
-      };
-
-      //CREACION Y ENVIO DE NOTIFICACION PUSH A LOS USUASRIOS ACTIVOS
-      Map notificationData = {
-        "cordinates": cordinates,
-        "name": "${user.person.firstName} ${user.person.lastName}",
-      };
-      print(notificationData); */
-      //PETICIONES A PUSH NOTIFICATIONS Y NOTIFICACION A LA BASE DE DATOS
-      //await postNotificationBD();
       Vibration.vibrate(duration: 1000);
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(MySnackBars.successSnackBar);
@@ -597,16 +652,46 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   /// It sends a POST request to the server to save the notification in the database.
-  Future<void> postNotificationBD() async {
+  Future<String> postAlarmBD(double lat, double lng) async {
     //CUERPO DE PETICION POST PARA GUARDAR LA NOTIFICACION EN LA BASE DE DATOS
-    var contentAlertPostServer = Alarm(
-        user: user.id,
-        message: "Incidente en $_currentAddress",
-        state: "active",
-        latitude: _currentPosition.latitude,
-        longitude: _currentPosition.longitude);
+    try {
+      var contentAlertPostServer = Alarm(
+          person: user.person.id,
+          state: "en progreso",
+          latitude: lat,
+          longitude: lng);
 
-    await serviceNotification.postNotfication(contentAlertPostServer);
+      var id = await serviceNotification.postAlarm(contentAlertPostServer);
+      setState(() {
+        idAlarm = jsonDecode(id);
+      });
+      if (id != null) {
+        return id;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
+  Future<bool> putAlarmBD(
+      String idAlarm, String state, double lat, double lng, bool isLast) async {
+    try {
+      Map contentAlertPostServer = {
+        "id": idAlarm,
+        "person": user.person.id,
+        "state": state,
+        "latitude": lat,
+        "longitude": lng,
+        "isLast": isLast,
+      };
+      return await serviceNotification.putAlarm(contentAlertPostServer);
+    } catch (e) {
+      print(e.toString());
+      return false;
+    }
   }
 
   /// _logOut() is a function that removes the user and token from the shared preferences and navigates to
