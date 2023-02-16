@@ -47,8 +47,8 @@ class DrawerItems {
             fit: BoxFit.cover,
             imageUrl:
                 "https://www.afondochile.cl/site/wp-content/uploads/2018/06/jose-vaisman-e1529942487664.jpg",
-            errorWidget: (context, url, error) => Icon(Icons.error_outline),
-            placeholder: (context, url) => CircularProgressIndicator(),
+            errorWidget: (context, url, error) => const Icon(Icons.error_outline),
+            placeholder: (context, url) => const CircularProgressIndicator(),
           ),
         ),
       );

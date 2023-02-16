@@ -1,5 +1,6 @@
 import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/methods/formats.dart';
+import 'package:app_boton_panico/src/methods/validators.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/models/user.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
@@ -39,7 +40,6 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -57,7 +57,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.chevron_left_rounded,
             color: Colors.white,
             size: 40,
@@ -104,8 +104,8 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Icon(Icons.house_outlined),
-                                    Gap(20),
+                                    const Icon(Icons.house_outlined),
+                                    const Gap(20),
                                     Text(
                                       "Domicilio",
                                       style: Styles.textStyleTitle,
@@ -135,14 +135,14 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                     return null;
                                   },
                                 ),
-                                Gap(30),
+                               const  Gap(30),
 
                                 //TODO: ¨***********CUENTA*****************
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    Icon(Icons.account_box_outlined),
-                                    Gap(20),
+                                    const Icon(Icons.account_box_outlined),
+                                    const Gap(20),
                                     Text(
                                       "Cuenta",
                                       style: Styles.textStyleTitle,
@@ -160,7 +160,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                   keyboardType: TextInputType.name,
                                   decoration: InputDecoration(
                                     prefixIcon:
-                                        Icon(Icons.person_outline_rounded),
+                                        const Icon(Icons.person_outline_rounded),
                                     label: Text(
                                       "Nombre de Usuario",
                                       style: Styles.textLabel,
@@ -178,10 +178,14 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                   controller: phone,
                                   keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
-                                  decoration: const InputDecoration(
-                                    hintText: "09673803004",
-                                    prefixIcon: Icon(Icons.phone_outlined),
-                                    label: Text("Teléfono"),
+                                  decoration: InputDecoration(
+                                    hintText: "Ej. 09673803004",
+                                    prefixIcon:
+                                        const Icon(Icons.phone_outlined),
+                                    label: Text(
+                                      "Teléfono",
+                                      style: Styles.textLabel,
+                                    ),
                                   ),
                                   onSaved: (value) => {phone.text = value},
                                   validator: (value) {
@@ -206,14 +210,21 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                   controller: email,
                                   keyboardType: TextInputType.emailAddress,
                                   textInputAction: TextInputAction.next,
-                                  decoration: const InputDecoration(
-                                    prefixIcon: Icon(Icons.email_outlined),
-                                    label: Text("Email"),
+                                  decoration: InputDecoration(
+                                    prefixIcon:
+                                        const Icon(Icons.email_outlined),
+                                    label: Text(
+                                      "Email",
+                                      style: Styles.textLabel,
+                                    ),
                                   ),
                                   onSaved: (value) => {email.text = value},
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
                                       return "Ingrese su Email";
+                                    } else if (!Validators.validateEmail(
+                                        value)) {
+                                      return "Ingrese un correo valido";
                                     }
                                     return null;
                                   },
@@ -230,14 +241,19 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                   controller: password,
                                   textInputAction: TextInputAction.done,
                                   obscureText: true,
-                                  decoration: const InputDecoration(
-                                    prefixIcon: Icon(Icons.lock_person),
-                                    label: Text("Contraseña"),
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.lock_person),
+                                    label: Text(
+                                      "Contraseña",
+                                      style: Styles.textLabel,
+                                    ),
                                   ),
                                   onSaved: (value) => {password.text = value},
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
                                       return "Ingrese su contraseña";
+                                    } else if (value.length < 6) {
+                                      return "La contraseña debe tener almenos 6 caracteres";
                                     }
                                     password.text = value;
                                     return null;
@@ -255,18 +271,21 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                   controller: passwordConfirm,
                                   textInputAction: TextInputAction.done,
                                   obscureText: true,
-                                  decoration: const InputDecoration(
-                                    prefixIcon: Icon(Icons.lock_person),
-                                    label: Text("Confirmar contraseña"),
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.lock_person),
+                                    label: Text(
+                                      "Confirmar contraseña",
+                                      style: Styles.textLabel,
+                                    ),
                                   ),
                                   onSaved: (value) =>
                                       {passwordConfirm.text = value},
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
                                       return "Ingrese su contraseña";
+                                    } else if (value.length < 6) {
+                                      return "La contraseña debe tener almenos 6 caracteres";
                                     }
-                                    print(value);
-                                    print(password.text);
                                     if (!(password.text == value)) {
                                       return "Las contraseñas no coinciden";
                                     }
@@ -327,7 +346,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
 
   ///  _showHomePage() It is a function that verifies the user in the database and allows entry to the application.
   /// A function that receives a context, a user and a password and returns a future.
-  /// 
+  ///
   /// Args:
   ///   context: The context of the current page.
   ///   usuario: The username of the user who is trying to log in.
@@ -379,7 +398,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
             builder: (context) => AlertDialog(
                   title: Column(
                     children: [
-                      Text("¡Perfecto!"),
+                     const  Text("¡Perfecto!"),
                       Text(map["message"]),
                     ],
                   ),
@@ -398,9 +417,8 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
       }
     } catch (e) {
       print(e);
-      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
-          'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
-          'Error!'));
+              ScaffoldMessenger.of(context).showSnackBar(MySnackBars.errorConectionSnackBar());
+
       setState(() {
         _loading = false;
         textButtonSesion = "Registrarse";
@@ -408,14 +426,14 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
     }
   }
 
-/// It takes a name and an idCard and returns the first letter of the name and the idCard
-/// 
-/// Args:
-///   name (String): The name of the user.
-///   idCard (String): The ID card number of the user.
-/// 
-/// Returns:
-///   The first character of the name and the idCard.
+  /// It takes a name and an idCard and returns the first letter of the name and the idCard
+  ///
+  /// Args:
+  ///   name (String): The name of the user.
+  ///   idCard (String): The ID card number of the user.
+  ///
+  /// Returns:
+  ///   The first character of the name and the idCard.
   String getUserName(String name, String idCard) {
     return (name.substring(0, 1) + idCard);
   }

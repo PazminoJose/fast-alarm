@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:app_boton_panico/src/global/enviroment.dart';
-import 'package:app_boton_panico/src/models/alarm.dart';
 import 'package:app_boton_panico/src/models/user.dart';
 import 'package:http/http.dart' as http;
 import 'package:app_boton_panico/src/models/failure.dart';

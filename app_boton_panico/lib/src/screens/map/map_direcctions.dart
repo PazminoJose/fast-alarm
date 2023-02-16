@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:app_boton_panico/src/models/person.dart';
@@ -37,12 +36,6 @@ class _SearchPlacesState extends State<SearchPlaces> {
   String _currentAddress;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     personArguments = ModalRoute.of(context).settings.arguments as Person;
 
@@ -54,7 +47,7 @@ class _SearchPlacesState extends State<SearchPlaces> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon: Icon(
+          icon:const  Icon(
             Icons.chevron_left_rounded,
             color: Colors.black,
             size: 40,
@@ -109,8 +102,8 @@ class _SearchPlacesState extends State<SearchPlaces> {
                 FloatingActionButton.extended(
                   heroTag: "btn1",
                   onPressed: _handlePressButton,
-                  label: Text("Buscar dirección"),
-                  icon: Icon(Icons.search),
+                  label: const Text("Buscar dirección"),
+                  icon: const Icon(Icons.search),
                 ),
               ],
             ),
@@ -123,23 +116,23 @@ class _SearchPlacesState extends State<SearchPlaces> {
               Navigator.of(context).pushReplacementNamed("/secondRegisterPage",
                   arguments: personArguments);
             }),
-            child: Icon(Icons.check_rounded),
             backgroundColor: Colors.green,
+            child: const Icon(Icons.check_rounded),
           ),
         ],
       ),
     );
   }
 
-/// _getAddressFromLatLng() takes a LatLng object as an argument, and returns a Future<void> that calls
-/// the placemarkFromCoordinates() function from the geolocator package, which takes a latitude and
-/// longitude as arguments, and returns a Future<List<Placemark>> that calls the then() function, which
-/// takes a List<Placemark> as an argument, and returns a Future<void> that sets the _currentAddress
-/// variable to a string that contains the street name and number of the address that corresponds to the
-/// latitude and longitude that was passed to the placemarkFromCoordinates() function
-/// 
-/// Args:
-///   position (LatLng): The current position of the user.
+  /// _getAddressFromLatLng() takes a LatLng object as an argument, and returns a Future<void> that calls
+  /// the placemarkFromCoordinates() function from the geolocator package, which takes a latitude and
+  /// longitude as arguments, and returns a Future<List<Placemark>> that calls the then() function, which
+  /// takes a List<Placemark> as an argument, and returns a Future<void> that sets the _currentAddress
+  /// variable to a string that contains the street name and number of the address that corresponds to the
+  /// latitude and longitude that was passed to the placemarkFromCoordinates() function
+  ///
+  /// Args:
+  ///   position (LatLng): The current position of the user.
   Future<void> _getAddressFromLatLng(LatLng position) async {
     try {
       await placemarkFromCoordinates(position.latitude, position.longitude)
@@ -153,11 +146,11 @@ class _SearchPlacesState extends State<SearchPlaces> {
     }
   }
 
-/// _getCurrentPosition() is a function that gets the current position of the user and returns it as a
-/// Position object
-/// 
-/// Returns:
-///   A Future<void>
+  /// _getCurrentPosition() is a function that gets the current position of the user and returns it as a
+  /// Position object
+  ///
+  /// Returns:
+  ///   A Future<void>
   Future<void> _getCurrentPosition() async {
     final hasPermission = await Permissions.handleLocationPermission(context);
     if (!hasPermission) return;
@@ -208,13 +201,13 @@ class _SearchPlacesState extends State<SearchPlaces> {
     // homeScaffoldKey.currentState!.showSnackBar(SnackBar(content: Text(response.errorMessage!)));
   }
 
-/// It takes a Prediction object and a ScaffoldState object as parameters, then it uses the Prediction
-/// object to get the latitude and longitude of the place, then it adds a marker to the map and animates
-/// the camera to the marker
-/// 
-/// Args:
-///   p (Prediction): Prediction
-///   currentState (ScaffoldState): The current state of the scaffold.
+  /// It takes a Prediction object and a ScaffoldState object as parameters, then it uses the Prediction
+  /// object to get the latitude and longitude of the place, then it adds a marker to the map and animates
+  /// the camera to the marker
+  ///
+  /// Args:
+  ///   p (Prediction): Prediction
+  ///   currentState (ScaffoldState): The current state of the scaffold.
   Future<void> displayPrediction(
       Prediction p, ScaffoldState currentState) async {
     await dotenv.load(fileName: ".env");
@@ -244,12 +237,13 @@ class _SearchPlacesState extends State<SearchPlaces> {
           .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
     }
   }
-/// It takes a LatLng object and a ScaffoldState object as parameters, and then it displays a marker on
-/// the map at the location of the LatLng object
-/// 
-/// Args:
-///   latLng (LatLng): The latitude and longitude of the location you want to display on the map.
-///   currentState (ScaffoldState): The current state of the scaffold.
+
+  /// It takes a LatLng object and a ScaffoldState object as parameters, and then it displays a marker on
+  /// the map at the location of the LatLng object
+  ///
+  /// Args:
+  ///   latLng (LatLng): The latitude and longitude of the location you want to display on the map.
+  ///   currentState (ScaffoldState): The current state of the scaffold.
 
   Future<void> displayPredictionOnTap(
       LatLng latLng, ScaffoldState currentState) async {

@@ -1,6 +1,5 @@
 import 'package:app_boton_panico/src/global/enviroment.dart';
 import 'package:app_boton_panico/src/models/user.dart';
-import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 /// It connects to the server, and then it emits and listens to events

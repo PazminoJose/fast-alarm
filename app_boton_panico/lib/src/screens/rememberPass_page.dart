@@ -1,11 +1,9 @@
 import 'package:app_boton_panico/src/components/snackbars.dart';
-import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.Dart';
-import 'package:provider/provider.dart';
 
 class RememberPassPage extends StatefulWidget {
   const RememberPassPage({Key key}) : super(key: key);
@@ -197,9 +195,7 @@ class _RememberPassPageState extends State<RememberPassPage> {
             });
           }
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
-              'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
-              'Error!'));
+          ScaffoldMessenger.of(context).showSnackBar(MySnackBars.errorConectionSnackBar());
           setState(() {
             _loading = false;
             textButtonSesion = "Iniciar Sesión";

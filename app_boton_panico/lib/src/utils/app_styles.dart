@@ -12,7 +12,7 @@ class Styles {
   static Color redText = Colors.red;
   static Color tranparent = Colors.transparent;
   static Color blur = const Color.fromARGB(48, 255, 255, 255);
-  static RegExp exprOnlyLetter = RegExp(r'[ a-zA-Z]');
+  static RegExp exprOnlyLetter = RegExp(r'[ a-zA-ZñÑáéíóú]');
   static RegExp exprOnlydigists = RegExp(r'[0-9]');
   static RegExp exprWithoutWhitspace = RegExp(r'[ ]');
   static RegExp exprWithLetterDigits = RegExp(r'[ A-Za-z0-9]');
@@ -33,7 +33,7 @@ class Styles {
     color: black,
   );
   static TextStyle textLabel = const TextStyle(
-    fontSize: 15,
+    fontSize: 14,
   );
   static TextStyle textButtonTrackLocation = TextStyle(color: redText);
   static TextStyle textState =

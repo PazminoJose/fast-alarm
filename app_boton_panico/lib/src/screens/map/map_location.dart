@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
 
 import 'package:app_boton_panico/src/components/photo.dart';
-import 'package:app_boton_panico/src/global/enviroment.dart';
 import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/models/user.dart';
@@ -18,7 +15,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'dart:math' show cos, sqrt, asin;
 
 class LocationMap extends StatefulWidget {
   const LocationMap({Key key, this.person}) : super(key: key);
@@ -90,7 +86,7 @@ class _LocationMapState extends State<LocationMap> {
         (data) async {
           //var dataRecive = jsonDecode(data);
           //log(data);
-          log(widget.person.id);
+
           Map latlng = data["position"];
           final GoogleMapController controller = await _controllerMap.future;
           controller.animateCamera(
@@ -142,7 +138,7 @@ class _LocationMapState extends State<LocationMap> {
   ///   destination (LatLng): LatLng
 
   void getPolyPoints(LatLng destination) async {
-        await dotenv.load(fileName: ".env");
+    await dotenv.load(fileName: ".env");
 
     try {
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
@@ -182,7 +178,7 @@ class _LocationMapState extends State<LocationMap> {
             mapType: MapType.normal,
             polylines: {
               Polyline(
-                  polylineId: PolylineId("route"),
+                  polylineId: const PolylineId("route"),
                   points: polylineCoordinates,
                   color: Colors.blue,
                   width: 6),
@@ -192,7 +188,7 @@ class _LocationMapState extends State<LocationMap> {
             },
             markers: Set<Marker>.of(_markers.values),
           ),
-          Row(
+          /*         Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Wrap(
@@ -236,6 +232,7 @@ class _LocationMapState extends State<LocationMap> {
               )
             ],
           ),
+   */
         ],
       ),
       bottomNavigationBar: ClipRRect(

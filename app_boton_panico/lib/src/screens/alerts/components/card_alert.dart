@@ -1,10 +1,8 @@
 import 'package:app_boton_panico/src/components/photo.dart';
-import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/models/user_alert.dart';
 import 'package:app_boton_panico/src/screens/map/map_location.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
@@ -23,7 +21,7 @@ class CardAlert extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(
-        top: 5,
+        top: 8,
       ),
       child: Card(
           shape: RoundedRectangleBorder(
@@ -106,35 +104,23 @@ class CardAlert extends StatelessWidget {
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [                         
-                              Text(
-                                "Seguir Ubicación",
-                                style: Styles.textButtonTrackLocation,
-                              )
-                            ,
-                            Gap(10),                           
-                              RotatedBox(
-                                //turns: AlwaysStoppedAnimation(45 / 360),
-                                quarterTurns: 1,
-                                child: Icon(
-                                  Icons.navigation_rounded,
-                                  color: colorState,
-                                ),
-                              )
+                          children: [
+                            Text(
+                              "Seguir Ubicación",
+                              style: Styles.textButtonTrackLocation,
+                            ),
+                            const Gap(10),
+                            RotatedBox(
+                              //turns: AlwaysStoppedAnimation(45 / 360),
+                              quarterTurns: 1,
+                              child: Icon(
+                                Icons.navigation_rounded,
+                                color: colorState,
+                              ),
+                            )
                           ],
                         ),
                       )
-                      else 
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [                      
-                              Text(
-                                "Seguro",
-                                style: Styles.textButtonTrackLocation
-                                    .copyWith(color: Styles.green),
-                              ),                            
-                          ],
-                        ),
                   ],
                 )
               ],

@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:app_boton_panico/src/global/enviroment.dart';
@@ -8,7 +6,6 @@ import 'package:app_boton_panico/src/models/failure.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/models/user.dart';
 import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 
 class UserServices {
   Map<String, String> headers = {

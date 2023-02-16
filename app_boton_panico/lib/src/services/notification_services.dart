@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:app_boton_panico/src/global/enviroment.dart';
@@ -116,9 +115,9 @@ class NotificationServices {
   /// Returns:
   ///   A boolean value.
 
-  Future<bool> sendNotificationFamilyGroup(String userId) async {
+  Future<bool> sendNotificationFamilyGroup(String userId, String name) async {
     try {
-      Map data = {"user": userId};
+      Map data = {"user": userId, "name":name};
 
       var url =
           Uri.http(Environments.url, Environments.sendNotificationFamilyGroup);
@@ -132,6 +131,7 @@ class NotificationServices {
       }
     } catch (e) {
       print(e);
+      return false;
     }
   }
 }

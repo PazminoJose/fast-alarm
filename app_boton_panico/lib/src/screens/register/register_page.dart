@@ -1,13 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/methods/validators.dart';
-import 'package:app_boton_panico/src/models/failure.dart';
 import 'package:app_boton_panico/src/models/person.dart';
-import 'package:app_boton_panico/src/models/user.dart';
 import 'package:app_boton_panico/src/screens/register/components/user_photo.dart';
-import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +19,6 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-//TODO: cargar imagen
   TextEditingController firstName = TextEditingController();
   TextEditingController middleName = TextEditingController();
   TextEditingController lastName = TextEditingController();
@@ -55,7 +48,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     bithDate.text;
   }
@@ -67,7 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.chevron_left_rounded,
             color: Colors.white,
             size: 40,
@@ -123,6 +115,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               )
                             ],
                           ),
+                        const Gap(10),
                         Form(
                           key: _formKey,
                           child: Column(
@@ -133,18 +126,17 @@ class _RegisterPageState extends State<RegisterPage> {
                                     Expanded(
                                       child: TextFormField(
                                         inputFormatters: [
-                                          LengthLimitingTextInputFormatter(10),
+                                          LengthLimitingTextInputFormatter(15),
                                           FilteringTextInputFormatter.allow(
                                               Styles.exprOnlyLetter),
                                         ],
                                         controller: firstName,
                                         textInputAction: TextInputAction.next,
-                                        autofocus: true,
                                         keyboardType: TextInputType.name,
                                         textCapitalization:
                                             TextCapitalization.sentences,
                                         decoration: InputDecoration(
-                                          prefixIcon: Icon(
+                                          prefixIcon: const Icon(
                                               Icons.person_outline_rounded),
                                           label: Text(
                                             "Primer nombre",
@@ -161,17 +153,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                         },
                                       ),
                                     ),
-                                    Gap(15),
+                                    const Gap(15),
                                     Expanded(
                                       child: TextFormField(
                                         inputFormatters: [
-                                          LengthLimitingTextInputFormatter(10),
+                                          LengthLimitingTextInputFormatter(15),
                                           FilteringTextInputFormatter.allow(
                                               Styles.exprOnlyLetter),
                                         ],
                                         controller: middleName,
                                         textInputAction: TextInputAction.next,
-                                        autofocus: true,
                                         keyboardType: TextInputType.name,
                                         textCapitalization:
                                             TextCapitalization.sentences,
@@ -198,7 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 TextFormField(
                                   inputFormatters: [
-                                    LengthLimitingTextInputFormatter(15),
+                                    LengthLimitingTextInputFormatter(30),
                                     FilteringTextInputFormatter.allow(
                                         Styles.exprOnlyLetter),
                                   ],
@@ -206,10 +197,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                   keyboardType: TextInputType.name,
                                   textInputAction: TextInputAction.next,
                                   textCapitalization: TextCapitalization.words,
-                                  decoration: const InputDecoration(
-                                    prefixIcon:
-                                        Icon(Icons.person_outline_rounded),
-                                    label: Text("Apellidos"),
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(
+                                        Icons.person_outline_rounded),
+                                    label: Text(
+                                      "Apellidos",
+                                      style: Styles.textLabel,
+                                    ),
                                   ),
                                   onSaved: (value) => {lastName.text = value},
                                   validator: (value) {
@@ -231,10 +225,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                   controller: idCard,
                                   keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
-                                  decoration: const InputDecoration(
-                                    prefixIcon:
-                                        Icon(Icons.calendar_view_week_outlined),
-                                    label: Text("Cedula"),
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(
+                                        Icons.calendar_view_week_outlined),
+                                    label: Text(
+                                      "Cedula",
+                                      style: Styles.textLabel,
+                                    ),
                                   ),
                                   onSaved: (value) => {idCard.text = value},
                                   validator: (value) {
@@ -255,10 +252,13 @@ class _RegisterPageState extends State<RegisterPage> {
                                 TextFormField(
                                   keyboardType: TextInputType.datetime,
                                   textInputAction: TextInputAction.next,
-                                  decoration: const InputDecoration(
-                                    prefixIcon:
-                                        Icon(Icons.calendar_month_outlined),
-                                    label: Text("Fecha de nacimiento"),
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(
+                                        Icons.calendar_month_outlined),
+                                    label: Text(
+                                      "Fecha de nacimiento",
+                                      style: Styles.textLabel,
+                                    ),
                                   ),
                                   onSaved: (value) => {bithDate.text = value},
                                   readOnly: true,
@@ -292,13 +292,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                   children: [
                                     Expanded(
                                       child: DropdownButtonFormField<String>(
-                                          decoration: const InputDecoration(
-                                            label: Text("Estado Civil"),
+                                          decoration: InputDecoration(
+                                            label: Text(
+                                              "Estado Civil",
+                                              style: Styles.textLabel,
+                                            ),
                                           ),
                                           items: listMaritalStatus.map((e) {
                                             return DropdownMenuItem(
-                                              child: Text(e),
                                               value: e,
+                                              child: Text(e),
                                             );
                                           }).toList(),
                                           validator: (value) => value == null
@@ -308,16 +311,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 maritalStatus.text = item;
                                               })),
                                     ),
-                                    Gap(10),
+                                    const Gap(10),
                                     Expanded(
                                       child: DropdownButtonFormField<String>(
-                                          decoration: const InputDecoration(
-                                            label: Text("Género"),
+                                          decoration: InputDecoration(
+                                            label: Text(
+                                              "Género",
+                                              style: Styles.textLabel,
+                                            ),
                                           ),
                                           items: listGender.map((e) {
                                             return DropdownMenuItem(
-                                              child: Text(e),
                                               value: e,
+                                              child: Text(e),
                                             );
                                           }).toList(),
                                           validator: (value) => value == null
@@ -333,13 +339,16 @@ class _RegisterPageState extends State<RegisterPage> {
                                   children: [
                                     Expanded(
                                       child: DropdownButtonFormField<String>(
-                                          decoration: const InputDecoration(
-                                            label: Text("Etnia"),
+                                          decoration: InputDecoration(
+                                            label: Text(
+                                              "Etnia",
+                                              style: Styles.textLabel,
+                                            ),
                                           ),
                                           items: listEthnic.map((e) {
                                             return DropdownMenuItem(
-                                              child: Text(e),
                                               value: e,
+                                              child: Text(e),
                                             );
                                           }).toList(),
                                           validator: (value) => value == null
@@ -349,14 +358,17 @@ class _RegisterPageState extends State<RegisterPage> {
                                                 ethnic.text = item;
                                               })),
                                     ),
-                                    Gap(10),
+                                    const Gap(10),
                                     Expanded(
                                         child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       crossAxisAlignment:
                                           CrossAxisAlignment.center,
                                       children: [
-                                        Text("¿Sufre alguna\n discapacidad?"),
+                                        Text(
+                                          "¿Sufre alguna\n discapacidad?",
+                                          style: Styles.textLabel,
+                                        ),
                                         Checkbox(
                                             activeColor: Styles.primaryColor,
                                             value: isDisability,
@@ -388,8 +400,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceAround,
-                                  children: [
-                                    const Text("Continuar"),
+                                  children: const [
+                                    Text("Continuar"),
                                     Icon(Icons.arrow_forward_rounded)
                                   ],
                                 ),
@@ -438,9 +450,8 @@ class _RegisterPageState extends State<RegisterPage> {
       }
     } catch (e) {
       print(e);
-      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
-          'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
-          'Error!'));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(MySnackBars.errorConectionSnackBar());
     }
   }
 

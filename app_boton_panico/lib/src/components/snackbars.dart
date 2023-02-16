@@ -6,7 +6,7 @@ class MySnackBars {
   /// failure
 
   /// It returns a SnackBar widget.
-  /// 
+  ///
   /// Args:
   ///   message (String): The message you want to display
   ///   title (String): The title of the snackbar
@@ -18,8 +18,17 @@ class MySnackBars {
           title: title,
           message: message,
           contentType: ContentType.failure,
-          isDesktop: false,
-          xlarge: false,
+        ),
+      );
+
+  static errorConectionSnackBar() => SnackBar(
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.transparent,
+        content: AwesomeSnackbarContent(
+          title: 'Error!',
+          message:  'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
+          contentType: ContentType.failure,
         ),
       );
 
@@ -34,8 +43,6 @@ class MySnackBars {
       message:
           'You need to use this package in the app to uplift your Snackbar Experinece!',
       contentType: ContentType.help,
-      isDesktop: false,
-      xlarge: false,
     ),
   );
 
@@ -50,14 +57,11 @@ class MySnackBars {
       message:
           'Se envio alerta a todos los dispositivos.\nPor favor espere por ayuda!',
       contentType: ContentType.success,
-      isDesktop: false,
-      xlarge: false,
     ),
   );
 
-
   /// It returns a SnackBar widget.
-  /// 
+  ///
   /// Args:
   ///   message (String): The message you want to display.
   ///   title (String): The title of the snackbar.
@@ -69,8 +73,6 @@ class MySnackBars {
           title: title,
           message: message,
           contentType: ContentType.success,
-          isDesktop: false,
-          xlarge: false,
         ),
       );
 
@@ -84,17 +86,15 @@ class MySnackBars {
       title: 'Warning!',
       message: 'You Have a warning for this message.\nPlease read carefully!',
       contentType: ContentType.warning,
-      isDesktop: false,
-      xlarge: false,
     ),
   );
 
- /// It returns a SnackBar widget.
- /// 
- /// Args:
- ///   message (String): The message you want to display in the snackbar.
- ///   icon (IconData): The icon you want to display on the left side of the snackbar.
- ///   color (Color): The background color of the snackbar.
+  /// It returns a SnackBar widget.
+  ///
+  /// Args:
+  ///   message (String): The message you want to display in the snackbar.
+  ///   icon (IconData): The icon you want to display on the left side of the snackbar.
+  ///   color (Color): The background color of the snackbar.
   static simpleSnackbar(String message, IconData icon, Color color) => SnackBar(
         elevation: 15,
         /* shape: const RoundedRectangleBorder(

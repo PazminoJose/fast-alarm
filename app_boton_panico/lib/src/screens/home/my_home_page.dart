@@ -10,6 +10,7 @@ import 'package:app_boton_panico/src/models/user_alert.dart';
 import 'package:app_boton_panico/src/providers/socket_provider.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/alerts/alerts.dart';
+import 'package:app_boton_panico/src/screens/coreTrust/family_group_page.dart';
 import 'package:app_boton_panico/src/services/alerts_services.dart';
 import 'package:app_boton_panico/src/services/family_group_services.dart';
 import 'package:app_boton_panico/src/services/notification_services.dart';
@@ -23,7 +24,6 @@ import 'package:flutter/services.Dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:map_launcher/map_launcher.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +41,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 String idOneSignal;
-var serviceNotification = NotificationServices();
+NotificationServices serviceNotification = NotificationServices();
 
 class _MyHomePageState extends State<MyHomePage> {
   int pressVolumeId;
@@ -52,18 +52,18 @@ class _MyHomePageState extends State<MyHomePage> {
   Position _currentPosition;
   List<UserAlert> userAlerts;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey _inkWellKey = GlobalKey();
   StreamSubscription<HardwareButton> subscription;
   TextEditingController password = TextEditingController();
   TextEditingController passwordConfirm = TextEditingController();
   SocketProvider socketProvider;
-  StreamSubscription<Position> _positionStream;
   final _formKey = GlobalKey<FormState>();
   AlertsServices serviceAlert = AlertsServices();
   String idAlarm;
   LC.Location location = LC.Location();
   StreamSubscription<LC.LocationData> locationSubscription;
   List<String> familyGroupIds;
-
+  Timer _timer;
   bool isSendLocation = false;
 
   String textButton = "Envío de alerta de Incidente";
@@ -111,6 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       InkWell(
+                        key: _inkWellKey,
                         child: Padding(
                           padding: const EdgeInsets.all(18.0),
                           child: Badge(
@@ -151,12 +152,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     if (!isSendLocation) ...[
                       InkWell(
                           splashColor: Colors.yellow,
-                          onLongPress: () {
-                            Timer(const Duration(seconds: 3), (sendLocation));
-                          },
-                          child: const Image(
-                            image: AssetImage("assets/image/sos.png"),
-                            height: 230,
+                          onLongPress: () => {
+                                Timer(const Duration(seconds: 2), () {
+                                  sendLocation(true);
+                                })
+                              },
+                          child: Image(
+                            image: const AssetImage("assets/image/sos.png"),
+                            height: (size.width * 0.6),
                           )),
                       const Text(
                         "Presione durante 3 segundos para enviar alerta",
@@ -184,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: InkWell(
                                 splashColor: Colors.white, // Splash color
                                 onLongPress: () {
-                                  Timer(const Duration(seconds: 3),
+                                  Timer(const Duration(seconds: 2),
                                       (cancelSendLocation));
                                 },
                                 child: SizedBox(
@@ -196,7 +199,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       children: [
                                         Icon(
                                           Icons.check_rounded,
-                                          size: 80,
+                                          size: (size.width * 0.2),
                                         ),
                                         Text(
                                           "¡Ya Estoy Seguro!",
@@ -225,8 +228,8 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: [
               UserAccountsDrawerHeader(
-                accountName:
-                    Text("${user.person.firstName} ${user.person.lastName}"),
+                accountName: Text(
+                    "${user.person.firstName}${user.person.middleName}${user.person.lastName}"),
                 accountEmail: Column(
                   children: [
                     Padding(
@@ -274,9 +277,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         imageUrl:
                             "http://${Environments.getImage}/${user.person.urlImage}",
                         errorWidget: (context, url, error) =>
-                            Icon(Icons.error_outline),
+                            const Icon(Icons.error_outline),
                         placeholder: (context, url) =>
-                            CircularProgressIndicator(),
+                            const CircularProgressIndicator(),
                       ),
                     ),
                   ),
@@ -296,7 +299,17 @@ class _MyHomePageState extends State<MyHomePage> {
                         ListTile(
                             title: const Text("Nucleo de Confianza"),
                             trailing: const Icon(Icons.family_restroom),
-                            onTap: () => _openFormChangePassword(context)),
+                            onTap: () => showBarModalBottomSheet(
+                                  context: context,
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 0, 0, 0),
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(20))),
+                                  builder: (context) => FamilyGroup(
+                                    userId: user.id,
+                                  ),
+                                )),
                         const Divider(
                           height: 10,
                         ),
@@ -333,106 +346,103 @@ class _MyHomePageState extends State<MyHomePage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Container(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Stack(
-                    clipBehavior: Clip.none,
-                    children: <Widget>[
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(
-                              "Cambiar Contraseña",
-                              style: Styles.textLabel.copyWith(
-                                  color: Styles.black,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: TextFormField(
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(15),
-                                  FilteringTextInputFormatter.deny(
-                                      Styles.exprWithoutWhitspace),
-                                ],
-                                controller: password,
-                                textInputAction: TextInputAction.done,
-                                obscureText: true,
-                                decoration: const InputDecoration(
-                                  prefixIcon: Icon(Icons.lock_person),
-                                  label: Text("Contraseña"),
-                                ),
-                                onSaved: (value) => {password.text = value},
-                                validator: (value) {
-                                  if (value.isEmpty || value == null) {
-                                    return "Ingrese su contraseña";
-                                  }
-                                  password.text = value;
-                                  return null;
-                                },
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: <Widget>[
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            "Cambiar Contraseña",
+                            style: Styles.textLabel.copyWith(
+                                color: Styles.black,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(15),
+                                FilteringTextInputFormatter.deny(
+                                    Styles.exprWithoutWhitspace),
+                              ],
+                              controller: password,
+                              textInputAction: TextInputAction.done,
+                              obscureText: true,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(Icons.lock_person),
+                                label: Text("Contraseña"),
                               ),
+                              onSaved: (value) => {password.text = value},
+                              validator: (value) {
+                                if (value.isEmpty || value == null) {
+                                  return "Ingrese su contraseña";
+                                }
+                                password.text = value;
+                                return null;
+                              },
                             ),
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: TextFormField(
-                                inputFormatters: [
-                                  LengthLimitingTextInputFormatter(15),
-                                  FilteringTextInputFormatter.deny(
-                                      Styles.exprWithoutWhitspace),
-                                ],
-                                controller: passwordConfirm,
-                                textInputAction: TextInputAction.done,
-                                obscureText: true,
-                                decoration: const InputDecoration(
-                                  prefixIcon: Icon(Icons.lock_person),
-                                  label: Text("Confirmar contraseña"),
-                                ),
-                                onSaved: (value) =>
-                                    {passwordConfirm.text = value},
-                                validator: (value) {
-                                  if (value.isEmpty || value == null) {
-                                    return "Ingrese su contraseña";
-                                  }
-                                  if (!(password.text == value)) {
-                                    return "Las contraseñas no coinciden";
-                                  }
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextFormField(
+                              inputFormatters: [
+                                LengthLimitingTextInputFormatter(15),
+                                FilteringTextInputFormatter.deny(
+                                    Styles.exprWithoutWhitspace),
+                              ],
+                              controller: passwordConfirm,
+                              textInputAction: TextInputAction.done,
+                              obscureText: true,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(Icons.lock_person),
+                                label: Text("Confirmar contraseña"),
+                              ),
+                              onSaved: (value) =>
+                                  {passwordConfirm.text = value},
+                              validator: (value) {
+                                if (value.isEmpty || value == null) {
+                                  return "Ingrese su contraseña";
+                                }
+                                if (!(password.text == value)) {
+                                  return "Las contraseñas no coinciden";
+                                }
 
-                                  return null;
-                                },
-                              ),
+                                return null;
+                              },
                             ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: Styles.secondaryColor),
-                                    child: Text("Cancelar"),
-                                    onPressed: (() {
-                                      Navigator.of(context).pop();
-                                    }),
-                                  ),
-                                  ElevatedButton(
-                                    child: Text("Aceptar"),
-                                    onPressed: () => _changePassword(context),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      backgroundColor: Styles.secondaryColor),
+                                  child: Text("Cancelar"),
+                                  onPressed: (() {
+                                    Navigator.of(context).pop();
+                                  }),
+                                ),
+                                ElevatedButton(
+                                  child: const Text("Aceptar"),
+                                  onPressed: () => _changePassword(context),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
           );
         });
@@ -467,47 +477,54 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _currentPosition = position;
       });
-      log(_currentPosition.latitude.toString());
     }).catchError((e) {
       print(e);
     });
   }
 
-  void sendLocation() async {
+  void sendLocation(bool isNewAlarm) async {
     try {
-      await _getLivePosition();
-      Vibration.vibrate(duration: 1000);
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.successSnackBar);
+      bool isSendPosition = await _getLivePosition(isNewAlarm);
+      if (isSendPosition) {
+        setState(() {
+          isSendLocation = true;
+          textButton = "Se esta enviando tu ubicación...";
+        });
+        Vibration.vibrate(duration: 1000);
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(MySnackBars.successSnackBar);
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
-          'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
-          'Error!'));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(MySnackBars.errorConectionSnackBar());
     }
   }
 
-  Future<void> _getLivePosition() async {
+  Future<bool> _getLivePosition(bool isNewAlarm) async {
     try {
       final hasPermission = await Permissions.handleLocationPermission(context);
-      if (!hasPermission) return;
+      if (!hasPermission) return false;
 
-      await _getCurrentPosition();
-
-      setState(() {
-        isSendLocation = true;
-        textButton = "Se esta enviando tu ubicación...";
-      });
       UserServices serviceUser = UserServices();
-      await serviceUser.putStateByUser(user.id, "danger");
-      await postAlarmBD(_currentPosition.latitude, _currentPosition.longitude);
       SharedPreferences preferences = await SharedPreferences.getInstance();
+
+      if (isNewAlarm) {
+        await serviceUser.putStateByUser(user.id, "danger");
+        await _getCurrentPosition();
+        await postAlarmBD(
+            _currentPosition.latitude, _currentPosition.longitude);
+        preferences.setString("idAlarm", idAlarm);
+      }
       preferences.setString("state", "danger");
-      await serviceNotification.sendNotificationFamilyGroup(user.id);
-      startListening();
+      //await serviceNotification.sendNotificationFamilyGroup(user.id, "${user.person.firstName} ${user.person.lastName}");
+      startListeningPosition();
+      return true;
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Error de envio'),
-      ));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(MySnackBars.errorConectionSnackBar());
+      Vibration.vibrate(duration: 200);
+
+      return false;
     }
   }
 
@@ -515,10 +532,7 @@ class _MyHomePageState extends State<MyHomePage> {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     String state = preferences.getString("state");
     if (state == "danger") {
-      setState(() {
-        isSendLocation = true;
-        textButton = "Se esta enviando tu ubicación...";
-      });
+      sendLocation(false);
     } else {
       setState(() {
         isSendLocation = false;
@@ -538,15 +552,15 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void startListening() {
+  void startListeningPosition() {
     getfamilyGruop();
     location.enableBackgroundMode(enable: true);
-/* location.changeNotificationOptions(
-          channelName: "channel",
-          subtitle: "sub",
-          description: "desc",
-          title: "title",
-          color: Colors.red); */
+    location.changeNotificationOptions(
+        channelName: "channel",
+        subtitle: "Se esta enviando tu ubicación a tu nucle de confianza.",
+        description: "desc",
+        title: "Vivo Vivo está accediendo a su ubicación",
+        color: Colors.red);
     locationSubscription =
         location.onLocationChanged.listen((LC.LocationData position) {
       log('${position.latitude}, ${position.longitude}');
@@ -571,29 +585,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void cancelSendLocation() async {
     try {
+      SharedPreferences preferences = await SharedPreferences.getInstance();
+
       await locationSubscription.cancel();
+      location.enableBackgroundMode(enable: false);
       UserServices serviceUser = UserServices();
       await serviceUser.putStateByUser(user.id, "ok");
       Position lastPosition = await _getLastKnownPosition();
-      bool isCancel = await putAlarmBD(idAlarm, "cancelada",
-          lastPosition.latitude, lastPosition.longitude, true);
+      String id = preferences.getString("idAlarm");
+
+      bool isCancel = await putAlarmBD(
+          id, "cancelada", lastPosition.latitude, lastPosition.longitude, true);
       Vibration.vibrate(duration: 100);
       if (isCancel) {
-        SharedPreferences preferences = await SharedPreferences.getInstance();
         preferences.setString("state", "ok");
+        preferences.remove("idAlarm");
         setState(() {
           isSendLocation = false;
           textButton = "Envío de alerta de Incidente";
         });
       } else {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('No se pudo cancelar, Intente de nuevo'),
         ));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
-          'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
-          'Error!'));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(MySnackBars.errorConectionSnackBar());
     }
   }
 
@@ -686,28 +705,23 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> initPlatform(context) async {
     OneSignal.shared.setNotificationOpenedHandler(
         (OSNotificationOpenedResult result) async {
-      //OBTENER DATOS DESDE LA NOTIFICACION PUSH
-      Map<String, dynamic> valueNotify = result.notification.additionalData;
-      //OBTENER LA UBICACION EXACTA DEL USUASRIO PARA REDIRECCION EN GOOGLE MAPS
-      //var ubication = await location.getLocation();
-      var longitude = valueNotify["longitude"];
-      var latitude = valueNotify["latitude"];
-
-      if (await MapLauncher.isMapAvailable(MapType.google)) {
+      _inkWellKey.currentState.activate();
+      /* if (await MapLauncher.isMapAvailable(MapType.google)) {
         MapLauncher.showDirections(
           mapType: MapType.google,
           destination: Coords(latitude, longitude),
-          //origin: Coords(ubication.latitude, ubication.longitude)
         );
-      }
+      } */
     });
+
     await dotenv.load(fileName: ".env");
 
     ///SUBSCRIPCION A ONE SIGNAL PARA RECIBIR Y ENVIAR TANTO SMS Y NOTIFICACIONES
     await OneSignal.shared.setAppId(dotenv.env['API_ONE_SIGNAL']);
-    await OneSignal.shared.getDeviceState().then((value) {
+    await OneSignal.shared.getDeviceState().then((value) async {
+      print("value.userId");
       print(value.userId);
-      setIdOneSignal(value.userId);
+      await setIdOneSignal(value.userId);
       //setSmsNumber(value.smsNumber);
     });
   }
@@ -729,9 +743,9 @@ class _MyHomePageState extends State<MyHomePage> {
       UserServices userServices = UserServices();
       Map response = await userServices.postChangePassword(changePasswordData);
       if (response == null) {
-        ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
-            'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
-            'Error!'));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(MySnackBars.errorConectionSnackBar());
+
         return;
       }
       _scaffoldKey.currentState.closeEndDrawer();

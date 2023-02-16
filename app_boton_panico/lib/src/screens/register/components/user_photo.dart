@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:flutter_svg_provider/flutter_svg_provider.dart';
+
+import '../../../components/snackbars.dart';
 
 typedef OnImageSelected = Function(XFile imageFile);
 
@@ -28,11 +28,10 @@ class UserPhoto extends StatelessWidget {
               children: [
                 CircleAvatar(backgroundColor: Styles.primaryColor, radius: 65),
                 CircleAvatar(
+                    backgroundColor: Styles.primaryColor,
                     backgroundImage: imageFile != null
                         ? FileImage(File(imageFile.path))
-                        : /* SvgPicture.asset("assets/svg/user.svg")
-                            as ImageProvider */
-                        const AssetImage("assets/image/person.png"),
+                        : const AssetImage("assets/image/user.png"),
                     radius: 62)
               ],
             )),
@@ -44,7 +43,7 @@ class UserPhoto extends StatelessWidget {
                 showMaterialModalBottomSheet(
                     expand: false,
                     context: context,
-                    backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                    backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                     shape: const RoundedRectangleBorder(
                         borderRadius:
                             BorderRadius.vertical(top: Radius.circular(20))),
@@ -56,16 +55,16 @@ class UserPhoto extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             ListTile(
-                              title: Text('Cámara'),
-                              leading: Icon(Icons.camera_alt_outlined),
+                              title: const Text('Cámara'),
+                              leading: const Icon(Icons.camera_alt_outlined),
                               onTap: () {
                                 _pickImage(context, ImageSource.camera);
                                 Navigator.of(context).pop();
                               },
                             ),
                             ListTile(
-                              title: Text('Galeria'),
-                              leading: Icon(Icons.image),
+                              title: const Text('Galeria'),
+                              leading: const Icon(Icons.image),
                               onTap: () {
                                 _pickImage(context, ImageSource.gallery);
                                 Navigator.of(context).pop();
@@ -89,12 +88,15 @@ class UserPhoto extends StatelessWidget {
 
   Future _pickImage(BuildContext context, ImageSource source) async {
     try {
-      final ImagePicker _picker = ImagePicker();
-      final image = await _picker.pickImage(source: source, imageQuality: 25);
+      final ImagePicker picker = ImagePicker();
+      final image = await picker.pickImage(source: source, imageQuality: 25);
       if (image == null) return;
-      this.onImageSelected(image);
+      onImageSelected(image);
     } on PlatformException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.simpleSnackbar(
+          "No se obtuvo, la imagen intente de nuevo", Icons.dangerous, Styles.red));
       print("Failed to pick image $e");
+      return;
     }
   }
 }

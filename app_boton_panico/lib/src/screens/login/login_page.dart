@@ -1,16 +1,16 @@
 import 'dart:convert';
 
 import 'package:app_boton_panico/src/models/user.dart';
-import 'package:app_boton_panico/src/providers/socket_provider.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:flutter/services.Dart';
+
+import '../../utils/app_layout.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -18,11 +18,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-  FToast fToast;
   var user;
   bool _loading = false;
-  bool _isNotConncet;
   bool isSwitched = false;
+  bool _isNotConncet;
 
   final email = TextEditingController();
   final password = TextEditingController();
@@ -39,14 +38,13 @@ class LoginPageState extends State<LoginPage> {
     _isNotConncet = true;
     openUserPreferences(context);
     userProvider = Provider.of<UserProvider>(context, listen: false);
-
   }
 
   @override
   Widget build(BuildContext context) {
     BuildContext contextPushScreen = context;
+    final Size size = AppLayout.getSize(context);
 
-    // ignore: prefer_const_constructors
     return Scaffold(
       body: Stack(children: [
         Container(
@@ -64,13 +62,40 @@ class LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 50),
+              padding: EdgeInsets.only(top: (size.height * 0.08)),
               child: Image.asset(
                 "assets/image/vivo_vivo_logo.png",
-                height: 170,
+                height: (size.height * 0.2),
               ),
             ),
           ],
+        ),
+        Container(
+          margin: EdgeInsets.only(bottom: (size.height * 0.05)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                        style:
+                            TextButton.styleFrom(backgroundColor: Styles.blur),
+                        onPressed: () => _showRegisterPage(contextPushScreen),
+                        child: Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Text(
+                            "Registrate!",
+                            style: TextStyle(color: Styles.white, fontSize: 16),
+                          ),
+                        ))
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
         Center(
           child: SingleChildScrollView(
@@ -80,8 +105,11 @@ class LoginPageState extends State<LoginPage> {
                   elevation: 5.0,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)),
-                  margin: const EdgeInsets.only(
-                      left: 20, right: 20, top: 220, bottom: 20),
+                  margin: EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      top: (size.height * 0.18),
+                      bottom: 20),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 35, vertical: 20),
@@ -216,32 +244,6 @@ class LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 30),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextButton(
-                              style: TextButton.styleFrom(
-                                  backgroundColor: Styles.blur),
-                              onPressed: () =>
-                                  _showRegisterPage(contextPushScreen),
-                              child: Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Text(
-                                  "Registrate!",
-                                  style: TextStyle(
-                                      color: Styles.white, fontSize: 16),
-                                ),
-                              ))
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
           ),
@@ -277,8 +279,6 @@ class LoginPageState extends State<LoginPage> {
         "password": password
       };
 
-      print(credentials);
-
       if (!_loading) {
         setState(() {
           _loading = true;
@@ -305,9 +305,8 @@ class LoginPageState extends State<LoginPage> {
           }
         } catch (e) {
           print(e);
-          ScaffoldMessenger.of(context).showSnackBar(MySnackBars.failureSnackBar(
-              'No se pudo conectar a Internet.\nPor favor compruebe su conexión!',
-              'Error!'));
+                    ScaffoldMessenger.of(context).showSnackBar(MySnackBars.errorConectionSnackBar());
+
           setState(() {
             _loading = false;
             textButtonSesion = "Iniciar Sesión";
@@ -326,7 +325,6 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-
   Future<void> openUserPreferences(context) async {
     try {
       WidgetsFlutterBinding.ensureInitialized();
@@ -334,17 +332,31 @@ class LoginPageState extends State<LoginPage> {
       user = preferences.getString("user");
       String token = preferences.getString("token");
       print(user);
-      if (user != "" && token != "") {
+      if (user != null && token != null) {
         user = User.fromJson(jsonDecode(user));
         await userProvider.getUser(null, user, token);
+
+        Future.delayed(const Duration(seconds: 4), () {
+          if (mounted) {
+            setState(() {
+              _isNotConncet = false;
+            });
+          }
+        });
+
         ScaffoldMessenger.of(context).showSnackBar(MySnackBars.simpleSnackbar(
-            "Ya ha iniciado sesión", Icons.key_outlined, Styles.green));        
+            "Ya ha iniciado sesión", Icons.key_outlined, Styles.green));
         Navigator.of(context).pushReplacementNamed("/homePage");
       } else {
+        setState(() {
+          _isNotConncet = false;
+        });
         return;
       }
     } catch (e) {
-      print(e.toString());
+      setState(() {
+        _isNotConncet = false;
+      });
       return;
     }
   }
