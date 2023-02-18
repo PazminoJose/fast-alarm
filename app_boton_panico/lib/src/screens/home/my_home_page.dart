@@ -573,6 +573,10 @@ class _MyHomePageState extends State<MyHomePage> {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(MySnackBars.successSnackBar);
       }
+
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(MySnackBars.warningSnackBar);
+
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(MySnackBars.errorConectionSnackBar());

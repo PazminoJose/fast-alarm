@@ -83,8 +83,8 @@ class MySnackBars {
     behavior: SnackBarBehavior.floating,
     backgroundColor: Colors.transparent,
     content: AwesomeSnackbarContent(
-      title: 'Warning!',
-      message: 'You Have a warning for this message.\nPlease read carefully!',
+      title: 'Permisos!',
+      message: 'Por favor habilite los permisos de ubicación.',
       contentType: ContentType.warning,
     ),
   );
