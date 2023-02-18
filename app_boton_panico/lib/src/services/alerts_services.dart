@@ -11,15 +11,15 @@ class AlertsServices {
     HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
   };
 
- /// I'm trying to get a list of objects from a rest api, but I'm getting a null value
- /// 
- /// Args:
- ///   personId (String): String
- /// 
- /// Returns:
- ///   A list of UserAlert objects.
+  /// I'm trying to get a list of objects from a rest api, but I'm getting a null value
+  ///
+  /// Args:
+  ///   personId (String): String
+  ///
+  /// Returns:
+  ///   A list of UserAlert objects.
   Future<List<UserAlert>> getUsersAlertsByPerson(String personId) async {
-    var url = Uri.http(
+    var url = Uri.https(
       Environments.url,
       "${Environments.getUsersAlertsByPersson}/$personId",
     );

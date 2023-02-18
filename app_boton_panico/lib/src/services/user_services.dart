@@ -5,6 +5,9 @@ import 'package:app_boton_panico/src/global/enviroment.dart';
 import 'package:app_boton_panico/src/models/failure.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/models/user.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.Dart';
 import 'package:http/http.dart' as http;
 
 class UserServices {
@@ -24,7 +27,7 @@ class UserServices {
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
     };
-    var url = Uri.http(Environments.url, Environments.getUser);
+    var url = Uri.https(Environments.url, Environments.getUser);
     try {
       final response =
           await http.post(url, headers: headers, body: jsonEncode(credentials));
@@ -62,7 +65,7 @@ class UserServices {
       HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
       HttpHeaders.authorizationHeader: token
     };
-    var url = Uri.http(Environments.url, Environments.postIdOneSignal);
+    var url = Uri.https(Environments.url, Environments.postIdOneSignal);
     try {
       Map<String, String> idOneSignalPost = {
         "id": id,
@@ -94,7 +97,7 @@ class UserServices {
         "password": user.password,
         "userType": user.userType,
       };
-      var url = Uri.http(Environments.url, Environments.postUser);
+      var url = Uri.https(Environments.url, Environments.postUser);
       var request = http.MultipartRequest("POST", url);
       request.fields["user"] = jsonEncode(userData);
       //person.id = "";
@@ -124,7 +127,7 @@ class UserServices {
     Map<String, String> headers = {
       HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
     };
-    var url = Uri.http(Environments.url, Environments.postChangePassword);
+    var url = Uri.https(Environments.url, Environments.postChangePassword);
     try {
       final response = await http.post(url,
           headers: headers, body: jsonEncode(changePasswordData));
@@ -151,7 +154,7 @@ class UserServices {
       HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
     };
     var url =
-        Uri.http(Environments.url, Environments.postSendEmailChangePassword);
+        Uri.https(Environments.url, Environments.postSendEmailChangePassword);
     try {
       final response = await http.post(url,
           headers: headers, body: jsonEncode(changePasswordData));
@@ -174,7 +177,7 @@ class UserServices {
 
   Future<bool> putStateByUser(String userId, String state) async {
     var url =
-        Uri.http(Environments.url, "${Environments.putStateByUser}/$userId");
+        Uri.https(Environments.url, "${Environments.putStateByUser}/$userId");
     Map data = {"state": state};
     try {
       final response =
@@ -193,6 +196,20 @@ class UserServices {
       throw Failure("Couldn't find the post");
     } on FormatException {
       throw Failure("Bad response format");
+    }
+  }
+
+  Future<Uint8List> getImageNetwork(String imgUrl) async {
+    try {
+      var url = Uri.https(
+          Environments.url, "https://${Environments.getImage}/$imgUrl");
+      var request = await http.get(url);
+      var bytes = request.bodyBytes;
+      return bytes;
+    } catch (e) {
+      ByteData imageData = await rootBundle.load("assets/image/user.png");
+      Uint8List bytes = imageData.buffer.asUint8List();
+      return bytes;
     }
   }
 }

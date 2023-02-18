@@ -11,13 +11,13 @@ class FamilyGroupServices {
     HttpHeaders.contentTypeHeader: "application/json; charset=utf-8",
   };
 
-  Future <List<User>> getfamilyGropuByUser(String userId) async {
-    var url =
-        Uri.http(Environments.url, "${Environments.getfamilyGropuByUser}/$userId");
+  Future<List<User>> getfamilyGropuByUser(String userId) async {
+    var url = Uri.https(
+        Environments.url, "${Environments.getfamilyGropuByUser}/$userId");
 
     try {
       var response = await http.get(url, headers: headers);
-        if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
         final List result = json.decode(response.body);
         return result.map((e) => User.fromJson(e)).toList();
       } else {

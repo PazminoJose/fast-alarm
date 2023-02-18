@@ -17,7 +17,7 @@ class SocketProvider {
       if (_socket != null && _socket.connected) {
         return;
       }
-      _socket = IO.io("http://${Environments.url}", <String, dynamic>{
+      _socket = IO.io("https://${Environments.url}", <String, dynamic>{
         'transports': ['websocket'],
         'autoConnect': true,
         'query': {"personId": user.person.id}

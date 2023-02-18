@@ -19,7 +19,7 @@ class NotificationServices {
   /// Returns:
   ///   A Future<bool>
   Future<String> postAlarm(Alarm alert) async {
-    var url = Uri.http(Environments.url, Environments.postAlarm);
+    var url = Uri.https(Environments.url, Environments.postAlarm);
 
     try {
       var response =
@@ -36,7 +36,7 @@ class NotificationServices {
 
   Future<bool> putAlarm(Map alarm) async {
     var url =
-        Uri.http(Environments.url, "${Environments.putAlarm}/${alarm["id"]}");
+        Uri.https(Environments.url, "${Environments.putAlarm}/${alarm["id"]}");
 
     try {
       var response =
@@ -64,7 +64,7 @@ class NotificationServices {
   /// Returns:
   ///   A list of Alarm objects.
   Future<List<Alarm>> getAlertsByUser(String userId) async {
-    var url = Uri.http(
+    var url = Uri.https(
       Environments.url,
       Environments.getAlertsByUser + userId,
     );
@@ -94,7 +94,7 @@ class NotificationServices {
   /// Returns:
   ///   A Future<dynamic>
   Future<dynamic> getDevices() async {
-    var url = Uri.http(Environments.url, Environments.getDevices);
+    var url = Uri.https(Environments.url, Environments.getDevices);
     try {
       final response = await http.get(url, headers: headers);
       return response;
@@ -117,10 +117,10 @@ class NotificationServices {
 
   Future<bool> sendNotificationFamilyGroup(String userId, String name) async {
     try {
-      Map data = {"user": userId, "name":name};
+      Map data = {"user": userId, "name": name};
 
       var url =
-          Uri.http(Environments.url, Environments.sendNotificationFamilyGroup);
+          Uri.https(Environments.url, Environments.sendNotificationFamilyGroup);
       final response =
           await http.post(url, headers: headers, body: jsonEncode(data));
       if (response.statusCode == 200) {
