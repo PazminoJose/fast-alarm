@@ -11,6 +11,7 @@ import 'package:app_boton_panico/src/providers/socket_provider.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/screens/alerts/alerts.dart';
 import 'package:app_boton_panico/src/screens/coreTrust/family_group_page.dart';
+import 'package:app_boton_panico/src/screens/home/components/permision_dialog.dart';
 import 'package:app_boton_panico/src/services/alerts_services.dart';
 import 'package:app_boton_panico/src/services/family_group_services.dart';
 import 'package:app_boton_panico/src/services/notification_services.dart';
@@ -19,9 +20,12 @@ import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.Dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
+import 'package:gap/gap.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -29,6 +33,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_boton_panico/src/methods/permissions.dart';
+import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 import 'package:vibration/vibration.dart';
 import 'package:location/location.dart' as LC;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -65,6 +70,8 @@ class _MyHomePageState extends State<MyHomePage> {
   List<String> familyGroupIds;
   Timer _timer;
   bool isSendLocation = false;
+  bool isProcessSendLocation = false;
+  Key _key;
 
   String textButton = "Envío de alerta de Incidente";
 
@@ -77,7 +84,6 @@ class _MyHomePageState extends State<MyHomePage> {
     userAlerts = [];
     familyGroupIds = [];
     initPlatform(context);
-    Permissions.handleLocationPermission(context);
     user = Provider.of<UserProvider>(context, listen: false).userData["user"];
     token = Provider.of<UserProvider>(context, listen: false).userData["token"];
     socketProvider = Provider.of<SocketProvider>(context, listen: false);
@@ -150,67 +156,127 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     Text(textButton, style: Styles.textStyleBody),
                     if (!isSendLocation) ...[
-                      InkWell(
-                          splashColor: Colors.yellow,
-                          onLongPress: () => {
-                                Timer(const Duration(seconds: 2), () {
-                                  sendLocation(true);
-                                })
+                      (!isProcessSendLocation)
+                          ? RawGestureDetector(
+                              gestures: <Type, GestureRecognizerFactory>{
+                                LongPressGestureRecognizer:
+                                    GestureRecognizerFactoryWithHandlers<
+                                        LongPressGestureRecognizer>(
+                                  () => LongPressGestureRecognizer(
+                                    debugOwner: this,
+                                    duration: Duration(seconds: 3),
+                                  ),
+                                  (LongPressGestureRecognizer instance) {
+                                    instance.onLongPress = () {
+                                      setState(() {
+                                        isProcessSendLocation = true;
+                                      });
+                                      sendLocation(true);
+                                    };
+                                  },
+                                ),
                               },
-                          child: Image(
-                            image: const AssetImage("assets/image/sos.png"),
-                            height: (size.width * 0.6),
-                          )),
+                              child: Image(
+                                image: const AssetImage("assets/image/sos.png"),
+                                height: (size.width * 0.6),
+                              ),
+                            )
+                          : RippleAnimation(
+                              key: _key,
+                              repeat: true,
+                              color: Styles.redText,
+                              minRadius: 140,
+                              ripplesCount: 8,
+                              child: Image(
+                                image:
+                                    const AssetImage("assets/image/alert.gif"),
+                                height: (size.width * 0.6),
+                              ),
+                            ),
                       const Text(
                         "Presione durante 3 segundos para enviar alerta",
                         style: TextStyle(color: Colors.white),
                       )
                     ] else ...[
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          ClipOval(
-                            child: Material(
-                              elevation: 20,
-                              child: Container(
-                                color: Colors.grey[350],
-                                child: SizedBox(
-                                  width: size.width * 0.59,
-                                  height: size.width * 0.59,
+                      Center(
+                        child: Column(
+                          children: [
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Styles.redText,
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 15,
+                                      horizontal: size.height * 0.1),
                                 ),
-                              ),
-                            ),
-                          ),
-                          ClipOval(
-                            child: Material(
-                              color: Colors.green, // Button color
-                              child: InkWell(
-                                splashColor: Colors.white, // Splash color
-                                onLongPress: () {
-                                  Timer(const Duration(seconds: 2),
-                                      (cancelSendLocation));
-                                },
-                                child: SizedBox(
-                                    width: size.width * 0.55,
-                                    height: size.width * 0.55,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.check_rounded,
-                                          size: (size.width * 0.2),
+                                child: const Text("Cancelar"),
+                                onPressed: () {}),
+                            Gap(30),
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                ClipOval(
+                                  child: Material(
+                                    elevation: 20,
+                                    child: Container(
+                                      color: Colors.grey[350],
+                                      child: SizedBox(
+                                        width: size.width * 0.57,
+                                        height: size.width * 0.57,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                ClipOval(
+                                  child: Material(
+                                    color: Styles.green, // Button color
+                                    child: RawGestureDetector(
+                                      gestures: <Type,
+                                          GestureRecognizerFactory>{
+                                        LongPressGestureRecognizer:
+                                            GestureRecognizerFactoryWithHandlers<
+                                                LongPressGestureRecognizer>(
+                                          () => LongPressGestureRecognizer(
+                                            debugOwner: this,
+                                            duration: Duration(seconds: 3),
+                                          ),
+                                          (LongPressGestureRecognizer
+                                              instance) {
+                                            instance.onLongPress =
+                                                () => (cancelSendLocation());
+                                            instance.onLongPressUp = () {
+                                              setState(() {
+                                                _key = UniqueKey();
+                                              });
+                                            };
+                                          },
                                         ),
-                                        Text(
-                                          "¡Ya Estoy Seguro!",
-                                          style: Styles.textStyleTitle,
-                                        )
-                                      ],
-                                    )),
-                              ),
+                                      },
+                                      child: SizedBox(
+                                        width: size.width * 0.55,
+                                        height: size.width * 0.55,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.check_rounded,
+                                              size: (size.width * 0.2),
+                                            ),
+                                            Text(
+                                              "¡Ya Estoy Seguro!",
+                                              style: Styles.textStyleTitle
+                                                  .copyWith(fontSize: 17),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const Text(
                         "Presione durante 3 segundos para terminar alerta",
@@ -275,7 +341,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         height: size.width * 0.07,
                         fit: BoxFit.cover,
                         imageUrl:
-                            "http://${Environments.getImage}/${user.person.urlImage}",
+                            "https://${Environments.getImage}/${user.person.urlImage}",
                         errorWidget: (context, url, error) =>
                             const Icon(Icons.error_outline),
                         placeholder: (context, url) =>
@@ -448,6 +514,18 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  Future<void> _openPermisionLocations() async {
+    bool isPermisionEnable = await Permissions.checkPermision(context);
+
+    if (!isPermisionEnable) {
+      SchedulerBinding.instance.addPostFrameCallback((_) => showDialog(
+          context: context,
+          builder: ((context) {
+            return PermisionLocation();
+          })));
+    }
+  }
+
   void initSocket(User user) async {
     socketProvider.connect(user);
   }
@@ -487,6 +565,7 @@ class _MyHomePageState extends State<MyHomePage> {
       bool isSendPosition = await _getLivePosition(isNewAlarm);
       if (isSendPosition) {
         setState(() {
+          isProcessSendLocation = false;
           isSendLocation = true;
           textButton = "Se esta enviando tu ubicación...";
         });
@@ -497,32 +576,44 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(MySnackBars.errorConectionSnackBar());
+      setState(() {
+        isProcessSendLocation = false;
+      });
     }
   }
 
   Future<bool> _getLivePosition(bool isNewAlarm) async {
     try {
-      final hasPermission = await Permissions.handleLocationPermission(context);
-      if (!hasPermission) return false;
+      bool hasPermission = false;
 
-      UserServices serviceUser = UserServices();
-      SharedPreferences preferences = await SharedPreferences.getInstance();
-
-      if (isNewAlarm) {
-        await serviceUser.putStateByUser(user.id, "danger");
-        await _getCurrentPosition();
-        await postAlarmBD(
-            _currentPosition.latitude, _currentPosition.longitude);
-        preferences.setString("idAlarm", idAlarm);
+      await _openPermisionLocations();
+      if (mounted) {
+        hasPermission = await Permissions.checkPermision(context);
       }
-      preferences.setString("state", "danger");
-      //await serviceNotification.sendNotificationFamilyGroup(user.id, "${user.person.firstName} ${user.person.lastName}");
-      startListeningPosition();
-      return true;
+
+      if (hasPermission) {
+        UserServices serviceUser = UserServices();
+        SharedPreferences preferences = await SharedPreferences.getInstance();
+        if (isNewAlarm) {
+          await serviceUser.putStateByUser(user.id, "danger");
+          await _getCurrentPosition();
+          await postAlarmBD(
+              _currentPosition.latitude, _currentPosition.longitude);
+          preferences.setString("idAlarm", idAlarm);
+        }
+        preferences.setString("state", "danger");
+        //await serviceNotification.sendNotificationFamilyGroup(user.id, "${user.person.firstName} ${user.person.lastName}");
+        startListeningPosition();
+        return true;
+      }
+      return false;
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(MySnackBars.errorConectionSnackBar());
       Vibration.vibrate(duration: 200);
+      setState(() {
+        isProcessSendLocation = false;
+      });
 
       return false;
     }
@@ -546,6 +637,7 @@ class _MyHomePageState extends State<MyHomePage> {
     List<User> users = await familyGroupServices.getfamilyGropuByUser(user.id);
 
     setState(() {
+      familyGroupIds.clear();
       users.forEach((user) {
         familyGroupIds.add(user.person.id);
       });
@@ -557,7 +649,7 @@ class _MyHomePageState extends State<MyHomePage> {
     location.enableBackgroundMode(enable: true);
     location.changeNotificationOptions(
         channelName: "channel",
-        subtitle: "Se esta enviando tu ubicación a tu nucle de confianza.",
+        subtitle: "Se esta enviando tu ubicación a tu núcleo de confianza.",
         description: "desc",
         title: "Vivo Vivo está accediendo a su ubicación",
         color: Colors.red);
@@ -586,7 +678,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void cancelSendLocation() async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
-
       await locationSubscription.cancel();
       location.enableBackgroundMode(enable: false);
       UserServices serviceUser = UserServices();
