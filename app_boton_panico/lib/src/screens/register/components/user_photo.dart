@@ -63,7 +63,7 @@ class UserPhoto extends StatelessWidget {
                               },
                             ),
                             ListTile(
-                              title: const Text('Galeria'),
+                              title: const Text('Galería'),
                               leading: const Icon(Icons.image),
                               onTap: () {
                                 _pickImage(context, ImageSource.gallery);

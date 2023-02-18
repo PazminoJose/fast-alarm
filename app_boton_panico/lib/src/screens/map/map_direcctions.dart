@@ -1,4 +1,3 @@
-
 import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
@@ -12,7 +11,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 
-typedef OnDirecctionSelected = Function(LatLng direcctionSelected);
+import '../../components/snackbars.dart';
 
 class SearchPlaces extends StatefulWidget {
   const SearchPlaces({
@@ -27,18 +26,15 @@ final homeScaffoldKey = GlobalKey<ScaffoldState>();
 class _SearchPlacesState extends State<SearchPlaces> {
   LatLng direction;
   Set<Marker> markersList = {};
-  Position _currentPosition;
   GoogleMapController googleMapController;
   static const CameraPosition _initialCameraPosition = CameraPosition(
       target: LatLng(0.8148998285180321, -77.7182745106789), zoom: 15.0);
   final Mode _mode = Mode.overlay;
-  Person personArguments;
   String _currentAddress;
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
-    personArguments = ModalRoute.of(context).settings.arguments as Person;
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       key: homeScaffoldKey,
@@ -47,7 +43,7 @@ class _SearchPlacesState extends State<SearchPlaces> {
         elevation: 0,
         centerTitle: true,
         leading: IconButton(
-          icon:const  Icon(
+          icon: const Icon(
             Icons.chevron_left_rounded,
             color: Colors.black,
             size: 40,
@@ -110,56 +106,32 @@ class _SearchPlacesState extends State<SearchPlaces> {
           ),
           FloatingActionButton(
             heroTag: "btn2",
-            onPressed: (() async {
-              await _getAddressFromLatLng(direction);
-              personArguments.address = _currentAddress;
-              Navigator.of(context).pushReplacementNamed("/secondRegisterPage",
-                  arguments: personArguments);
+            onPressed: (() {
+              getDirection(context);
             }),
             backgroundColor: Colors.green,
-            child: const Icon(Icons.check_rounded),
+            child: (!loading)
+                ? const Icon(Icons.check_rounded)
+                : CircularProgressIndicator(
+                    color: Styles.white,
+                  ),
           ),
         ],
       ),
     );
   }
 
-  /// _getAddressFromLatLng() takes a LatLng object as an argument, and returns a Future<void> that calls
-  /// the placemarkFromCoordinates() function from the geolocator package, which takes a latitude and
-  /// longitude as arguments, and returns a Future<List<Placemark>> that calls the then() function, which
-  /// takes a List<Placemark> as an argument, and returns a Future<void> that sets the _currentAddress
-  /// variable to a string that contains the street name and number of the address that corresponds to the
-  /// latitude and longitude that was passed to the placemarkFromCoordinates() function
-  ///
-  /// Args:
-  ///   position (LatLng): The current position of the user.
-  Future<void> _getAddressFromLatLng(LatLng position) async {
+  Future<bool> _getAddressFromLatLng(LatLng position) async {
     try {
-      await placemarkFromCoordinates(position.latitude, position.longitude)
-          .then((List<Placemark> placemarks) {
-        _currentAddress = '${placemarks[1].street}, ${placemarks[2].street}';
-      }).catchError((e) {
-        print(e);
+      List<Placemark> marksList =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      setState(() {
+        _currentAddress = '${marksList[1].street}, ${marksList[2].street}';
       });
+      return true;
     } catch (e) {
-      print(e);
+      return false;
     }
-  }
-
-  /// _getCurrentPosition() is a function that gets the current position of the user and returns it as a
-  /// Position object
-  ///
-  /// Returns:
-  ///   A Future<void>
-  Future<void> _getCurrentPosition() async {
-    final hasPermission = await Permissions.handleLocationPermission(context);
-    if (!hasPermission) return;
-    _currentPosition = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) => position)
-        .catchError((e) {
-      print(e);
-    });
   }
 
   Future<void> _handlePressButton() async {
@@ -201,13 +173,6 @@ class _SearchPlacesState extends State<SearchPlaces> {
     // homeScaffoldKey.currentState!.showSnackBar(SnackBar(content: Text(response.errorMessage!)));
   }
 
-  /// It takes a Prediction object and a ScaffoldState object as parameters, then it uses the Prediction
-  /// object to get the latitude and longitude of the place, then it adds a marker to the map and animates
-  /// the camera to the marker
-  ///
-  /// Args:
-  ///   p (Prediction): Prediction
-  ///   currentState (ScaffoldState): The current state of the scaffold.
   Future<void> displayPrediction(
       Prediction p, ScaffoldState currentState) async {
     await dotenv.load(fileName: ".env");
@@ -238,13 +203,6 @@ class _SearchPlacesState extends State<SearchPlaces> {
     }
   }
 
-  /// It takes a LatLng object and a ScaffoldState object as parameters, and then it displays a marker on
-  /// the map at the location of the LatLng object
-  ///
-  /// Args:
-  ///   latLng (LatLng): The latitude and longitude of the location you want to display on the map.
-  ///   currentState (ScaffoldState): The current state of the scaffold.
-
   Future<void> displayPredictionOnTap(
       LatLng latLng, ScaffoldState currentState) async {
     if (latLng != null) {
@@ -262,6 +220,29 @@ class _SearchPlacesState extends State<SearchPlaces> {
 
       googleMapController
           .animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 18.0));
+    }
+  }
+
+  void getDirection(BuildContext context) async {
+    setState(() {
+      loading = true;
+    });
+    bool isDirectionValid = await _getAddressFromLatLng(direction);
+
+    if (isDirectionValid) {
+      if (mounted) {
+        /* personArguments.address = _currentAddress; */
+        Navigator.pop(context, _currentAddress);
+      }
+    } else {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(MySnackBars.simpleSnackbar(
+          "No se pudo obtener la dirección, Intente de nuevo",
+          Icons.info,
+          Styles.red));
+      setState(() {
+        loading = false;
+      });
     }
   }
 }

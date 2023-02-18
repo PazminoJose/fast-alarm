@@ -1,11 +1,14 @@
 import 'dart:async';
-
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:app_boton_panico/src/components/photo.dart';
+import 'package:app_boton_panico/src/global/enviroment.dart';
 import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/models/user.dart';
 import 'package:app_boton_panico/src/providers/socket_provider.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
+import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +18,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:custom_marker/marker_icon.dart';
+import 'package:location/location.dart' as LC;
 
 class LocationMap extends StatefulWidget {
   const LocationMap({Key key, this.person}) : super(key: key);
@@ -33,6 +38,11 @@ class _LocationMapState extends State<LocationMap> {
   PolylinePoints polylinePoints = PolylinePoints();
   Marker sourcePosition, destinantionPosition;
   List<LatLng> polylineCoordinates = [];
+  int count = 0;
+  LC.Location location = LC.Location();
+  StreamSubscription<LC.LocationData> locationSubscription;
+  BitmapDescriptor imagenMarker;
+
   //LatLng destination = LatLng(0.3368, -78.1237);
 /*   static CameraPosition _initialCameraPosition = CameraPosition(
       target: LatLng(_currentPosition.latitude, _currentPosition.longitude), zoom: 15.0); */
@@ -40,80 +50,109 @@ class _LocationMapState extends State<LocationMap> {
   @override
   void initState() {
     super.initState();
+    user = Provider.of<UserProvider>(context, listen: false).userData["user"];
     _markers = <MarkerId, Marker>{};
     _markers.clear();
-    addMarkers();
-    _getCurrentPosition();
-    //getPolyPoints();
+    startListeningPosition();
   }
 
   @override
   void dispose() {
     super.dispose();
+    cancelSendLocation();
   }
 
-  /// _getCurrentPosition() is a function that gets the current position of the user and sets the state of
-  /// the current position to the position of the user
-  ///
-  /// Returns:
-  ///   A Future<void>
-  Future<void> _getCurrentPosition() async {
-    final hasPermission = await Permissions.handleLocationPermission(context);
-    if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
+  void startListeningPosition() async {
+    bool hasPermisions = await Permissions.handleLocationPermission(context);
+    if (!hasPermisions) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Conceda los permisos para ver su ubicación')));
+      }
+    } else {
+      BitmapDescriptor imgSource = await getImagesMap(user.person.urlImage);
+      location.changeNotificationOptions(
+          channelName: "channel",
+          subtitle: "Se esta obteniendo tu ubicación.",
+          description: "desc",
+          title: "Vivo Vivo está accediendo a su ubicación",
+          color: Colors.green);
+      locationSubscription =
+          location.onLocationChanged.listen((LC.LocationData position) {
+        changeSourcePosition(position, imgSource);
       });
-    }).catchError((e) {
-      print(e);
-    });
+    }
   }
 
-  /// I'm trying to get the location of the user and update the map with the new location
-  ///
-  /// Args:
-  ///   context: The context of the widget.
-  ///   user (User): The user who is currently logged in.
+  void cancelSendLocation() async {
+    await locationSubscription.cancel();
+    location.enableBackgroundMode(enable: false);
+  }
+
+  void changeSourcePosition(
+      LC.LocationData position, BitmapDescriptor imgSource) {
+    sourcePosition = Marker(
+      markerId: MarkerId("source"),
+      icon: imgSource,
+      position: LatLng(
+        position.latitude,
+        position.longitude,
+      ),
+    );
+
+    if (mounted) {
+      setState(() {
+        _markers[const MarkerId("source")] = sourcePosition;
+      });
+    }
+  }
+
+  void changeDestinationPosition(
+      Map latlng, BitmapDescriptor imgDestination) async {
+    if (count <= 0) {
+      final GoogleMapController controller = await _controllerMap.future;
+      controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: LatLng(latlng["lat"], latlng["lng"]),
+            zoom: 15,
+          ),
+        ),
+      );
+      if (mounted) {
+        setState(() {
+          count++;
+        });
+      }
+    }
+
+    destinantionPosition = Marker(
+      markerId: MarkerId("destination"),
+      icon: imgDestination,
+      position: LatLng(
+        latlng["lat"],
+        latlng["lng"],
+      ),
+    );
+    if (mounted) {
+      setState(() {
+        _markers[const MarkerId("destination")] = destinantionPosition;
+      });
+    }
+  }
+
   void initSocket(context, User user) async {
     try {
       final socketProvider =
           Provider.of<SocketProvider>(context, listen: false);
       socketProvider.connect(user);
-
+      BitmapDescriptor imgDestination =
+          await getImagesMap(widget.person.urlImage);
       socketProvider.onLocation(
         widget.person.id,
         (data) async {
-          //var dataRecive = jsonDecode(data);
-          //log(data);
-
           Map latlng = data["position"];
-          final GoogleMapController controller = await _controllerMap.future;
-          controller.animateCamera(
-            CameraUpdate.newCameraPosition(
-              CameraPosition(
-                target: LatLng(latlng["lat"], latlng["lng"]),
-                zoom: 16,
-              ),
-            ),
-          );
-          var image = await BitmapDescriptor.fromAssetImage(
-            const ImageConfiguration(),
-            "assets/image/alarm.png",
-          );
-          destinantionPosition = Marker(
-            markerId: MarkerId("destination"),
-            //icon: image,
-            position: LatLng(
-              latlng["lat"],
-              latlng["lng"],
-            ),
-          );
-          if (mounted) {
-            setState(() {
-              _markers[MarkerId("destination")] = destinantionPosition;
-            });
-          }
+          changeDestinationPosition(latlng, imgDestination);
         },
       );
     } catch (e) {
@@ -121,13 +160,14 @@ class _LocationMapState extends State<LocationMap> {
     }
   }
 
-  void addMarkers() {
-    sourcePosition = Marker(
-      markerId: MarkerId("source"),
-      position: LatLng(0.326190, 0.326190),
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-    );
-    _markers[MarkerId("source")] = sourcePosition;
+  Future<BitmapDescriptor> getImagesMap(urlImage) async {
+    try {
+      BitmapDescriptor imgMarker = await MarkerIcon.downloadResizePictureCircle(
+          "https://${Environments.getImage}/$urlImage");
+      return imgMarker;
+    } catch (e) {
+      return BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure);
+    }
   }
 
   /// It takes a destination as a parameter, then it uses the PolylinePoints class to get the route
@@ -161,7 +201,6 @@ class _LocationMapState extends State<LocationMap> {
 
   @override
   Widget build(BuildContext context) {
-    user = Provider.of<UserProvider>(context).userData["user"];
     initSocket(context, user);
     final Size size = AppLayout.getSize(context);
     return Scaffold(
@@ -176,13 +215,6 @@ class _LocationMapState extends State<LocationMap> {
               zoom: 10,
             ),
             mapType: MapType.normal,
-            polylines: {
-              Polyline(
-                  polylineId: const PolylineId("route"),
-                  points: polylineCoordinates,
-                  color: Colors.blue,
-                  width: 6),
-            },
             onMapCreated: (GoogleMapController controller) {
               _controllerMap.complete(controller);
             },

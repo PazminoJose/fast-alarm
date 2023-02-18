@@ -3,6 +3,7 @@ import 'package:app_boton_panico/src/methods/formats.dart';
 import 'package:app_boton_panico/src/methods/validators.dart';
 import 'package:app_boton_panico/src/models/person.dart';
 import 'package:app_boton_panico/src/models/user.dart';
+import 'package:app_boton_panico/src/screens/map/map_direcctions.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
@@ -47,11 +48,8 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
   Widget build(BuildContext context) {
     final size = AppLayout.getSize(context);
     personArguments = ModalRoute.of(context).settings.arguments as Person;
-    print(personArguments.firstName);
     userNameController.text =
         getUserName(personArguments.firstName, personArguments.idCard);
-    address.text =
-        (personArguments.address == null) ? "" : personArguments.address;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -123,19 +121,15 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                   onSaved: (value) => {address.text = value},
                                   readOnly: true,
                                   controller: address,
-                                  onTap: () => {
-                                    Navigator.of(context).pushReplacementNamed(
-                                        "/mapMarker",
-                                        arguments: personArguments)
-                                  },
+                                  onTap: () => {_navigateAndReturnDirecction()},
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
-                                      return "Ingrese su Direccion";
+                                      return "Ingrese su Dirección";
                                     }
                                     return null;
                                   },
                                 ),
-                               const  Gap(30),
+                                const Gap(30),
 
                                 //TODO: ¨***********CUENTA*****************
                                 Row(
@@ -159,8 +153,8 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                   autofocus: true,
                                   keyboardType: TextInputType.name,
                                   decoration: InputDecoration(
-                                    prefixIcon:
-                                        const Icon(Icons.person_outline_rounded),
+                                    prefixIcon: const Icon(
+                                        Icons.person_outline_rounded),
                                     label: Text(
                                       "Nombre de Usuario",
                                       style: Styles.textLabel,
@@ -398,7 +392,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
             builder: (context) => AlertDialog(
                   title: Column(
                     children: [
-                     const  Text("¡Perfecto!"),
+                      const Text("¡Perfecto!"),
                       Text(map["message"]),
                     ],
                   ),
@@ -417,7 +411,8 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
       }
     } catch (e) {
       print(e);
-              ScaffoldMessenger.of(context).showSnackBar(MySnackBars.errorConectionSnackBar());
+      ScaffoldMessenger.of(context)
+          .showSnackBar(MySnackBars.errorConectionSnackBar());
 
       setState(() {
         _loading = false;
@@ -436,5 +431,16 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
   ///   The first character of the name and the idCard.
   String getUserName(String name, String idCard) {
     return (name.substring(0, 1) + idCard);
+  }
+
+  Future<void> _navigateAndReturnDirecction() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const SearchPlaces()),
+    );
+
+    if (!mounted) return;
+    address.text = result;
+    print(personArguments.firstName);
   }
 }

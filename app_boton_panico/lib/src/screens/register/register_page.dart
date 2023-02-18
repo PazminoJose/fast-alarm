@@ -229,19 +229,19 @@ class _RegisterPageState extends State<RegisterPage> {
                                     prefixIcon: const Icon(
                                         Icons.calendar_view_week_outlined),
                                     label: Text(
-                                      "Cedula",
+                                      "Cédula",
                                       style: Styles.textLabel,
                                     ),
                                   ),
                                   onSaved: (value) => {idCard.text = value},
                                   validator: (value) {
                                     if (value.isEmpty || value == null) {
-                                      return "Ingrese su cedula";
-                                    } else if (value.substring(0, 2) != "04") {
+                                      return "Ingrese su cédula";
+                                    } /* else if (value.substring(0, 2) != "04") {
                                       return "Debe ingresar una cedula respectiva a Carchi";
-                                    } else if ((!Validators.isValidateIdCard(
+                                    } */ else if ((!Validators.isValidateIdCard(
                                         value))) {
-                                      return "Ingrese una cedula correcta";
+                                      return "Ingrese una cédula correcta";
                                     }
                                     return null;
                                   },

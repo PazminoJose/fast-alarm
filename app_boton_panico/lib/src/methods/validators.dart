@@ -11,9 +11,9 @@ class Validators {
     bool cedulaCorrecta = false;
 
     try {
-      if (cedula.substring(0, 2) != "04") {
+      /* if (cedula.substring(0, 2) != "04") {
         cedulaCorrecta = false;
-      } else {
+      } else { */
         if (cedula.length == 10) // ConstantesApp.LongitudCedula
         {
           int tercerDigito = int.parse(cedula.substring(2, 3));
@@ -42,11 +42,10 @@ class Validators {
         } else {
           cedulaCorrecta = false;
         }
-      }
+    /*   } */
     } on FormatException {
       cedulaCorrecta = false;
     } on Exception {
-      print("Una excepcion ocurrio en el proceso de validadcion");
       cedulaCorrecta = false;
     }
 
