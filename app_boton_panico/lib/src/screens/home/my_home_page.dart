@@ -28,6 +28,7 @@ import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.da
 import 'package:gap/gap.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
@@ -71,6 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Timer _timer;
   bool isSendLocation = false;
   bool isProcessSendLocation = false;
+  bool isProcessFinalizeLocation = false;
   Key _key;
 
   String textButton = "Envío de alerta de Incidente";
@@ -83,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     userAlerts = [];
     familyGroupIds = [];
-    initPlatform(context);
+    //initPlatform(context);
     user = Provider.of<UserProvider>(context, listen: false).userData["user"];
     token = Provider.of<UserProvider>(context, listen: false).userData["token"];
     socketProvider = Provider.of<SocketProvider>(context, listen: false);
@@ -91,6 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
     getUsersAlerts(user.person.id);
     onAlerts(user.person.id);
     openStateUser();
+    _openPermisionLocations();
   }
 
   @override
@@ -164,10 +167,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                         LongPressGestureRecognizer>(
                                   () => LongPressGestureRecognizer(
                                     debugOwner: this,
-                                    duration: Duration(seconds: 3),
+                                    duration: const Duration(seconds: 3),
                                   ),
                                   (LongPressGestureRecognizer instance) {
                                     instance.onLongPress = () {
+                                      Vibration.vibrate(duration: 50);
                                       setState(() {
                                         isProcessSendLocation = true;
                                       });
@@ -199,84 +203,95 @@ class _MyHomePageState extends State<MyHomePage> {
                       )
                     ] else ...[
                       Center(
-                        child: Column(
-                          children: [
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Styles.redText,
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 15,
-                                      horizontal: size.height * 0.1),
-                                ),
-                                child: const Text("Cancelar"),
-                                onPressed: () {}),
-                            Gap(30),
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                ClipOval(
-                                  child: Material(
-                                    elevation: 20,
-                                    child: Container(
-                                      color: Colors.grey[350],
-                                      child: SizedBox(
-                                        width: size.width * 0.57,
-                                        height: size.width * 0.57,
+                        child: (!isProcessFinalizeLocation)
+                            ? Column(
+                                children: [
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Styles.redText,
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 15,
+                                            horizontal: size.height * 0.1),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                ClipOval(
-                                  child: Material(
-                                    color: Styles.green, // Button color
-                                    child: RawGestureDetector(
-                                      gestures: <Type,
-                                          GestureRecognizerFactory>{
-                                        LongPressGestureRecognizer:
-                                            GestureRecognizerFactoryWithHandlers<
-                                                LongPressGestureRecognizer>(
-                                          () => LongPressGestureRecognizer(
-                                            debugOwner: this,
-                                            duration: Duration(seconds: 3),
-                                          ),
-                                          (LongPressGestureRecognizer
-                                              instance) {
-                                            instance.onLongPress =
-                                                () => (cancelSendLocation());
-                                            instance.onLongPressUp = () {
-                                              setState(() {
-                                                _key = UniqueKey();
-                                              });
-                                            };
-                                          },
-                                        ),
-                                      },
-                                      child: SizedBox(
-                                        width: size.width * 0.55,
-                                        height: size.width * 0.55,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.check_rounded,
-                                              size: (size.width * 0.2),
+                                      child: const Text("Cancelar"),
+                                      onPressed: () {}),
+                                  const Gap(30),
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      ClipOval(
+                                        child: Material(
+                                          elevation: 20,
+                                          child: Container(
+                                            color: Colors.grey[350],
+                                            child: SizedBox(
+                                              width: size.width * 0.57,
+                                              height: size.width * 0.57,
                                             ),
-                                            Text(
-                                              "¡Ya Estoy Seguro!",
-                                              style: Styles.textStyleTitle
-                                                  .copyWith(fontSize: 17),
-                                            )
-                                          ],
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                                      ClipOval(
+                                        child: Material(
+                                            color: Styles.green, // Button color
+                                            child: RawGestureDetector(
+                                              gestures: <Type,
+                                                  GestureRecognizerFactory>{
+                                                LongPressGestureRecognizer:
+                                                    GestureRecognizerFactoryWithHandlers<
+                                                        LongPressGestureRecognizer>(
+                                                  () =>
+                                                      LongPressGestureRecognizer(
+                                                    debugOwner: this,
+                                                    duration: const Duration(
+                                                        seconds: 3),
+                                                  ),
+                                                  (LongPressGestureRecognizer
+                                                      instance) {
+                                                    instance.onLongPress = () {
+                                                      Vibration.vibrate(
+                                                          duration: 50);
+                                                      setState(() {
+                                                        isProcessFinalizeLocation =
+                                                            true;
+                                                      });
+                                                      (cancelSendLocation());
+                                                    };
+                                                  },
+                                                ),
+                                              },
+                                              child: SizedBox(
+                                                width: size.width * 0.55,
+                                                height: size.width * 0.55,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Icon(
+                                                      Icons.check_rounded,
+                                                      size: (size.width * 0.2),
+                                                    ),
+                                                    Text(
+                                                      "¡Ya Estoy Seguro!",
+                                                      style: Styles
+                                                          .textStyleTitle
+                                                          .copyWith(
+                                                              fontSize: 17),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                            )),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              )
+                            : Lottie.asset(
+                                'assets/lottie/chargeIsSecurity.json',
+                                width: size.width * 0.8,
+                                height: size.height * 0.35,
+                              ),
                       ),
                       const Text(
                         "Presione durante 3 segundos para terminar alerta",
@@ -572,11 +587,11 @@ class _MyHomePageState extends State<MyHomePage> {
         Vibration.vibrate(duration: 1000);
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(MySnackBars.successSnackBar);
+      } else {
+        setState(() {
+          isProcessSendLocation = false;
+        });
       }
-
-        // ignore: use_build_context_synchronously
-        ScaffoldMessenger.of(context).showSnackBar(MySnackBars.warningSnackBar);
-
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(MySnackBars.errorConectionSnackBar());
@@ -590,7 +605,6 @@ class _MyHomePageState extends State<MyHomePage> {
     try {
       bool hasPermission = false;
 
-      await _openPermisionLocations();
       if (mounted) {
         hasPermission = await Permissions.checkPermision(context);
       }
@@ -673,6 +687,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<Position> _getLastKnownPosition() async {
     final position = await Geolocator.getLastKnownPosition();
     if (position != null) {
+      log('${position.latitude}  ${position.longitude}');
       return position;
     } else {
       return null;
@@ -682,10 +697,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void cancelSendLocation() async {
     try {
       SharedPreferences preferences = await SharedPreferences.getInstance();
-      await locationSubscription.cancel();
-      location.enableBackgroundMode(enable: false);
+
       UserServices serviceUser = UserServices();
-      await serviceUser.putStateByUser(user.id, "ok");
       Position lastPosition = await _getLastKnownPosition();
       String id = preferences.getString("idAlarm");
 
@@ -693,9 +706,13 @@ class _MyHomePageState extends State<MyHomePage> {
           id, "cancelada", lastPosition.latitude, lastPosition.longitude, true);
       Vibration.vibrate(duration: 100);
       if (isCancel) {
+        await serviceUser.putStateByUser(user.id, "ok");
+        await locationSubscription.cancel();
+        location.enableBackgroundMode(enable: false);
         preferences.setString("state", "ok");
         preferences.remove("idAlarm");
         setState(() {
+          isProcessFinalizeLocation = false;
           isSendLocation = false;
           textButton = "Envío de alerta de Incidente";
         });
@@ -704,6 +721,9 @@ class _MyHomePageState extends State<MyHomePage> {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('No se pudo cancelar, Intente de nuevo'),
         ));
+        setState(() {
+          isProcessFinalizeLocation = false;
+        });
       }
     } catch (e) {
       ScaffoldMessenger.of(context)
@@ -797,7 +817,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ///
   /// Args:
   ///   context: The context of the widget that is calling the method.
-  Future<void> initPlatform(context) async {
+/*   Future<void> initPlatform(context) async {
     OneSignal.shared.setNotificationOpenedHandler(
         (OSNotificationOpenedResult result) async {
       _inkWellKey.currentState.activate();
@@ -820,7 +840,7 @@ class _MyHomePageState extends State<MyHomePage> {
       //setSmsNumber(value.smsNumber);
     });
   }
-
+ */
   /// _changePassword() is a function that takes a context as a parameter and returns a Future
   ///
   /// Args:
