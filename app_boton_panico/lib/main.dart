@@ -9,16 +9,15 @@ import 'package:app_boton_panico/src/screens/register/second_register_page.dart'
 import 'package:app_boton_panico/src/screens/rememberPass_page.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:provider/provider.dart';
-
 
 /// `runApp` is a function that takes a widget and displays it on the screen
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
-/// MyApp is a StatelessWidget that uses a MultiProvider to provide a UserProvider and a SocketProvider
-/// to the rest of the app. It also uses a MaterialApp to generate routes and set the theme
 class MyApp extends StatelessWidget {
   const MyApp({Key key}) : super(key: key);
 

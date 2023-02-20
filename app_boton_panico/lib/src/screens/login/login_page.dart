@@ -316,11 +316,12 @@ class LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> saveCredentials(user, String token) async {
+  Future<void> saveCredentials(User user, String token) async {
     if (isSwitched) {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       var userString = jsonDecode(jsonEncode(userToJson(user)));
       preferences.setString("user", userString);
+      preferences.setString("personId", user.person.id);
       preferences.setString("token", token);
     }
   }
