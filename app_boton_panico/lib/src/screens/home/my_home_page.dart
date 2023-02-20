@@ -167,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         LongPressGestureRecognizer>(
                                   () => LongPressGestureRecognizer(
                                     debugOwner: this,
-                                    duration: const Duration(seconds: 3),
+                                    duration: const Duration(seconds: 2),
                                   ),
                                   (LongPressGestureRecognizer instance) {
                                     instance.onLongPress = () {
@@ -244,7 +244,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                       LongPressGestureRecognizer(
                                                     debugOwner: this,
                                                     duration: const Duration(
-                                                        seconds: 3),
+                                                        seconds: 2),
                                                   ),
                                                   (LongPressGestureRecognizer
                                                       instance) {
@@ -623,8 +623,10 @@ class _MyHomePageState extends State<MyHomePage> {
         //await serviceNotification.sendNotificationFamilyGroup(user.id, "${user.person.firstName} ${user.person.lastName}");
         startListeningPosition();
         return true;
+      } else {
+        _openPermisionLocations();
+        return false;
       }
-      return false;
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(MySnackBars.errorConectionSnackBar());
