@@ -355,7 +355,6 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
         });
         personArguments.phone = Formats.formatPhoneNumber(phone.text);
         personArguments.address = address.text;
-        // Person person = await servicePerson.postPerson(personArguments);
 
         User user = User(
           password: passwordConfirm.text,
@@ -363,12 +362,11 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
           userName: userNameController.text,
           email: email.text,
         );
+        
         Map map = await serviceUser.saveUser(user, personArguments);
         if (map == null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             elevation: 15,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(15))),
             backgroundColor: Colors.red[400],
             content: Row(
               children: const [

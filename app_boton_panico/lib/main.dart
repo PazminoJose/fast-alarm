@@ -18,6 +18,75 @@ void main() {
   runApp(const MyApp());
 }
 
+const notificationChannelId = 'my_foreground';
+
+const notificationId = 888;
+
+/* Future<void> initializeService() async {
+  final service = FlutterBackgroundService();
+
+  const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      notificationChannelId, 'MY FOREGROUND SERVICE', "",
+      importance: Importance.low);
+
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+
+  await service.configure(
+    androidConfiguration: AndroidConfiguration(
+      // this will be executed when app is in foreground or background in separated isolate
+      onStart: onStart, 
+
+      // auto start service
+      autoStart: true,
+      isForegroundMode: true,
+
+      notificationChannelId:
+          "id", // this must match with notification channel you created above.
+      initialNotificationTitle: 'AWESOME SERVICE',
+      initialNotificationContent: 'Initializing',
+      foregroundServiceNotificationId: notificationId,
+    ),
+    iosConfiguration: IosConfiguration(
+      // auto start service
+      autoStart: true,
+
+      // this will be executed when app is in foreground in separated isolate
+      onForeground: onStart,
+
+      // you have to enable background fetch capability on xcode project
+      onBackground: onIosBackground,
+    ),
+  );
+
+   service.startService();
+} */
+
+
+
+
+/* void onStart() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final audioPlayer = AudioPlayer();
+
+  String url =
+      "https://www.mediacollege.com/downloads/sound-effects/nature/forest/rainforest-ambient.mp3";
+
+  audioPlayer.onPlayerStateChanged.listen((event) {
+    if (event == AudioPlayerState.COMPLETED) {
+      audioPlayer.play(url); // repeat
+    }
+  });
+
+  audioPlayer.play(url);
+} */
+
 class MyApp extends StatelessWidget {
   const MyApp({Key key}) : super(key: key);
 

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:isolate';
 
 import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/global/enviroment.dart';
@@ -18,6 +19,7 @@ import 'package:app_boton_panico/src/services/notification_services.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
+import 'package:background_locator_2/background_locator.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
@@ -25,19 +27,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.Dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:gap/gap.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 import 'package:vibration/vibration.dart';
 import 'package:location/location.dart' as LC;
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key key}) : super(key: key);
@@ -66,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final _formKey = GlobalKey<FormState>();
   AlertsServices serviceAlert = AlertsServices();
   String idAlarm;
-  LC.Location location = LC.Location();
+  final LC.Location location = LC.Location();
   StreamSubscription<LC.LocationData> locationSubscription;
   List<String> familyGroupIds;
   Timer _timer;
@@ -74,11 +75,12 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isProcessSendLocation = false;
   bool isProcessFinalizeLocation = false;
   Key _key;
-
+  bool isRunning;
   String textButton = "Envío de alerta de Incidente";
-
   int count = 0;
   int countSocket = 0;
+  static const String _isolateName = "LocatorIsolate";
+  ReceivePort port = ReceivePort();
 
   @override
   void initState() {
@@ -86,6 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
     userAlerts = [];
     familyGroupIds = [];
     //initPlatform(context);
+    _initForegroundTask();
     user = Provider.of<UserProvider>(context, listen: false).userData["user"];
     token = Provider.of<UserProvider>(context, listen: false).userData["token"];
     socketProvider = Provider.of<SocketProvider>(context, listen: false);
@@ -96,10 +99,57 @@ class _MyHomePageState extends State<MyHomePage> {
     _openPermisionLocations();
   }
 
+  void _initForegroundTask() {
+    FlutterForegroundTask.init(
+      androidNotificationOptions: AndroidNotificationOptions(
+        channelId: 'notification_channel_id',
+        channelName: 'Foreground Notification',
+        channelDescription:
+            'This notification appears when the foreground service is running.',
+        channelImportance: NotificationChannelImportance.LOW,
+        priority: NotificationPriority.LOW,
+        iconData: const NotificationIconData(
+          resType: ResourceType.mipmap,
+          resPrefix: ResourcePrefix.ic,
+          name: 'launcher',
+          backgroundColor: Colors.orange,
+        ),
+        buttons: [
+          const NotificationButton(id: 'sendButton', text: 'Send'),
+          const NotificationButton(id: 'testButton', text: 'Test'),
+        ],
+      ),
+      iosNotificationOptions: const IOSNotificationOptions(
+        showNotification: true,
+        playSound: false,
+      ),
+      foregroundTaskOptions: const ForegroundTaskOptions(
+        interval: 500,
+        isOnceEvent: false,
+        autoRunOnBoot: true,
+        allowWakeLock: true,
+        allowWifiLock: true,
+      ),
+    );
+  }
+
   @override
   void dispose() {
     super.dispose();
   }
+
+  Future<void> initPlatformState() async {
+    await BackgroundLocator.initialize();
+  }
+
+  /*  Future<void> initPlatformState() async {
+    print('Initializing...');
+    await BackgroundLocator.initialize();
+    final _isRunning = await BackgroundLocator.isServiceRunning();
+    setState(() {
+      isRunning = _isRunning;
+    });
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -667,10 +717,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void startListeningPosition() {
     getfamilyGruop();
     location.enableBackgroundMode(enable: true);
+
     location.changeNotificationOptions(
         channelName: "channel",
         subtitle: "Se esta enviando tu ubicación a tu núcleo de confianza.",
-        description: "desc",
         title: "Vivo Vivo está accediendo a su ubicación",
         color: Colors.red);
     locationSubscription =
@@ -682,7 +732,11 @@ class _MyHomePageState extends State<MyHomePage> {
         "familyGroup": familyGroupIds
       };
 
-      socketProvider.emitLocation("send-alarm", jsonEncode(data));
+      FlutterForegroundTask.startService(
+          notificationTitle: "Ubi",
+          notificationText: "ubicacion",
+          callback: () => socketProvider.emitLocation(
+              user, "send-alarm", jsonEncode(data)));
     });
   }
 
@@ -710,7 +764,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (isCancel) {
         await serviceUser.putStateByUser(user.id, "ok");
         await locationSubscription.cancel();
-        location.enableBackgroundMode(enable: false);
+        /* location.enableBackgroundMode(enable: false); */
         preferences.setString("state", "ok");
         preferences.remove("idAlarm");
         setState(() {
