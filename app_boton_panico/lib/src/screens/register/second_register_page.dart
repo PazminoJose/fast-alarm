@@ -351,7 +351,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
         _formKey.currentState.save();
         setState(() {
           textButtonSesion = "Registrando";
-          _loading = false;
+          _loading = true;
         });
         personArguments.phone = Formats.formatPhoneNumber(phone.text);
         personArguments.address = address.text;
@@ -365,6 +365,10 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
         );
         Map map = await serviceUser.saveUser(user, personArguments);
         if (map == null) {
+          setState(() {
+            textButtonSesion = "Registrarse";
+            _loading = false;
+          });
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             elevation: 15,
             shape: const RoundedRectangleBorder(
