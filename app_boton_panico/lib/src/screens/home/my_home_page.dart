@@ -101,7 +101,19 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
+     
   }
+    Future<void> handleAppLifecycleState(AppLifecycleState state) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    String statePerson = preferences.getString("state");
+
+    if (state == AppLifecycleState.detached && statePerson == "danger") {
+      // La aplicación se cerró
+      if (!mounted) return;
+      Phoenix.rebirth(context);
+    }
+  }
+  
 
   @override
   Widget build(BuildContext context) {
