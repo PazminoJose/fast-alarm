@@ -676,7 +676,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     }
   }
 
-  void getfamilyGruop() async {
+  Future<void> getfamilyGruop() async {
     FamilyGroupServices familyGroupServices = FamilyGroupServices();
     List<User> users = await familyGroupServices.getfamilyGropuByUser(user.id);
 
@@ -689,14 +689,16 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   Future<void> startListeningPosition() async {
+    await getfamilyGruop();
     await BackgroundLocation.setAndroidNotification(
       title: 'Background service is running',
       message: 'Background location in progress',
       icon: '@mipmap/ic_launcher',
     );
-    //await BackgroundLocation.setAndroidConfiguration(1000);
-    await BackgroundLocation.startLocationService(distanceFilter: 20);
+    await BackgroundLocation.setAndroidConfiguration(50000);
+    await BackgroundLocation.startLocationService(distanceFilter: 5);
     BackgroundLocation.getLocationUpdates((location) {
+      log(' ${location.longitude}, ${location.latitude}');
       Map data = {
         "position": {"lat": location.latitude, "lng": location.longitude},
         "familyGroup": familyGroupIds
@@ -749,8 +751,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       Vibration.vibrate(duration: 100);
       if (isCancel) {
         await serviceUser.putStateByUser(user.id, "ok");
-        await locationSubscription.cancel();
-        location.enableBackgroundMode(enable: false);
+        /* await locationSubscription.cancel();
+        location.enableBackgroundMode(enable: false); */
+        BackgroundLocation.stopLocationService();
         preferences.setString("state", "ok");
         preferences.remove("idAlarm");
         setState(() {
