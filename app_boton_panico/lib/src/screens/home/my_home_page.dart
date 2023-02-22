@@ -18,6 +18,7 @@ import 'package:app_boton_panico/src/services/notification_services.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
+import 'package:background_location/background_location.dart';
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
@@ -101,19 +102,28 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
-     
   }
-    Future<void> handleAppLifecycleState(AppLifecycleState state) async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    String statePerson = preferences.getString("state");
 
-    if (state == AppLifecycleState.detached && statePerson == "danger") {
-      // La aplicación se cerró
-      if (!mounted) return;
-      Phoenix.rebirth(context);
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        print("app in resumed");
+        break;
+      case AppLifecycleState.inactive:
+        print("app in inactive");
+        break;
+      case AppLifecycleState.paused:
+        print("app in paused");
+        break;
+      case AppLifecycleState.detached:
+        /* Phoenix.rebirth(context); */
+
+        print("app in detached");
+
+        break;
     }
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -678,8 +688,24 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     });
   }
 
-  void startListeningPosition() {
-    getfamilyGruop();
+  Future<void> startListeningPosition() async {
+    await BackgroundLocation.setAndroidNotification(
+      title: 'Background service is running',
+      message: 'Background location in progress',
+      icon: '@mipmap/ic_launcher',
+    );
+    //await BackgroundLocation.setAndroidConfiguration(1000);
+    await BackgroundLocation.startLocationService(distanceFilter: 20);
+    BackgroundLocation.getLocationUpdates((location) {
+      Map data = {
+        "position": {"lat": location.latitude, "lng": location.longitude},
+        "familyGroup": familyGroupIds
+      };
+
+      socketProvider.emitLocation("send-alarm", jsonEncode(data));
+    });
+
+    /* getfamilyGruop();
     location.enableBackgroundMode(enable: true);
     location.changeNotificationOptions(
         channelName: "channel",
@@ -697,7 +723,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       };
 
       socketProvider.emitLocation("send-alarm", jsonEncode(data));
-    });
+    }); */
   }
 
   Future<Position> _getLastKnownPosition() async {
