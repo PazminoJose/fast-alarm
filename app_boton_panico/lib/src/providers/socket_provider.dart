@@ -1,12 +1,11 @@
 import 'package:app_boton_panico/src/global/enviroment.dart';
 import 'package:app_boton_panico/src/models/user.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-class SocketProvider implements FlutterForegroundTask {
+class SocketProvider {
   IO.Socket _socket;
 
-  void connect(User user) async {
+  void connect(String personId) async {
     try {
       if (_socket != null && _socket.connected) {
         return;
@@ -14,7 +13,7 @@ class SocketProvider implements FlutterForegroundTask {
       _socket = IO.io("https://${Environments.url}", <String, dynamic>{
         'transports': ['websocket'],
         'autoConnect': true,
-        'query': {"personId": user.person.id}
+        'query': {"personId": personId}
       });
 
       _socket.connect();
@@ -28,8 +27,7 @@ class SocketProvider implements FlutterForegroundTask {
     _socket.disconnect();
   }
 
-  void emitLocation(User user, String event, [dynamic data]) {
-    connect(user);
+  void emitLocation(String event, [dynamic data]) {
     _socket.emit(event, data);
   }
 

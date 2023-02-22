@@ -39,6 +39,9 @@ import 'package:app_boton_panico/src/methods/permissions.dart';
 import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 import 'package:vibration/vibration.dart';
 import 'package:location/location.dart' as LC;
+import 'package:workmanager/workmanager.dart';
+import 'dart:isolate';
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key key}) : super(key: key);
@@ -592,7 +595,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void initSocket(User user) async {
-    socketProvider.connect(user);
+    socketProvider.connect(user.person.id);
+    /* Workmanager().registerOneOffTask("taskOne", "socket-connect",
+          inputData: {"user": user.person.id}, initialDelay: Duration(seconds: 1)); */
   }
 
   void onAlerts(personId) {
@@ -671,7 +676,8 @@ class _MyHomePageState extends State<MyHomePage> {
         }
         preferences.setString("state", "danger");
         //await serviceNotification.sendNotificationFamilyGroup(user.id, "${user.person.firstName} ${user.person.lastName}");
-        startListeningPosition();
+        ReceivePort receivePort = ReceivePort();
+         await Isolate.spawn(startListeningPosition, receivePort.sendPort);
         return true;
       } else {
         _openPermisionLocations();
@@ -714,7 +720,26 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  void startListeningPosition() {
+ /*  Future<void> startListeningPosition() async {
+    getfamilyGruop();
+    await BackgroundLocation.setAndroidNotification(
+      title: 'Background service is running',
+      message: 'Background location in progress',
+      icon: '@mipmap/ic_launcher',
+    );
+    await BackgroundLocation.setAndroidConfiguration(1000);
+    await BackgroundLocation.startLocationService(distanceFilter: 0);
+    BackgroundLocation.getLocationUpdates((location) {
+        Map data = {
+          "position": {"lat": location.latitude, "lng": location.longitude},
+          "familyGroup": familyGroupIds
+        };
+
+        socketProvider.emitLocation("send-alarm", jsonEncode(data));
+    });
+  }
+ */
+  void startListeningPosition(SendPort mySendPort) {
     getfamilyGruop();
     location.enableBackgroundMode(enable: true);
 
@@ -732,11 +757,7 @@ class _MyHomePageState extends State<MyHomePage> {
         "familyGroup": familyGroupIds
       };
 
-      FlutterForegroundTask.startService(
-          notificationTitle: "Ubi",
-          notificationText: "ubicacion",
-          callback: () => socketProvider.emitLocation(
-              user, "send-alarm", jsonEncode(data)));
+      socketProvider.emitLocation("send-alarm", jsonEncode(data));
     });
   }
 

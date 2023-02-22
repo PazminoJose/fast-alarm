@@ -68,6 +68,8 @@ dependencies:
   flutter_background_service: ^2.4.6
   background_locator_2: ^2.0.5
   flutter_foreground_task: ^4.1.0
+  workmanager: ^0.5.1
+  flutter_background_geolocation: ^4.9.0
   
 
 dev_dependencies:

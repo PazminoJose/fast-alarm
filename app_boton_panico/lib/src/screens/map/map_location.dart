@@ -145,7 +145,7 @@ class _LocationMapState extends State<LocationMap> {
     try {
       final socketProvider =
           Provider.of<SocketProvider>(context, listen: false);
-      socketProvider.connect(user);
+      socketProvider.connect(user.person.id);
       BitmapDescriptor imgDestination =
           await getImagesMap(widget.person.urlImage);
       socketProvider.onLocation(

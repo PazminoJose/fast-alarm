@@ -9,13 +9,24 @@ import 'package:app_boton_panico/src/screens/register/second_register_page.dart'
 import 'package:app_boton_panico/src/screens/rememberPass_page.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:provider/provider.dart';
+import 'package:workmanager/workmanager.dart';
 
 /// `runApp` is a function that takes a widget and displays it on the screen
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+
   runApp(const MyApp());
+}
+
+void callbackDispatcher() {
+  Workmanager().executeTask((taskName, inputData) async {
+    print("tarea ejecutandose: $taskName");
+    SocketProvider socket = SocketProvider();
+    socket.connect(inputData["user"]);
+    return Future.value(true);
+  });
 }
 
 const notificationChannelId = 'my_foreground';
@@ -66,9 +77,6 @@ const notificationId = 888;
 
    service.startService();
 } */
-
-
-
 
 /* void onStart() {
   WidgetsFlutterBinding.ensureInitialized();
