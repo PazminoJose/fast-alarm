@@ -25,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.Dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:gap/gap.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -49,7 +50,7 @@ class MyHomePage extends StatefulWidget {
 String idOneSignal;
 NotificationServices serviceNotification = NotificationServices();
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   int pressVolumeId;
   User user;
 
@@ -83,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     userAlerts = [];
     familyGroupIds = [];
     //initPlatform(context);
@@ -752,7 +754,8 @@ class _MyHomePageState extends State<MyHomePage> {
           person: user.person.id,
           state: "en progreso",
           latitude: lat,
-          longitude: lng);
+          longitude: lng,
+          type: "phone");
 
       var id = await serviceNotification.postAlarm(contentAlertPostServer);
       setState(() {
@@ -776,9 +779,8 @@ class _MyHomePageState extends State<MyHomePage> {
         "id": idAlarm,
         "person": user.person.id,
         "state": state,
-        "latitude": lat,
-        "longitude": lng,
-        "isLast": isLast,
+        "finalLatitude": lat,
+        "finalLongitude": lng,
       };
       return await serviceNotification.putAlarm(contentAlertPostServer);
     } catch (e) {
