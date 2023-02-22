@@ -752,7 +752,8 @@ class _MyHomePageState extends State<MyHomePage> {
           person: user.person.id,
           state: "en progreso",
           latitude: lat,
-          longitude: lng);
+          longitude: lng,
+          type: "phone");
 
       var id = await serviceNotification.postAlarm(contentAlertPostServer);
       setState(() {
@@ -776,9 +777,8 @@ class _MyHomePageState extends State<MyHomePage> {
         "id": idAlarm,
         "person": user.person.id,
         "state": state,
-        "latitude": lat,
-        "longitude": lng,
-        "isLast": isLast,
+        "finalLatitude": lat,
+        "finalLongitude": lng,
       };
       return await serviceNotification.putAlarm(contentAlertPostServer);
     } catch (e) {

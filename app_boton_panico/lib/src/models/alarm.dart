@@ -6,14 +6,14 @@ String alarmToJson(Alarm data) => json.encode(data.toJson());
 
 /// The class Alarm has a constructor that takes a Map<String, dynamic> and returns an Alarm object
 class Alarm {
-  Alarm({
-    this.id,
-    this.person,
-    this.state,
-    this.latitude,
-    this.longitude,
-    bool isLast,
-  });
+  Alarm(
+      {this.id,
+      this.person,
+      this.state,
+      this.latitude,
+      this.longitude,
+      bool isLast,
+      this.type});
 
   String id;
   String person;
@@ -21,6 +21,7 @@ class Alarm {
   double latitude;
   double longitude;
   bool isLast;
+  String type;
 
   /// This function takes a JSON object and returns an Alarm object
   ///
@@ -31,6 +32,7 @@ class Alarm {
         state: json["state"],
         latitude: json["latitude"].toDouble(),
         longitude: json["longitude"].toDouble(),
+        type: json["type"],
       );
 
   /// It takes a JSON object and returns a Dart object
@@ -40,5 +42,6 @@ class Alarm {
         "latitude": latitude,
         "longitude": longitude,
         "isLast": isLast,
+        "type": type
       };
 }
