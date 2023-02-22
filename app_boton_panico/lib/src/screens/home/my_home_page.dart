@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/global/enviroment.dart';
@@ -25,6 +28,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.Dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:gap/gap.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -38,6 +42,7 @@ import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 import 'package:vibration/vibration.dart';
 import 'package:location/location.dart' as LC;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key key}) : super(key: key);
@@ -621,13 +626,14 @@ class _MyHomePageState extends State<MyHomePage> {
         }
         preferences.setString("state", "danger");
         //await serviceNotification.sendNotificationFamilyGroup(user.id, "${user.person.firstName} ${user.person.lastName}");
-        startListeningPosition();
+        FlutterBackgroundService().invoke("setAsBackground");
         return true;
       } else {
         _openPermisionLocations();
         return false;
       }
     } catch (e) {
+      print(e);
       ScaffoldMessenger.of(context)
           .showSnackBar(MySnackBars.errorConectionSnackBar());
       Vibration.vibrate(duration: 200);
@@ -682,9 +688,77 @@ class _MyHomePageState extends State<MyHomePage> {
         "familyGroup": familyGroupIds
       };
 
-      socketProvider.emitLocation("send-alarm", jsonEncode(data));
     });
   }
+
+  Future<void> initializeService() async {
+    final service = FlutterBackgroundService();
+    await service.configure(
+    androidConfiguration: AndroidConfiguration(
+      // this will be executed when app is in foreground or background in separated isolate
+      onStart: onStart,
+
+      // auto start service
+      autoStart: true,
+      isForegroundMode: true,
+
+      notificationChannelId: 'my_foreground',
+      initialNotificationTitle: 'AWESOME SERVICE',
+      initialNotificationContent: 'Initializing',
+      foregroundServiceNotificationId: 888,
+    ),
+    iosConfiguration: IosConfiguration(
+      // auto start service
+      autoStart: true,
+
+      // this will be executed when app is in foreground in separated isolate
+      onForeground: onStart,
+
+      // you have to enable background fetch capability on xcode project
+      onBackground: onStart,
+    ),
+  );
+
+  service.startService();
+  }
+
+
+  @pragma('vm:entry-point')
+void onStart(ServiceInstance service) async {
+  // Only available for flutter 3.0.0 and later
+  DartPluginRegistrant.ensureInitialized();
+
+  if (service is AndroidServiceInstance) {
+    service.on('setAsForeground').listen((event) {
+      service.setAsForegroundService();
+    });
+
+    service.on('setAsBackground').listen((event) {
+      service.setAsBackgroundService();
+    });
+  }
+
+  service.on('stopService').listen((event) {
+    service.stopSelf();
+  });
+
+  // bring to foreground
+  Timer.periodic(const Duration(seconds: 1), (timer) async {
+    if (service is AndroidServiceInstance) {
+      if (await service.isForegroundService()) {
+        /// OPTIONAL for use custom notification
+        /// the notification id must be equals with AndroidConfiguration when you call configure() method.
+        
+        startListeningPosition();
+        // if you don't using custom notification, uncomment this
+         service.setForegroundNotificationInfo(
+           title: "Servicio de ubicacion en segundo plano",
+           content: "Updated at ${DateTime.now()}",
+        );
+      }
+    }
+  });
+}
 
   Future<Position> _getLastKnownPosition() async {
     final position = await Geolocator.getLastKnownPosition();
