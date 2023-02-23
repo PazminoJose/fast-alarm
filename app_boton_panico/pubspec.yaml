@@ -66,6 +66,8 @@ dependencies:
   custom_marker: ^1.0.0
   lottie: ^2.2.0
   flutter_background_service: ^2.4.6
+  background_locator_2: ^2.0.5
+  flutter_isolate: ^2.0.4
 
 dev_dependencies:
   flutter_test:

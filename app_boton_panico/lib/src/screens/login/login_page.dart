@@ -331,7 +331,7 @@ class LoginPageState extends State<LoginPage> {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       user = preferences.getString("user");
       String token = preferences.getString("token");
-      print(user);
+      //print(user);
       if (user != null && token != null) {
         user = User.fromJson(jsonDecode(user));
         await userProvider.getUser(null, user, token);

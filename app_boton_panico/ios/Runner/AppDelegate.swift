@@ -1,7 +1,14 @@
 import UIKit
 import Flutter
 import GoogleMaps
-import flutter_background_service_ios 
+import background_locator_2
+
+func registerPlugins(registry: FlutterPluginRegistry) -> () {
+    if (!registry.hasPlugin("BackgroundLocatorPlugin")) {
+        GeneratedPluginRegistrant.register(with: registry)
+    } 
+}
+
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -9,9 +16,9 @@ import flutter_background_service_ios
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    SwiftFlutterBackgroundServicePlugin.taskIdentifier = "your.custom.task.identifier"
     GMSServices.provideAPIKey("AIzaSyCfK3Fp-ScPOOhLGtTki7nejALoQXZs96o")
     GeneratedPluginRegistrant.register(with: self)
+    BackgroundLocatorPlugin.setPluginRegistrantCallback(registerPlugins)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }

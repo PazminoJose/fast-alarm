@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:app_boton_panico/src/components/snackbars.dart';
 import 'package:app_boton_panico/src/global/enviroment.dart';
@@ -18,6 +20,13 @@ import 'package:app_boton_panico/src/services/notification_services.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
+
+import 'package:background_locator_2/background_locator.dart';
+import 'package:background_locator_2/location_dto.dart';
+import 'package:background_locator_2/settings/android_settings.dart';
+import 'package:background_locator_2/settings/ios_settings.dart';
+import 'package:background_locator_2/settings/locator_settings.dart';
+
 import 'package:badges/badges.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
@@ -27,7 +36,7 @@ import 'package:flutter/services.Dart';
 import 'package:flutter_android_volume_keydown/flutter_android_volume_keydown.dart';
 import 'package:gap/gap.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart' as GL;
 import 'package:lottie/lottie.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
@@ -38,6 +47,8 @@ import 'package:simple_ripple_animation/simple_ripple_animation.dart';
 import 'package:vibration/vibration.dart';
 import 'package:location/location.dart' as LC;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import 'components/location_callback_handler.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key key}) : super(key: key);
@@ -55,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   String token;
   String _currentAddress;
-  Position _currentPosition;
+  GL.Position _currentPosition;
   List<UserAlert> userAlerts;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey _inkWellKey = GlobalKey();
@@ -74,6 +85,8 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isProcessSendLocation = false;
   bool isProcessFinalizeLocation = false;
   Key _key;
+  static const String _isolateName = "LocatorIsolate";
+  ReceivePort port = ReceivePort();
 
   String textButton = "Envío de alerta de Incidente";
 
@@ -94,6 +107,51 @@ class _MyHomePageState extends State<MyHomePage> {
     onAlerts(user.person.id);
     openStateUser();
     _openPermisionLocations();
+
+    initPlatformState();
+  }
+
+  Future<void> initPlatformState() async {
+    await BackgroundLocator.initialize();
+  }
+
+  @pragma('vm:entry-point')
+  static void callback(LocationDto locationDto) async {
+    final SendPort send = IsolateNameServer.lookupPortByName(_isolateName);
+    send?.send(locationDto);
+  }
+
+  @pragma('vm:entry-point')
+  static void notificationCallback() {
+    print('User clicked on the notification');
+  }
+
+  Future<void> _startLocator() async {
+    Map<String, dynamic> data = {'countInit': 1};
+    return await BackgroundLocator.registerLocationUpdate(
+        LocationCallbackHandler.callback,
+        initCallback: LocationCallbackHandler.initCallback,
+        initDataCallback: data,
+        disposeCallback: LocationCallbackHandler.disposeCallback,
+        iosSettings: const IOSSettings(
+            accuracy: LocationAccuracy.NAVIGATION,
+            distanceFilter: 0,
+            stopWithTerminate: true),
+        autoStop: false,
+        androidSettings: const AndroidSettings(
+            accuracy: LocationAccuracy.NAVIGATION,
+            interval: 2,
+            distanceFilter: 0,
+            client: LocationClient.google,
+            androidNotificationSettings: AndroidNotificationSettings(
+                notificationChannelName: 'Envio de Ubicacion',
+                notificationTitle: 'Ubicación en tiempo real de Vivo Vivo',
+                notificationMsg: 'Envío de ubicación en segundo plano',
+                notificationBigMsg:
+                    'Vivo Vivo esta accediendo a su ubicación actual.',
+                notificationIconColor: Colors.grey,
+                notificationTapCallback:
+                    LocationCallbackHandler.notificationCallback)));
   }
 
   @override
@@ -565,8 +623,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> _getCurrentPosition() async {
     final hasPermission = await Permissions.handleLocationPermission(context);
     if (!hasPermission) return;
-    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-        .then((Position position) {
+    await GL.Geolocator.getCurrentPosition(
+            desiredAccuracy: GL.LocationAccuracy.high)
+        .then((GL.Position position) {
       setState(() {
         _currentPosition = position;
       });
@@ -665,8 +724,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void startListeningPosition() {
-    getfamilyGruop();
-    location.enableBackgroundMode(enable: true);
+    /* location.enableBackgroundMode(enable: true);
     location.changeNotificationOptions(
         channelName: "channel",
         subtitle: "Se esta enviando tu ubicación a tu núcleo de confianza.",
@@ -675,7 +733,7 @@ class _MyHomePageState extends State<MyHomePage> {
         color: Colors.red);
     locationSubscription =
         location.onLocationChanged.listen((LC.LocationData position) {
-      log('${position.latitude}, ${position.longitude}');
+      //log('${position.latitude}, ${position.longitude}');
 
       Map data = {
         "position": {"lat": position.latitude, "lng": position.longitude},
@@ -683,11 +741,28 @@ class _MyHomePageState extends State<MyHomePage> {
       };
 
       socketProvider.emitLocation("send-alarm", jsonEncode(data));
+    }); */
+    _startLocator();
+
+    IsolateNameServer.registerPortWithName(port.sendPort, _isolateName);
+    getfamilyGruop();
+
+    port.listen((dynamic data) {
+      if (data != null) {
+        log("${data.latitude}, ${data.longitude}");
+
+        Map dataLocation = {
+          "position": {"lat": data.latitude, "lng": data.longitude},
+          "familyGroup": familyGroupIds
+        };
+
+        socketProvider.emitLocation("send-alarm", jsonEncode(dataLocation));
+      }
     });
   }
 
-  Future<Position> _getLastKnownPosition() async {
-    final position = await Geolocator.getLastKnownPosition();
+  Future<GL.Position> _getLastKnownPosition() async {
+    final position = await GL.Geolocator.getLastKnownPosition();
     if (position != null) {
       log('${position.latitude}  ${position.longitude}');
       return position;
@@ -701,7 +776,7 @@ class _MyHomePageState extends State<MyHomePage> {
       SharedPreferences preferences = await SharedPreferences.getInstance();
 
       UserServices serviceUser = UserServices();
-      Position lastPosition = await _getLastKnownPosition();
+      GL.Position lastPosition = await _getLastKnownPosition();
       String id = preferences.getString("idAlarm");
 
       bool isCancel = await putAlarmBD(
@@ -709,8 +784,9 @@ class _MyHomePageState extends State<MyHomePage> {
       Vibration.vibrate(duration: 100);
       if (isCancel) {
         await serviceUser.putStateByUser(user.id, "ok");
-        await locationSubscription.cancel();
-        location.enableBackgroundMode(enable: false);
+        /* await locationSubscription.cancel();
+        location.enableBackgroundMode(enable: false); */
+        await BackgroundLocator.unRegisterLocationUpdate();
         preferences.setString("state", "ok");
         preferences.remove("idAlarm");
         setState(() {
@@ -733,7 +809,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future<void> _getAddressFromLatLng(Position position) async {
+  Future<void> _getAddressFromLatLng(GL.Position position) async {
     await placemarkFromCoordinates(position.latitude, position.longitude)
         .then((List<Placemark> placemarks) {
       Placemark place = placemarks[0];
