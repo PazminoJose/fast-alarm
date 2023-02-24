@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:app_boton_panico/src/models/user.dart';
 import 'package:app_boton_panico/src/providers/user_provider.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -31,6 +32,7 @@ class LoginPageState extends State<LoginPage> {
   String textButtonSesion = "Iniciar Sesión";
   final formKey = GlobalKey<FormState>();
   UserProvider userProvider;
+  bool _passwordVisible = false;
 
   @override
   void initState() {
@@ -51,10 +53,10 @@ class LoginPageState extends State<LoginPage> {
           width: double.infinity,
           //padding: const EdgeInsets.symmetric(vertical: 60),
           padding: const EdgeInsets.only(top: 60),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             gradient: LinearGradient(colors: [
-              Color.fromRGBO(0, 150, 136, 1),
-              Color.fromRGBO(56, 56, 76, 1),
+              Styles.primaryColorGradient,
+              Styles.secondaryColorGradient,
             ]),
           ),
         ),
@@ -62,9 +64,9 @@ class LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: (size.height * 0.08)),
+              padding: EdgeInsets.only(top: (size.height * 0.09)),
               child: Image.asset(
-                "assets/image/vivo_vivo_logo.png",
+                "assets/image/logo.png",
                 height: (size.height * 0.2),
               ),
             ),
@@ -156,9 +158,22 @@ class LoginPageState extends State<LoginPage> {
                                 LengthLimitingTextInputFormatter(15),
                               ],
                               textInputAction: TextInputAction.done,
-                              obscureText: true,
+                              obscureText: _passwordVisible,
                               controller: password,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _passwordVisible = !_passwordVisible;
+                                    });
+                                  },
+                                  icon: Icon(
+                                    (_passwordVisible)
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Styles.secondaryColor,
+                                  ),
+                                ),
                                 prefixIcon: Icon(Icons.lock_person),
                                 label: Text("Contraseña"),
                               ),
@@ -219,9 +234,8 @@ class LoginPageState extends State<LoginPage> {
                               ],
                             ),
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Text("¿Olvidó su contraseña?"),
                                 TextButton(
                                     style: TextButton.styleFrom(
                                       textStyle: TextStyle(
@@ -233,7 +247,7 @@ class LoginPageState extends State<LoginPage> {
                                           .pushNamed("/rememberPassword");
                                     },
                                     child: const Text(
-                                      "Recuerdame",
+                                      "¿Olvidó su contraseña?",
                                       style: TextStyle(color: Colors.blue),
                                     ))
                               ],
@@ -305,7 +319,8 @@ class LoginPageState extends State<LoginPage> {
           }
         } catch (e) {
           print(e);
-                    ScaffoldMessenger.of(context).showSnackBar(MySnackBars.errorConectionSnackBar());
+          ScaffoldMessenger.of(context)
+              .showSnackBar(MySnackBars.errorConectionSnackBar());
 
           setState(() {
             _loading = false;

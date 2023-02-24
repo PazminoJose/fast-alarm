@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 /// It's a class that contains static variables that are used throughout the app
 class Styles {
   static Color primaryColor = const Color.fromRGBO(56, 56, 76, 1);
+  static Color primaryColorGradient = const Color.fromRGBO(0, 150, 136, 1);
+  static Color secondaryColorGradient = const Color.fromRGBO(56, 56, 76, 1);
   static Color secondaryColor = Colors.blueGrey[800];
   static Color white = Colors.white;
   static Color black = Colors.black;
@@ -10,6 +12,7 @@ class Styles {
   static Color green = Colors.green;
   static Color red = Colors.red[300];
   static Color redText = Colors.red;
+  static Color blue = Colors.blue;
   static Color tranparent = Colors.transparent;
   static Color blur = const Color.fromARGB(48, 255, 255, 255);
   static RegExp exprOnlyLetter = RegExp(r'[ a-zA-ZñÑáéíóú]');

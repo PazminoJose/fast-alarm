@@ -10,7 +10,8 @@ import 'package:app_boton_panico/src/screens/rememberPass_page.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:intl/intl.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 /// `runApp` is a function that takes a widget and displays it on the screen
 void main() {
@@ -31,13 +32,14 @@ class MyApp extends StatelessWidget {
         Provider(create: (_) => SocketProvider())
       ],
       child: MaterialApp(
-        /* localizationsDelegates: <LocalizationsDelegate<Object>>[
-          globa
-        ], */
-        //supportedLocales: const [Locale("es", "EC")],
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [Locale("es", "ES"), Locale("en", "EN")],
         debugShowCheckedModeBanner: false,
         title: 'Material App',
-        //home: MyHomePage()
         theme: theme.copyWith(
           colorScheme: theme.colorScheme.copyWith(
               primary: Styles.primaryColor, secondary: Styles.secondaryColor),

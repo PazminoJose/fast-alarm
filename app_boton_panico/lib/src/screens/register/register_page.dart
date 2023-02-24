@@ -98,6 +98,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
+                        const Padding(
+                          padding: EdgeInsets.only(bottom: 15),
+                          child: Text("Añade una foto retrato"),
+                        ),
                         UserPhoto(
                             imageFile: imageFile,
                             onImageSelected: ((file) {
@@ -136,6 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         textCapitalization:
                                             TextCapitalization.sentences,
                                         decoration: InputDecoration(
+                                          hintText: "Ej. Kevin",
                                           prefixIcon: const Icon(
                                               Icons.person_outline_rounded),
                                           label: Text(
@@ -167,6 +172,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         textCapitalization:
                                             TextCapitalization.sentences,
                                         decoration: InputDecoration(
+                                          hintText: "Ej. Daniel",
                                           label: Text(
                                             "Segundo nombre",
                                             style: Styles.textLabel,
@@ -198,6 +204,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   textInputAction: TextInputAction.next,
                                   textCapitalization: TextCapitalization.words,
                                   decoration: InputDecoration(
+                                    hintText: "Ej. Chicaiza Suarez",
                                     prefixIcon: const Icon(
                                         Icons.person_outline_rounded),
                                     label: Text(
@@ -226,6 +233,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
                                   decoration: InputDecoration(
+                                    hintText: "Ej. 1002677184",
                                     prefixIcon: const Icon(
                                         Icons.calendar_view_week_outlined),
                                     label: Text(
@@ -239,7 +247,8 @@ class _RegisterPageState extends State<RegisterPage> {
                                       return "Ingrese su cédula";
                                     } /* else if (value.substring(0, 2) != "04") {
                                       return "Debe ingresar una cedula respectiva a Carchi";
-                                    } */ else if ((!Validators.isValidateIdCard(
+                                    } */
+                                    else if ((!Validators.isValidateIdCard(
                                         value))) {
                                       return "Ingrese una cédula correcta";
                                     }
@@ -265,7 +274,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   controller: bithDate,
                                   onTap: (() async {
                                     pickerDate = await showDatePicker(
-                                        //locale: const Locale("es", "EC"),
+                                        locale: const Locale("es", "ES"),
                                         context: context,
                                         initialDate: DateTime(2000),
                                         firstDate: DateTime(1950),

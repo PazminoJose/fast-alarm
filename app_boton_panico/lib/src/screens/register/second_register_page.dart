@@ -7,6 +7,7 @@ import 'package:app_boton_panico/src/screens/map/map_direcctions.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.Dart';
 import 'package:gap/gap.dart';
@@ -64,7 +65,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
         ),
         backgroundColor: Styles.tranparent,
         elevation: 0,
-        title: const Text("Información Adicional"),
+        title: const Text("Información de Registro"),
         centerTitle: true,
       ),
       body: Stack(
@@ -153,6 +154,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                   autofocus: true,
                                   keyboardType: TextInputType.name,
                                   decoration: InputDecoration(
+                                    hintText: "Ej. P041357484",
                                     prefixIcon: const Icon(
                                         Icons.person_outline_rounded),
                                     label: Text(
@@ -187,7 +189,7 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
                                       return "Ingrese su telefono";
                                     } else if (value.length != 10 ||
                                         value.substring(0, 2) != "09") {
-                                      return "Ingrese un telefono correcto";
+                                      return "Ingrese un teléfono correcto";
                                     }
                                     return null;
                                   },
@@ -363,8 +365,9 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
           userName: userNameController.text,
           email: email.text,
         );
-        Map map = await serviceUser.saveUser(user, personArguments);
-        if (map == null) {
+        Map mapResponsSaveUser =
+            await serviceUser.saveUser(user, personArguments);
+        if (mapResponsSaveUser == null) {
           setState(() {
             textButtonSesion = "Registrarse";
             _loading = false;
@@ -389,23 +392,79 @@ class _SecondRegisterPageState extends State<SecondRegisterPage> {
           ));
           return;
         }
-
+        final size = AppLayout.getSize(context);
         showDialog(
             barrierDismissible: false,
             context: context,
             builder: (context) => AlertDialog(
-                  title: Column(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0)),
+                  title: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 20,
+                    ),
+                    decoration: BoxDecoration(
+                        color: Styles.primaryColor,
+                        borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20))),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "¡Perfecto!",
+                          style: Styles.textStyleBody,
+                        ),
+                        /*  , */
+                        Text(
+                          "${mapResponsSaveUser["message"]}",
+                          style: Styles.textStyleBody,
+                        ),
+                      ],
+                    ),
+                  ),
+                  titlePadding: const EdgeInsets.all(0),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text("¡Perfecto!"),
-                      Text(map["message"]),
+                      const Text(
+                          "Recuerda tu nombre de usuario para poder ingresar"),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  "Usuario: ",
+                                  style: Styles.textStyleBotttomTitle
+                                      .copyWith(fontSize: 17),
+                                ),
+                                Gap(5),
+                                Text("${mapResponsSaveUser["userName"]}"),
+                              ],
+                            ),
+                            Gap(30),
+                            IconButton(
+                                onPressed: () => FlutterClipboard.copy(
+                                    "${mapResponsSaveUser["userName"]}"),
+                                icon: Icon(
+                                  Icons.content_paste_rounded,
+                                  color: Styles.primaryColor,
+                                  size: 33,
+                                ),
+                                iconSize: 30),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
-                  content: Text(
-                      "Recuerda tu nombre de usuario para poder ingresar\nUsuario: ${map["userName"]}"),
                   actions: [
                     TextButton(
                         onPressed: (() =>
-                            Navigator.of(context).pushReplacementNamed("/")),
+                            /* Navigator.of(context).pushReplacementNamed("/")), */
+                            Navigator.of(context).pop()),
                         child: Text(
                           "OK",
                           style: Styles.textLabel.copyWith(color: Colors.blue),

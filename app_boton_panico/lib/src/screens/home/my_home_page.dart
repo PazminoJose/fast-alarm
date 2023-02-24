@@ -60,8 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final GlobalKey _inkWellKey = GlobalKey();
   StreamSubscription<HardwareButton> subscription;
-  TextEditingController password = TextEditingController();
-  TextEditingController passwordConfirm = TextEditingController();
+  String password = "";
+  String passwordConfirm = "";
   SocketProvider socketProvider;
   final _formKey = GlobalKey<FormState>();
   AlertsServices serviceAlert = AlertsServices();
@@ -74,7 +74,6 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isProcessSendLocation = false;
   bool isProcessFinalizeLocation = false;
   Key _key;
-
   String textButton = "Envío de alerta de Incidente";
 
   int count = 0;
@@ -426,105 +425,131 @@ class _MyHomePageState extends State<MyHomePage> {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
-          return AlertDialog(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: <Widget>[
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Text(
-                            "Cambiar Contraseña",
-                            style: Styles.textLabel.copyWith(
-                                color: Styles.black,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(15),
-                                FilteringTextInputFormatter.deny(
-                                    Styles.exprWithoutWhitspace),
-                              ],
-                              controller: password,
-                              textInputAction: TextInputAction.done,
-                              obscureText: true,
-                              decoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.lock_person),
-                                label: Text("Contraseña"),
-                              ),
-                              onSaved: (value) => {password.text = value},
-                              validator: (value) {
-                                if (value.isEmpty || value == null) {
-                                  return "Ingrese su contraseña";
-                                }
-                                password.text = value;
-                                return null;
-                              },
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              inputFormatters: [
-                                LengthLimitingTextInputFormatter(15),
-                                FilteringTextInputFormatter.deny(
-                                    Styles.exprWithoutWhitspace),
-                              ],
-                              controller: passwordConfirm,
-                              textInputAction: TextInputAction.done,
-                              obscureText: true,
-                              decoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.lock_person),
-                                label: Text("Confirmar contraseña"),
-                              ),
-                              onSaved: (value) =>
-                                  {passwordConfirm.text = value},
-                              validator: (value) {
-                                if (value.isEmpty || value == null) {
-                                  return "Ingrese su contraseña";
-                                }
-                                if (!(password.text == value)) {
-                                  return "Las contraseñas no coinciden";
-                                }
+          bool passwordVisible = false;
+          final Size size = AppLayout.getSize(context);
 
-                                return null;
-                              },
-                            ),
+          return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                insetPadding: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0)),
+                title: Container(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 20, horizontal: (size.width * 0.15)),
+                  decoration: BoxDecoration(
+                      color: Styles.primaryColor,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20))),
+                  child: Center(
+                    child: Text(
+                      'Cambiar Contraseña',
+                      style: Styles.textStyleBody,
+                    ),
+                  ),
+                ),
+                titlePadding: const EdgeInsets.all(0),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Stack(
+                      clipBehavior: Clip.none,
+                      children: <Widget>[
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            children: <Widget>[
+                              TextFormField(
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(15),
+                                  FilteringTextInputFormatter.deny(
+                                      Styles.exprWithoutWhitspace),
+                                ],
+                                textInputAction: TextInputAction.done,
+                                obscureText: !passwordVisible,
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(Icons.lock_person),
+                                  label: Text("Contraseña nueva"),
+                                ),
+                                onSaved: (value) => {password = value},
+                                validator: (value) {
+                                  if (value.isEmpty || value == null) {
+                                    return "Ingrese su contraseña";
+                                  }
+                                  password = value;
+                                  return null;
+                                },
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child: TextFormField(
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(15),
+                                    FilteringTextInputFormatter.deny(
+                                        Styles.exprWithoutWhitspace),
+                                  ],
+                                  textInputAction: TextInputAction.done,
+                                  obscureText: !passwordVisible,
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.lock_person),
+                                    label: Text("Confirmar contraseña"),
+                                  ),
+                                  onSaved: (value) => {passwordConfirm = value},
+                                  validator: (value) {
+                                    if (value.isEmpty || value == null) {
+                                      return "Ingrese su contraseña";
+                                    }
+                                    if (!(password == value)) {
+                                      return "Las contraseñas no coinciden";
+                                    }
+
+                                    return null;
+                                  },
+                                ),
+                              ),
+                            ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                      backgroundColor: Styles.secondaryColor),
-                                  child: Text("Cancelar"),
-                                  onPressed: (() {
-                                    Navigator.of(context).pop();
-                                  }),
-                                ),
-                                ElevatedButton(
-                                  child: const Text("Aceptar"),
-                                  onPressed: () => _changePassword(context),
-                                ),
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text("Mostrar Contraseña"),
+                        Checkbox(
+                            value: passwordVisible,
+                            onChanged: (value) {
+                              setState(() {
+                                passwordVisible = !passwordVisible;
+                              });
+                            }),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                          child: Text("Cancelar"),
+                          onPressed: (() {
+                            Navigator.of(context).pop();
+                          }),
+                        ),
+                        ElevatedButton(
+                          child: const Text("Aceptar"),
+                          onPressed: () => _changePassword(context),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              );
+            },
           );
         });
   }
@@ -855,7 +880,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _formKey.currentState.save();
       Map<String, String> changePasswordData = {
         "userId": user.id,
-        "password": password.text,
+        "password": password,
       };
       UserServices userServices = UserServices();
       Map response = await userServices.postChangePassword(changePasswordData);

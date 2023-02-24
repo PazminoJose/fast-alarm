@@ -105,9 +105,10 @@ class _RememberPassPageState extends State<RememberPassPage> {
                               textInputAction: TextInputAction.next,
                               keyboardType: TextInputType.emailAddress,
                               decoration: const InputDecoration(
-                                prefixIcon: Icon(Icons.person_outline_rounded),
-                                label: Text("Usuario"),
-                              ),
+                                  prefixIcon:
+                                      Icon(Icons.person_outline_rounded),
+                                  label: Text("Usuario"),
+                                  hintText: "Ej. P0492834758"),
                               onSaved: (value) => {userNameValue = value},
                               validator: (value) {
                                 if (value.isEmpty || value == null) {
@@ -188,7 +189,8 @@ class _RememberPassPageState extends State<RememberPassPage> {
             });
           }
         } catch (e) {
-          ScaffoldMessenger.of(context).showSnackBar(MySnackBars.errorConectionSnackBar());
+          ScaffoldMessenger.of(context)
+              .showSnackBar(MySnackBars.errorConectionSnackBar());
           setState(() {
             _loading = false;
             textButtonSesion = "Iniciar Sesión";
