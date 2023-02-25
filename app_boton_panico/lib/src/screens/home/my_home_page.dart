@@ -69,7 +69,6 @@ class _MyHomePageState extends State<MyHomePage> {
   LC.Location location = LC.Location();
   StreamSubscription<LC.LocationData> locationSubscription;
   List<String> familyGroupIds;
-  Timer _timer;
   bool isSendLocation = false;
   bool isProcessSendLocation = false;
   bool isProcessFinalizeLocation = false;
@@ -84,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.initState();
     userAlerts = [];
     familyGroupIds = [];
-    //initPlatform(context);
+    initPlatform();
     user = Provider.of<UserProvider>(context, listen: false).userData["user"];
     token = Provider.of<UserProvider>(context, listen: false).userData["token"];
     socketProvider = Provider.of<SocketProvider>(context, listen: false);
@@ -430,6 +429,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
           return StatefulBuilder(
             builder: (context, setState) {
+              String buttonTextAceptar = "Aceptar";
+              var _loading = false;
               return AlertDialog(
                 insetPadding: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(
@@ -466,9 +467,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                   FilteringTextInputFormatter.deny(
                                       Styles.exprWithoutWhitspace),
                                 ],
-                                textInputAction: TextInputAction.done,
+                                textInputAction: TextInputAction.next,
                                 obscureText: !passwordVisible,
-                                decoration: InputDecoration(
+                                decoration: const InputDecoration(
                                   prefixIcon: Icon(Icons.lock_person),
                                   label: Text("Contraseña nueva"),
                                 ),
@@ -484,6 +485,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 20),
                                 child: TextFormField(
+                                  keyboardType: TextInputType.text,
                                   inputFormatters: [
                                     LengthLimitingTextInputFormatter(15),
                                     FilteringTextInputFormatter.deny(
@@ -541,8 +543,37 @@ class _MyHomePageState extends State<MyHomePage> {
                           }),
                         ),
                         ElevatedButton(
-                          child: const Text("Aceptar"),
-                          onPressed: () => _changePassword(context),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(buttonTextAceptar),
+                              if (_loading)
+                                Container(
+                                  width: 20,
+                                  height: 20,
+                                  margin: const EdgeInsets.only(
+                                    left: 20,
+                                  ),
+                                  child: const CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                )
+                            ],
+                          ),
+                          onPressed: () async {
+                            setState(() {
+                              textButton = "Cambiando";
+                              _loading = true;
+                            });
+                            bool isChangePassword =
+                                await _changePassword(context);
+                            if (isChangePassword) {
+                              setState(() {
+                                textButton = "Aceptar";
+                                _loading = false;
+                              });
+                            }
+                          },
                         ),
                       ],
                     ),
@@ -612,6 +643,8 @@ class _MyHomePageState extends State<MyHomePage> {
         Vibration.vibrate(duration: 1000);
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(MySnackBars.successSnackBar);
+        await serviceNotification.sendNotificationFamilyGroup(
+            user.id, "${user.person.firstName} ${user.person.lastName}");
       } else {
         setState(() {
           isProcessSendLocation = false;
@@ -638,14 +671,14 @@ class _MyHomePageState extends State<MyHomePage> {
         UserServices serviceUser = UserServices();
         SharedPreferences preferences = await SharedPreferences.getInstance();
         if (isNewAlarm) {
-          await serviceUser.putStateByUser(user.id, "danger");
-          await _getCurrentPosition();
           await postAlarmBD(
               _currentPosition.latitude, _currentPosition.longitude);
           preferences.setString("idAlarm", idAlarm);
+          await serviceUser.putStateByUser(user.id, "danger");
+          await _getCurrentPosition();
         }
+        getFamilyGroup(isNewAlarm);
         preferences.setString("state", "danger");
-        //await serviceNotification.sendNotificationFamilyGroup(user.id, "${user.person.firstName} ${user.person.lastName}");
         startListeningPosition();
         return true;
       } else {
@@ -677,20 +710,28 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void getfamilyGruop() async {
+  void getFamilyGroup(bool isNewAlert) async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
     FamilyGroupServices familyGroupServices = FamilyGroupServices();
     List<User> users = await familyGroupServices.getfamilyGropuByUser(user.id);
-
-    setState(() {
-      familyGroupIds.clear();
-      users.forEach((user) {
-        familyGroupIds.add(user.person.id);
+    if (isNewAlert) {
+      setState(() {
+        familyGroupIds.clear();
+        users.forEach((user) {
+          familyGroupIds.add(user.person.id);
+        });
       });
-    });
+      preferences.setString("familyGroupIds", jsonEncode(familyGroupIds));
+    } else {
+      setState(() {
+        familyGroupIds.clear();
+        String codeList = preferences.getString("familyGroupIds");
+        familyGroupIds = jsonDecode(codeList).cast<String>();
+      });
+    }
   }
 
   void startListeningPosition() {
-    getfamilyGruop();
     location.enableBackgroundMode(enable: true);
     location.changeNotificationOptions(
         channelName: "channel",
@@ -731,18 +772,19 @@ class _MyHomePageState extends State<MyHomePage> {
 
       bool isCancel = await putAlarmBD(
           id, "cancelada", lastPosition.latitude, lastPosition.longitude, true);
-      Vibration.vibrate(duration: 100);
       if (isCancel) {
         await serviceUser.putStateByUser(user.id, "ok");
         await locationSubscription.cancel();
         location.enableBackgroundMode(enable: false);
         preferences.setString("state", "ok");
         preferences.remove("idAlarm");
+        preferences.remove("familyGroupIds");
         setState(() {
           isProcessFinalizeLocation = false;
           isSendLocation = false;
           textButton = "Envío de alerta de Incidente";
         });
+        Vibration.vibrate(duration: 100);
       } else {
         // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -755,6 +797,9 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       ScaffoldMessenger.of(context)
           .showSnackBar(MySnackBars.errorConectionSnackBar());
+      setState(() {
+        isProcessFinalizeLocation = false;
+      });
     }
   }
 
@@ -812,11 +857,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  /// _logOut() is a function that removes the user and token from the shared preferences and navigates to
-  /// the login page
-  ///
-  /// Args:
-  ///   context: The context of the current widget.
   void _logOut(context) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     preferences.remove("user");
@@ -828,6 +868,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> setIdOneSignal(String idOS) async {
     UserServices userServices = UserServices();
+
     if (user.idOneSignal == null || (user.idOneSignal != idOS)) {
       SharedPreferences preferences = await SharedPreferences.getInstance();
       Map idOne = await userServices.postIdOneSignal(user.id, idOS, token);
@@ -844,40 +885,29 @@ class _MyHomePageState extends State<MyHomePage> {
   ///
   /// Args:
   ///   context: The context of the widget that is calling the method.
-/*   Future<void> initPlatform(context) async {
+  Future<void> initPlatform() async {
     OneSignal.shared.setNotificationOpenedHandler(
-        (OSNotificationOpenedResult result) async {
-      _inkWellKey.currentState.activate();
-      /* if (await MapLauncher.isMapAvailable(MapType.google)) {
-        MapLauncher.showDirections(
-          mapType: MapType.google,
-          destination: Coords(latitude, longitude),
-        );
-      } */
-    });
-
+        (OSNotificationOpenedResult result) async {});
     await dotenv.load(fileName: ".env");
 
     ///SUBSCRIPCION A ONE SIGNAL PARA RECIBIR Y ENVIAR TANTO SMS Y NOTIFICACIONES
     await OneSignal.shared.setAppId(dotenv.env['API_ONE_SIGNAL']);
-    await OneSignal.shared.getDeviceState().then((value) async {
-      print("value.userId");
-      print(value.userId);
-      await setIdOneSignal(value.userId);
-      //setSmsNumber(value.smsNumber);
+
+    OneSignal.shared
+        .setSubscriptionObserver((OSSubscriptionStateChanges changes) {
+      //  print(changes.to.userId);
+      String userId = changes.to.userId ?? '';
+      if (userId != '') {
+        log(userId);
+        setIdOneSignal(userId);
+      }
     });
   }
- */
-  /// _changePassword() is a function that takes a context as a parameter and returns a Future
-  ///
-  /// Args:
-  ///   context: BuildContext
-  ///
-  /// Returns:
-  ///   A Map with a message and a status.
-  void _changePassword(context) async {
+
+  Future<bool> _changePassword(context) async {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
+
       Map<String, String> changePasswordData = {
         "userId": user.id,
         "password": password,
@@ -888,13 +918,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ScaffoldMessenger.of(context)
             .showSnackBar(MySnackBars.errorConectionSnackBar());
 
-        return;
+        return false;
       }
-      _scaffoldKey.currentState.closeEndDrawer();
-
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(MySnackBars.simpleSnackbar(
           "${response["message"]}", Icons.lock_reset_rounded, Styles.green));
+      _scaffoldKey.currentState.closeEndDrawer();
+      return true;
     }
+    return false;
   }
 }

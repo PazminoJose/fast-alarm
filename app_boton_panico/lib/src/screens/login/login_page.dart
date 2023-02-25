@@ -158,7 +158,7 @@ class LoginPageState extends State<LoginPage> {
                                 LengthLimitingTextInputFormatter(15),
                               ],
                               textInputAction: TextInputAction.done,
-                              obscureText: _passwordVisible,
+                              obscureText: !_passwordVisible,
                               controller: password,
                               decoration: InputDecoration(
                                 suffixIcon: IconButton(
