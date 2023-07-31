@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         ],
         supportedLocales: const [Locale("es", "ES"), Locale("en", "EN")],
         debugShowCheckedModeBanner: false,
-        title: 'Material App',
+        title: 'Vivo Vivo',
         theme: theme.copyWith(
           colorScheme: theme.colorScheme.copyWith(
               primary: Styles.primaryColor, secondary: Styles.secondaryColor),

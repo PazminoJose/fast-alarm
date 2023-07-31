@@ -1,6 +1,6 @@
 /// This class is used to store the endpoints of the API
 class Environments {
-  static String url = "api.vivovivo.net";
+  static String url = "vivo-vivo-server-production.up.railway.app";
 
   static String getUser = "/api/user/login";
   static String getDevices = "/api/GetDevices";
