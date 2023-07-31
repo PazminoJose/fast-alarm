@@ -18,7 +18,7 @@ import 'package:app_boton_panico/src/services/notification_services.dart';
 import 'package:app_boton_panico/src/services/user_services.dart';
 import 'package:app_boton_panico/src/utils/app_layout.dart';
 import 'package:app_boton_panico/src/utils/app_styles.dart';
-import 'package:badges/badges.dart';
+import 'package:badges/badges.dart' as BG;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -121,10 +121,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         key: _inkWellKey,
                         child: Padding(
                           padding: const EdgeInsets.all(18.0),
-                          child: Badge(
+                          child: BG.Badge(
                             badgeContent: Text("$count"),
                             padding: const EdgeInsets.all(5.5),
-                            animationType: BadgeAnimationType.slide,
+                            animationType: BG.BadgeAnimationType.slide,
                             child: const Icon(Icons.notification_important,
                                 size: 27, color: Colors.white),
                           ),
@@ -204,7 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: (!isProcessFinalizeLocation)
                             ? Column(
                                 children: [
-                                  ElevatedButton(
+                                 /*  ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: Styles.redText,
                                         padding: EdgeInsets.symmetric(
@@ -212,7 +212,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                             horizontal: size.height * 0.1),
                                       ),
                                       child: const Text("Cancelar"),
-                                      onPressed: () {}),
+                                      onPressed: () {}), */
                                   const Gap(30),
                                   Stack(
                                     alignment: Alignment.center,
@@ -376,7 +376,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Column(
                       children: [
                         ListTile(
-                            title: const Text("Nucleo de Confianza"),
+                            title: const Text("Núcleo de Confianza"),
                             trailing: const Icon(Icons.family_restroom),
                             onTap: () => showBarModalBottomSheet(
                                   context: context,
@@ -671,11 +671,11 @@ class _MyHomePageState extends State<MyHomePage> {
         UserServices serviceUser = UserServices();
         SharedPreferences preferences = await SharedPreferences.getInstance();
         if (isNewAlarm) {
+          await _getCurrentPosition();
           await postAlarmBD(
               _currentPosition.latitude, _currentPosition.longitude);
           preferences.setString("idAlarm", idAlarm);
           await serviceUser.putStateByUser(user.id, "danger");
-          await _getCurrentPosition();
         }
         getFamilyGroup(isNewAlarm);
         preferences.setString("state", "danger");

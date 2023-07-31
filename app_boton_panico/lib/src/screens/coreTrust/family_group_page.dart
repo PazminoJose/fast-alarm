@@ -23,7 +23,7 @@ class _FamilyGroupState extends State<FamilyGroup> {
         appBar: AppBar(
             leading: Container(),
             centerTitle: true,
-            title: const Text('Nucle de Confianza')),
+            title: const Text('Núcleo de Confianza')),
         body: SafeArea(
             bottom: false,
             child: FutureBuilder<List<User>>(
@@ -44,7 +44,7 @@ class _FamilyGroupState extends State<FamilyGroup> {
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 15),
                               child: Text(
-                                "No tiene agregado ningun nucleo de confianza",
+                                "No tiene agregado ningun ncleo de confianza",
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),
